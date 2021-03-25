@@ -8,6 +8,7 @@ package gal.usc.mercadovalores.aplicacion;
 /**
  *
  * @author acmc
+ * uwu
  */
 public class FachadaAplicacion {
     public static void main(){
