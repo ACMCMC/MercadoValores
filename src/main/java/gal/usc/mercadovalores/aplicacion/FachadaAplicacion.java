@@ -11,6 +11,6 @@ package gal.usc.mercadovalores.aplicacion;
  */
 public class FachadaAplicacion {
     public static void main(){
-    
+    return;
 }
 }
