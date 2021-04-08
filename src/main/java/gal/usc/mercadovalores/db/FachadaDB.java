@@ -14,6 +14,7 @@ import java.util.Set;
  */
 public class FachadaDB {
     public Set<UsuarioEmpresa> getUsuariosEmpresa() {
+        // Aquí se devuelve null
         return null;
     }
     public Set<UsuarioInversor> getUsuariosInversores() {
