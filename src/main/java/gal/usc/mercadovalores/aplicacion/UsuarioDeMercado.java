@@ -5,76 +5,89 @@
  */
 package gal.usc.mercadovalores.aplicacion;
 
+import java.util.Map;
+
 /**
  *
  * @author user
  */
-public class UsuarioDeMercado {
+public abstract class UsuarioDeMercado extends Usuario {
     
     //tipos de datos temporales -> pendiente de diccionario de datos
-    String id;
-    String clave;
-    int saldo;
-    int importeBloqueado;
-    String direccion;
-    String telefono;
-    int estado;
-    
-    //constructor
-    
-    //getters & setters
+    //el resto de atributos se heredan de Usuario
+    private double importeBloqueado;
+    private String direccion;
+    private String telefono;
+    private EstadoUsuario estado;
+    private Map<UsuarioEmpresa, Integer> tenerParticipaciones;
 
-    public String getId() {
-        return id;
-    }
-
-    public String getClave() {
-        return clave;
-    }
-
-    public void setClave(String clave) {
-        this.clave = clave;
-    }
-
-    public int getSaldo() {
-        return saldo;
-    }
-
-    public void setSaldo(int saldo) {
-        this.saldo = saldo;
-    }
-
-    public int getImporteBloqueado() {
-        return importeBloqueado;
-    }
-
-    public void setImporteBloqueado(int importeBloqueado) {
-        this.importeBloqueado = importeBloqueado;
-    }
-
+    /**
+     * @return the direccion
+     */
     public String getDireccion() {
         return direccion;
     }
 
-    public void setDireccion(String direccion) {
-        this.direccion = direccion;
+    /**
+     * @return the estado
+     */
+    public EstadoUsuario getEstado() {
+        return estado;
     }
 
+    /**
+     * @return the importeBloqueado
+     */
+    public double getImporteBloqueado() {
+        return importeBloqueado;
+    }
+
+    /**
+     * @return the telefono
+     */
     public String getTelefono() {
         return telefono;
     }
 
+    /**
+     * @return the tenerParticipaciones
+     */
+    public Map<UsuarioEmpresa, Integer> getTenerParticipaciones() {
+        return tenerParticipaciones;
+    }
+
+    /**
+     * @param direccion the direccion to set
+     */
+    public void setDireccion(String direccion) {
+        this.direccion = direccion;
+    }
+
+    /**
+     * @param estado the estado to set
+     */
+    public void setEstado(EstadoUsuario estado) {
+        this.estado = estado;
+    }
+
+    /**
+     * @param importeBloqueado the importeBloqueado to set
+     */
+    public void setImporteBloqueado(double importeBloqueado) {
+        this.importeBloqueado = importeBloqueado;
+    }
+
+    /**
+     * @param telefono the telefono to set
+     */
     public void setTelefono(String telefono) {
         this.telefono = telefono;
     }
 
-    public int getEstado() {
-        return estado;
+    /**
+     * @param tenerParticipaciones the tenerParticipaciones to set
+     */
+    public void setTenerParticipaciones(Map<UsuarioEmpresa, Integer> tenerParticipaciones) {
+        this.tenerParticipaciones = tenerParticipaciones;
     }
-
-    public void setEstado(int estado) {
-        this.estado = estado;
-    }
-    
-    
 }
