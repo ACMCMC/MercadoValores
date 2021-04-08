@@ -17,6 +17,11 @@ public class FachadaDB {
         return null;
     }
     public Set<UsuarioInversor> getUsuariosInversores() {
-        return null;
+    }
+    public Set<UsuarioDeMercado> getUsuariosDeMercado() {
+    }
+    public Set<Usuario> getUsuarios() {
+    }
+    public UsuarioRegulador getUsuarioRegulador() {
     }
 }
