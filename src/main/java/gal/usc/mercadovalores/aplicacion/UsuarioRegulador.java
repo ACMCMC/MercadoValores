@@ -13,6 +13,11 @@ package gal.usc.mercadovalores.aplicacion;
 public class UsuarioRegulador extends Usuario {
     private double comision_actual;
 
+    public UsuarioRegulador(String id, String clave, double saldo, double comision_actual) {
+        super(id, clave, saldo);
+        this.comision_actual = comision_actual;
+    }
+
     /**
      * @return the comision_actual
      */

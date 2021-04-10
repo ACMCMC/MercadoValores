@@ -10,5 +10,7 @@ package gal.usc.mercadovalores.gui;
  * @author acmc
  */
 public class FachadaGUI {
-    
+    public static void muestraExcepcion(Throwable t) {
+        System.out.println(t.getMessage());
+    }
 }

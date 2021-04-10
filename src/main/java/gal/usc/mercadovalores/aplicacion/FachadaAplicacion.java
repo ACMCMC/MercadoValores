@@ -5,6 +5,9 @@
  */
 package gal.usc.mercadovalores.aplicacion;
 
+import gal.usc.mercadovalores.db.FachadaDB;
+import gal.usc.mercadovalores.gui.FachadaGUI;
+
 /**
  *
  * @author acmc
@@ -12,5 +15,9 @@ package gal.usc.mercadovalores.aplicacion;
  */
 public class FachadaAplicacion {
     public static void main(String args[]){
+    }
+
+    public static void muestraExcepcion(Throwable t) {
+        FachadaGUI.muestraExcepcion(t);
     }
 }
