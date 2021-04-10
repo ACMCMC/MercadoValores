@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package gal.usc.mercadovalores.aplicacion;
+import gal.usc.mercadovalores.gui.FachadaGUI;
 
 import gal.usc.mercadovalores.db.FachadaDB;
 import gal.usc.mercadovalores.gui.FachadaGUI;
@@ -14,7 +15,34 @@ import gal.usc.mercadovalores.gui.FachadaGUI;
  * uwu
  */
 public class FachadaAplicacion {
+    private FachadaGUI fgui;
+
+    public FachadaAplicacion() {
+        this.fgui = new FachadaGUI(this);
+    }
+    
+    
+    
     public static void main(String args[]){
+        FachadaAplicacion fa;
+        fa= new FachadaAplicacion();
+        fa.iniciarAplicacion();
+    }
+    
+    public void iniciarAplicacion(){
+        this.fgui.iniciarAplicacion();
+    }
+    
+    public void iniciarSesion(){
+        this.fgui.iniciarSesion();
+    }
+    
+    public void iniciarAdmin(){
+        this.fgui.iniciarAdmin();
+    }
+    
+    public void iniciarInversor(){
+        this.fgui.iniciarInversor();
     }
 
     public static void muestraExcepcion(Throwable t) {
