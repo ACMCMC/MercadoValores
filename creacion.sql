@@ -16,7 +16,7 @@ CREATE TABLE usuario_mercado(
 
 CREATE TABLE usuario_inversor(
   id varchar(30),
-  DNI char(9),
+  dni char(9),
   nombre_completo varchar(64),
   primary key (id),
     foreign key (id) references usuario_mercado
@@ -25,7 +25,7 @@ CREATE TABLE usuario_inversor(
 
 CREATE TABLE usuario_empresa(
   id varchar(30),
-  CIF char(9),
+  cif char(9),
   nombre_comercial varchar(64),
   importe_bloqueado double precision,
   primary key (id),
