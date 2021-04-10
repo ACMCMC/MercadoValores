@@ -9,8 +9,8 @@ CREATE TABLE usuario_mercado(
     id varchar(30),
     clave varchar(40),
     saldo double precision,
-    direccion char(128),
-    telefono char(15), --15 valores porque si se pretendiese ser internacional haria falta el prefijo internacional
+    direccion varchar(256),
+    telefono varchar(15), --15 valores porque si se pretendiese ser internacional haria falta el prefijo internacional
     estado char(128),
     primary key (id));
 
@@ -25,7 +25,7 @@ CREATE TABLE usuario_inversor(
 
 CREATE TABLE usuario_empresa(
   id varchar(30),
-  CIF char(12),
+  CIF char(9),
   nombre_comercial varchar(64),
   importe_bloqueado double precision,
   primary key (id),
