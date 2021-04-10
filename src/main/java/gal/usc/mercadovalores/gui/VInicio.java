@@ -42,10 +42,10 @@ public class VInicio extends javax.swing.JFrame {
         setBackground(new java.awt.Color(237, 242, 244));
 
         jLabel1.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(43, 45, 66));
         jLabel1.setText("MercadoValores");
 
         botonIniciarSesion.setText("Iniciar Sesion");
+        botonIniciarSesion.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         botonIniciarSesion.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 botonIniciarSesionActionPerformed(evt);
@@ -53,6 +53,7 @@ public class VInicio extends javax.swing.JFrame {
         });
 
         botonRegistrarUsuario.setText("Registrarse");
+        botonRegistrarUsuario.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         botonRegistrarUsuario.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 botonRegistrarUsuarioActionPerformed(evt);

@@ -38,7 +38,7 @@ public class FachadaGUI {
     
     //aplicacion de admin (regulador de mercado)
     public void iniciarAdmin(){
-        //ya no necesitamos la ventana de inicio
+        //ya no necesitamos la ventana de inicio 
         this.vi.dispose();
         //iniciamos la vista de administrador
         this.vadmin = new VPrincipalAdmin();
