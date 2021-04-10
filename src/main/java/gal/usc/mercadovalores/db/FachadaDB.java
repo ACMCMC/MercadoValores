@@ -5,10 +5,27 @@
  */
 package gal.usc.mercadovalores.db;
 
+import gal.usc.mercadovalores.aplicacion.*;
+import java.util.Set;
+
 /**
  *
  * @author acmc
  */
 public class FachadaDB {
-    
+    public Set<UsuarioEmpresa> getUsuariosEmpresa() {
+        return null;
+    }
+    public Set<UsuarioInversor> getUsuariosInversores() {
+        return null;
+    }
+    public Set<UsuarioDeMercado> getUsuariosDeMercado() {
+        return null;
+    }
+    public Set<Usuario> getUsuarios() {
+        return null;
+    }
+    public UsuarioRegulador getUsuarioRegulador() {
+        return null;
+    }
 }
