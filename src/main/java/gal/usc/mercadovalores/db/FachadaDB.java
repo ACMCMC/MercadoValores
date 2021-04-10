@@ -23,6 +23,8 @@ public class FachadaDB {
 
     private static FachadaDB fachada = new FachadaDB();
     private Connection conexion;
+    private DAOUsuarioEmpresa daoUsuarioEmpresa;
+    private DAOUsuarioInversor daoUsuarioInversor;
 
     public static FachadaDB getFachada() {
         return fachada;
@@ -44,11 +46,9 @@ public class FachadaDB {
 
             usuario.setProperty("user", configuracion.getProperty("usuario"));
             usuario.setProperty("password", configuracion.getProperty("clave"));
-            this.conexion = java.sql.DriverManager.getConnection(
-                    "jdbc:" + gestor + "://" + configuracion.getProperty("servidor") + ":"
-                            + configuracion.getProperty("puerto") + "/" + configuracion.getProperty("baseDatos"),
-                    usuario);
-
+            usuario.setProperty("ssl", "true");
+            String url = "jdbc:" + gestor + "://" + configuracion.getProperty("servidor") + ":" + configuracion.getProperty("puerto") + "/" + configuracion.getProperty("baseDatos");
+            this.conexion = java.sql.DriverManager.getConnection(url, usuario);
         } catch (FileNotFoundException f) {
             FachadaAplicacion.muestraExcepcion(f);
         } catch (IOException i) {
@@ -56,10 +56,13 @@ public class FachadaDB {
         } catch (java.sql.SQLException e) {
             FachadaAplicacion.muestraExcepcion(e);
         }
+
+        daoUsuarioEmpresa = new DAOUsuarioEmpresa(conexion);
+        daoUsuarioInversor = new DAOUsuarioInversor(conexion);
     }
 
     public Set<UsuarioEmpresa> getUsuariosEmpresa() {
-        return null;
+        return daoUsuarioEmpresa.getAll();
     }
 
     public Set<UsuarioInversor> getUsuariosInversores() {

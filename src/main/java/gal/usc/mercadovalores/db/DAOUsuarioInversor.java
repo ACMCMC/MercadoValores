@@ -3,7 +3,6 @@ package gal.usc.mercadovalores.db;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.function.Function;
 
 import gal.usc.mercadovalores.aplicacion.UsuarioInversor;
 

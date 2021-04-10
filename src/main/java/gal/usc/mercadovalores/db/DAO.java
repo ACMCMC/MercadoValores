@@ -27,20 +27,18 @@ public abstract class DAO<T> {
 		ResultSet resultSet;
 
 		try {
-			preparedStatement = conexion.prepareStatement("select * from ?");
-			preparedStatement.setString(0, this.getNombreTabla());
+			preparedStatement = conexion.prepareStatement("select * from " + getNombreTabla()); // Ojo con esta línea, no es vulnerable a inyección SQL porque getNombreTabla lo controlamos nosotros, pero no se deben construír así los queries en general.
 			resultSet = preparedStatement.executeQuery();
 			while (resultSet.next()) {
 				setFinal.add(this.getTFromRS(resultSet));
 			}
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
 			FachadaAplicacion.muestraExcepcion(e);
 		} finally {
 			try {
 				preparedStatement.close();
 			} catch (SQLException e) {
-				System.out.println("Imposible cerrar cursores");
+				FachadaAplicacion.muestraExcepcion(e);
 			}
 		}
 
