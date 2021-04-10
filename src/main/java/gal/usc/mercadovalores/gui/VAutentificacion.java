@@ -127,9 +127,12 @@ public class VAutentificacion extends javax.swing.JDialog {
                 //lanzamos ventana de admin
                 fa.iniciarAdmin();
             }else{
-                //lanzamos ventana de usuario
+                //ahora tenemos que diferenciar entre los inversores y las empresas
+                
+                //lanzamos ventana de inversor
                 fa.iniciarInversor();
 
+                //la ventana de empresa
             }
         }
     }//GEN-LAST:event_botonInicioSesionActionPerformed

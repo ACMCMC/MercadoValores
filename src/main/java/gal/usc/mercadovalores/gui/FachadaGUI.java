@@ -4,6 +4,8 @@
  * and open the template in the editor.
  */
 package gal.usc.mercadovalores.gui;
+import gal.usc.mercadovalores.aplicacion.FachadaAplicacion;
+
 
 import gal.usc.mercadovalores.aplicacion.FachadaAplicacion;
 
@@ -12,7 +14,6 @@ import gal.usc.mercadovalores.aplicacion.FachadaAplicacion;
  * @author acmc
  */
 public class FachadaGUI {
-
     private FachadaAplicacion fa;
     private VInicio vi;
     private VAutentificacion vaut;
