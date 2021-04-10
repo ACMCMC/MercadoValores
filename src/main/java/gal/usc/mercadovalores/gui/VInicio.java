@@ -42,6 +42,10 @@ public class VInicio extends javax.swing.JFrame {
         setBackground(new java.awt.Color(237, 242, 244));
 
         jLabel1.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(43, 45, 66));
+        jLabel1.setText("MercadoValores");
+
+        botonIniciarSesion.setText("Iniciar Sesion");
         jLabel1.setText("MercadoValores");
 
         botonIniciarSesion.setText("Iniciar Sesion");
