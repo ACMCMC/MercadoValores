@@ -15,11 +15,17 @@ public abstract class UsuarioDeMercado extends Usuario {
     
     //tipos de datos temporales -> pendiente de diccionario de datos
     //el resto de atributos se heredan de Usuario
-    private double importeBloqueado;
     private String direccion;
     private String telefono;
     private EstadoUsuario estado;
     private Map<UsuarioEmpresa, Integer> tenerParticipaciones;
+
+    public UsuarioDeMercado(String id, String clave, double saldo, String direccion, String telefono, EstadoUsuario estado, Map<UsuarioEmpresa, Integer> tenerParticipaciones) {
+        super(id, clave, saldo);
+        this.direccion = direccion;
+        this.estado = estado;
+        this.tenerParticipaciones = tenerParticipaciones;
+    }
 
     /**
      * @return the direccion
@@ -33,13 +39,6 @@ public abstract class UsuarioDeMercado extends Usuario {
      */
     public EstadoUsuario getEstado() {
         return estado;
-    }
-
-    /**
-     * @return the importeBloqueado
-     */
-    public double getImporteBloqueado() {
-        return importeBloqueado;
     }
 
     /**
@@ -68,13 +67,6 @@ public abstract class UsuarioDeMercado extends Usuario {
      */
     public void setEstado(EstadoUsuario estado) {
         this.estado = estado;
-    }
-
-    /**
-     * @param importeBloqueado the importeBloqueado to set
-     */
-    public void setImporteBloqueado(double importeBloqueado) {
-        this.importeBloqueado = importeBloqueado;
     }
 
     /**

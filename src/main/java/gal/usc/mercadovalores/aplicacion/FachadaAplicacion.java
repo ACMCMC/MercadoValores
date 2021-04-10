@@ -6,6 +6,9 @@
 package gal.usc.mercadovalores.aplicacion;
 import gal.usc.mercadovalores.gui.FachadaGUI;
 
+import gal.usc.mercadovalores.db.FachadaDB;
+import gal.usc.mercadovalores.gui.FachadaGUI;
+
 /**
  *
  * @author acmc
@@ -40,5 +43,9 @@ public class FachadaAplicacion {
     
     public void iniciarInversor(){
         this.fgui.iniciarInversor();
+    }
+
+    public static void muestraExcepcion(Throwable t) {
+        FachadaGUI.muestraExcepcion(t);
     }
 }
