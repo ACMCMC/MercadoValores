@@ -5,13 +5,15 @@ CREATE TABLE usuario_regulador(
   comision_actual double precision,
   primary key (id));
 
+CREATE TYPE enum_estado AS ENUM ('SOLICITANDO_ALTA', 'SOLICITANDO_BAJA', 'DADO_DE_ALTA');
+
 CREATE TABLE usuario_mercado(
     id varchar(30),
     clave varchar(40),
     saldo double precision,
     direccion varchar(256),
     telefono varchar(15), --15 valores porque si se pretendiese ser internacional haria falta el prefijo internacional
-    estado char(128),
+    estado enum_estado,
     primary key (id));
 
 CREATE TABLE usuario_inversor(
