@@ -15,11 +15,9 @@ import java.util.HashSet;
 public abstract class DAO<T> {
 
 	private Connection conexion;
-	private String nombreTabla;
 
-	public DAO(Connection con, String nombreTabla) {
+	public DAO(Connection con) {
 		this.conexion = con;
-		this.nombreTabla = nombreTabla;
 	}
 
 	public Set<T> getAll() {
@@ -29,26 +27,25 @@ public abstract class DAO<T> {
 		ResultSet resultSet;
 
 		try {
-			preparedStatement = conexion.prepareStatement("select * from ?");
-			preparedStatement.setString(0, nombreTabla);
+			preparedStatement = conexion.prepareStatement("select * from " + getNombreTabla()); // Ojo con esta línea, no es vulnerable a inyección SQL porque getNombreTabla lo controlamos nosotros, pero no se deben construír así los queries en general.
 			resultSet = preparedStatement.executeQuery();
 			while (resultSet.next()) {
-
+				setFinal.add(this.getTFromRS(resultSet));
 			}
-			setFinal.add(this.getTFromRS(resultSet));
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
 			FachadaAplicacion.muestraExcepcion(e);
 		} finally {
 			try {
 				preparedStatement.close();
 			} catch (SQLException e) {
-				System.out.println("Imposible cerrar cursores");
+				FachadaAplicacion.muestraExcepcion(e);
 			}
 		}
 
 		return setFinal;
 	}
+
+	protected abstract String getNombreTabla();
 
 	protected abstract T getTFromRS(ResultSet rs) throws SQLException;
 }

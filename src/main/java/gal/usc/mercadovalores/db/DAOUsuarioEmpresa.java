@@ -10,7 +10,12 @@ import gal.usc.mercadovalores.aplicacion.UsuarioEmpresa;
 public final class DAOUsuarioEmpresa extends DAO<UsuarioEmpresa> {
 
     public DAOUsuarioEmpresa(Connection con) {
-        super(con, "usuario_empresa");
+        super(con);
+    }
+
+    @Override
+    protected String getNombreTabla() {
+        return "usuario_empresa";
     }
 
     @Override
