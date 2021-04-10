@@ -6,10 +6,13 @@
 package gal.usc.mercadovalores.aplicacion;
 import gal.usc.mercadovalores.gui.FachadaGUI;
 
+import gal.usc.mercadovalores.db.*;
+import gal.usc.mercadovalores.gui.*;
+import java.util.Set;
+
 /**
  *
  * @author acmc
- * uwu
  */
 public class FachadaAplicacion {
     private FachadaGUI fgui;
@@ -18,12 +21,12 @@ public class FachadaAplicacion {
         this.fgui = new FachadaGUI(this);
     }
     
-    
-    
     public static void main(String args[]){
         FachadaAplicacion fa;
         fa= new FachadaAplicacion();
         fa.iniciarAplicacion();
+
+        Set<UsuarioEmpresa> s = FachadaDB.getFachada().getUsuariosEmpresa();
     }
     
     public void iniciarAplicacion(){
@@ -40,5 +43,9 @@ public class FachadaAplicacion {
     
     public void iniciarInversor(){
         this.fgui.iniciarInversor();
+    }
+
+    public static void muestraExcepcion(Throwable t) {
+        FachadaGUI.muestraExcepcion(t);
     }
 }

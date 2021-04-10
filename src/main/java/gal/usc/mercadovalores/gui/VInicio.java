@@ -46,6 +46,10 @@ public class VInicio extends javax.swing.JFrame {
         jLabel1.setText("MercadoValores");
 
         botonIniciarSesion.setText("Iniciar Sesion");
+        jLabel1.setText("MercadoValores");
+
+        botonIniciarSesion.setText("Iniciar Sesion");
+        botonIniciarSesion.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         botonIniciarSesion.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 botonIniciarSesionActionPerformed(evt);
@@ -53,6 +57,7 @@ public class VInicio extends javax.swing.JFrame {
         });
 
         botonRegistrarUsuario.setText("Registrarse");
+        botonRegistrarUsuario.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         botonRegistrarUsuario.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 botonRegistrarUsuarioActionPerformed(evt);
