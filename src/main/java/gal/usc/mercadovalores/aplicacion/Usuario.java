@@ -7,6 +7,12 @@ public abstract class Usuario {
     private String clave;
     private double saldo;
 
+    public Usuario(String id, String clave, double saldo) {
+        this.id = id;
+        this.clave = clave;
+        this.saldo = saldo;
+    }
+
     /**
      * @return the clave
      */
