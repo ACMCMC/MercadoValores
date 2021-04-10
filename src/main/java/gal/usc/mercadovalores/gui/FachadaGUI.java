@@ -64,5 +64,9 @@ public class FachadaGUI {
         //iniciamos la vista de usuario de mercado
         this.vempresa = new VPrincipalEmpresa();
         vempresa.setVisible(true);
+        this.vi.dispose();
+        // iniciamos la vista de usuario de mercado
+        this.vinversor = new VPrincipalInversor();
+        vinversor.setVisible(true);
     }
 }
