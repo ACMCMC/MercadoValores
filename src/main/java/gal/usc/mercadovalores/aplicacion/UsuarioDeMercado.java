@@ -20,11 +20,11 @@ public abstract class UsuarioDeMercado extends Usuario {
     private EstadoUsuario estado;
     private Map<UsuarioEmpresa, Integer> tenerParticipaciones;
 
-    public UsuarioDeMercado(String id, String clave, double saldo, String direccion, String telefono, EstadoUsuario estado, Map<UsuarioEmpresa, Integer> tenerParticipaciones) {
+    public UsuarioDeMercado(String id, String clave, double saldo, String direccion, String telefono, EstadoUsuario estado) {
         super(id, clave, saldo);
         this.direccion = direccion;
         this.estado = estado;
-        this.tenerParticipaciones = tenerParticipaciones;
+        this.telefono = telefono;
     }
 
     /**
