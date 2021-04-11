@@ -15,6 +15,14 @@ public final class UsuarioEmpresa extends UsuarioDeMercado {
         this.importeBloqueado = importeBloqueado;
     }
 
+    public UsuarioEmpresa(String id, String clave, double saldo, String direccion, String telefono, EstadoUsuario estado, Map<UsuarioEmpresa, Integer> tenerParticipaciones, String cif, String nombreComercial, double importeBloqueado, Set<UsuarioDeMercado> usuariosConParticipaciones) {
+        super(id, clave, saldo, direccion, telefono, estado, tenerParticipaciones);
+        this.cif = cif;
+        this.nombreComercial = nombreComercial;
+        this.importeBloqueado = importeBloqueado;
+        this.usuariosConParticipaciones = usuariosConParticipaciones;
+    }
+
     /**
      * @return the cif
      */

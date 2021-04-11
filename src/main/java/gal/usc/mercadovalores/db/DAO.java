@@ -20,8 +20,39 @@ public abstract class DAO<T> {
 		this.conexion = con;
 	}
 
+<<<<<<< HEAD
 	protected Connection getConexion() {
 		return this.conexion;
 	}
 
+=======
+	public Set<T> getAll() {
+		Set<T> setFinal = new HashSet<>();
+
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet;
+
+		try {
+			preparedStatement = conexion.prepareStatement("select * from " + getNombreTabla()); // Ojo con esta línea, no es vulnerable a inyección SQL porque getNombreTabla lo controlamos nosotros, pero no se deben construír así los queries en general.
+			resultSet = preparedStatement.executeQuery();
+			while (resultSet.next()) {
+				setFinal.add(this.getTFromRS(resultSet));
+			}
+		} catch (SQLException e) {
+			FachadaAplicacion.muestraExcepcion(e);
+		} finally {
+			try {
+				preparedStatement.close();
+			} catch (SQLException e) {
+				FachadaAplicacion.muestraExcepcion(e);
+			}
+		}
+
+		return setFinal;
+	}
+
+	protected abstract String getNombreTabla();
+
+	protected abstract T getTFromRS(ResultSet rs) throws SQLException;
+>>>>>>> aaron
 }

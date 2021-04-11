@@ -1,6 +1,7 @@
 package gal.usc.mercadovalores.db;
 
 import java.sql.Connection;
+<<<<<<< HEAD
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -10,10 +11,17 @@ import java.util.HashSet;
 
 import gal.usc.mercadovalores.aplicacion.EstadoUsuario;
 import gal.usc.mercadovalores.aplicacion.FachadaAplicacion;
+=======
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.function.Function;
+
+>>>>>>> aaron
 import gal.usc.mercadovalores.aplicacion.UsuarioEmpresa;
 
 public final class DAOUsuarioEmpresa extends DAO<UsuarioEmpresa> {
 
+<<<<<<< HEAD
 	public DAOUsuarioEmpresa(Connection con) {
 		super(con);
 	}
@@ -103,4 +111,19 @@ public final class DAOUsuarioEmpresa extends DAO<UsuarioEmpresa> {
 		return usuario;
 	}
 
+=======
+    public DAOUsuarioEmpresa(Connection con) {
+        super(con);
+    }
+
+    @Override
+    protected String getNombreTabla() {
+        return "usuario_empresa";
+    }
+
+    @Override
+    protected UsuarioEmpresa getTFromRS(ResultSet rs) throws SQLException {
+        return new UsuarioEmpresa(null, null, 0, null, null, null, null, null, null, 0, null);
+    }
+>>>>>>> aaron
 }

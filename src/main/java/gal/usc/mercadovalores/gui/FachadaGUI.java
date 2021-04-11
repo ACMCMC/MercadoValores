@@ -52,6 +52,7 @@ public class FachadaGUI {
 
     public void iniciarInversor() {
         // ya no necesitamos la ventana de inicio
+<<<<<<< HEAD
         this.vi.dispose();
         // iniciamos la vista de usuario de mercado
         this.vinversor = new VPrincipalInversor();
@@ -65,6 +66,9 @@ public class FachadaGUI {
         this.vempresa = new VPrincipalEmpresa();
         vempresa.setVisible(true);
         this.vi.dispose();
+=======
+        this.vi.dispose();
+>>>>>>> aaron
         // iniciamos la vista de usuario de mercado
         this.vinversor = new VPrincipalInversor();
         vinversor.setVisible(true);
