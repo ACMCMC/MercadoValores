@@ -9,12 +9,12 @@ package gal.usc.mercadovalores.gui;
  *
  * @author icaro
  */
-public class VPrincipalInversor extends javax.swing.JFrame {
+public class VPrincipalEmpresa extends javax.swing.JFrame {
 
     /**
      * Creates new form VPrincipalMercado
      */
-    public VPrincipalInversor() {
+    public VPrincipalEmpresa() {
         initComponents();
     }
 
@@ -27,7 +27,6 @@ public class VPrincipalInversor extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jMenu1 = new javax.swing.JMenu();
         jScrollPane2 = new javax.swing.JScrollPane();
         TablaDatos = new javax.swing.JTable();
         SalirBoton = new javax.swing.JButton();
@@ -37,14 +36,18 @@ public class VPrincipalInversor extends javax.swing.JFrame {
         ModificarMenuItem = new javax.swing.JMenuItem();
         BajaMenuItem = new javax.swing.JMenuItem();
         ParticipacionesMenu = new javax.swing.JMenu();
+        AltaParticipacionMenuItem = new javax.swing.JMenuItem();
+        BajaParticipacionMenuItem = new javax.swing.JMenuItem();
         VenderMenuItem = new javax.swing.JMenuItem();
         ComprarMenuItem = new javax.swing.JMenuItem();
         BajaVentaMenuItem = new javax.swing.JMenuItem();
-
-        jMenu1.setText("jMenu1");
+        BeneficiosMenu = new javax.swing.JMenu();
+        AltaPagoMenuItem = new javax.swing.JMenuItem();
+        BajaPagoMenuItem = new javax.swing.JMenuItem();
+        PagarMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Ventana Inversor");
+        setTitle("Ventana  Empresa");
 
         TablaDatos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -52,9 +55,11 @@ public class VPrincipalInversor extends javax.swing.JFrame {
                 {"Saldo", null},
                 {"Direccion", null},
                 {"Telefono", null},
-                {"DNI", null},
+                {"CIF", null},
                 {"Nombre Comercial", null},
-                {"Participaciones ", null}
+                {"Importe Bloqueado", null},
+                {"Participaciones ", null},
+                {"Participaciones creadas", null}
             },
             new String [] {
                 "Title 1", "Title 2"
@@ -66,7 +71,7 @@ public class VPrincipalInversor extends javax.swing.JFrame {
 
         SalirBoton.setText("Salir");
 
-        jLabel1.setText("Información del inversor:");
+        jLabel1.setText("Información del usuario:");
 
         CuentaMenu.setText("Cuenta");
 
@@ -80,6 +85,17 @@ public class VPrincipalInversor extends javax.swing.JFrame {
 
         ParticipacionesMenu.setText("Participaciones");
 
+        AltaParticipacionMenuItem.setText("Dar de alta");
+        AltaParticipacionMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                AltaParticipacionMenuItemActionPerformed(evt);
+            }
+        });
+        ParticipacionesMenu.add(AltaParticipacionMenuItem);
+
+        BajaParticipacionMenuItem.setText("Dar de baja");
+        ParticipacionesMenu.add(BajaParticipacionMenuItem);
+
         VenderMenuItem.setText("Vender");
         VenderMenuItem.setToolTipText("");
         ParticipacionesMenu.add(VenderMenuItem);
@@ -87,10 +103,24 @@ public class VPrincipalInversor extends javax.swing.JFrame {
         ComprarMenuItem.setText("Comprar");
         ParticipacionesMenu.add(ComprarMenuItem);
 
-        BajaVentaMenuItem.setText("Dar de baja venta");
+        BajaVentaMenuItem.setText("Dar de baja anuncio");
         ParticipacionesMenu.add(BajaVentaMenuItem);
 
         Menu.add(ParticipacionesMenu);
+
+        BeneficiosMenu.setText("Beneficios");
+
+        AltaPagoMenuItem.setText("Alta de pago");
+        AltaPagoMenuItem.setToolTipText("");
+        BeneficiosMenu.add(AltaPagoMenuItem);
+
+        BajaPagoMenuItem.setText("Baja de pago");
+        BeneficiosMenu.add(BajaPagoMenuItem);
+
+        PagarMenuItem.setText("Pagar");
+        BeneficiosMenu.add(PagarMenuItem);
+
+        Menu.add(BeneficiosMenu);
 
         setJMenuBar(Menu);
 
@@ -106,8 +136,8 @@ public class VPrincipalInversor extends javax.swing.JFrame {
                         .addComponent(SalirBoton, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 345, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 345, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel1))
                         .addGap(0, 258, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -116,9 +146,9 @@ public class VPrincipalInversor extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 90, Short.MAX_VALUE)
+                .addGap(13, 13, 13)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 53, Short.MAX_VALUE)
                 .addComponent(SalirBoton)
                 .addContainerGap())
         );
@@ -126,20 +156,29 @@ public class VPrincipalInversor extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void AltaParticipacionMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AltaParticipacionMenuItemActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_AltaParticipacionMenuItemActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem AltaPagoMenuItem;
+    private javax.swing.JMenuItem AltaParticipacionMenuItem;
     private javax.swing.JMenuItem BajaMenuItem;
+    private javax.swing.JMenuItem BajaPagoMenuItem;
+    private javax.swing.JMenuItem BajaParticipacionMenuItem;
     private javax.swing.JMenuItem BajaVentaMenuItem;
+    private javax.swing.JMenu BeneficiosMenu;
     private javax.swing.JMenuItem ComprarMenuItem;
     private javax.swing.JMenu CuentaMenu;
     private javax.swing.JMenuBar Menu;
     private javax.swing.JMenuItem ModificarMenuItem;
+    private javax.swing.JMenuItem PagarMenuItem;
     private javax.swing.JMenu ParticipacionesMenu;
     private javax.swing.JButton SalirBoton;
     private javax.swing.JTable TablaDatos;
     private javax.swing.JMenuItem VenderMenuItem;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JMenu jMenu1;
     private javax.swing.JScrollPane jScrollPane2;
     // End of variables declaration//GEN-END:variables
 }

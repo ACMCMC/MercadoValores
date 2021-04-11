@@ -44,7 +44,11 @@ public class FachadaAplicacion {
     public void iniciarInversor(){
         this.fgui.iniciarInversor();
     }
-
+    
+    public void iniciarEmpresa(){
+        this.fgui.iniciarEmpresa();
+    }
+    
     public static void muestraExcepcion(Throwable t) {
         FachadaGUI.muestraExcepcion(t);
     }

@@ -19,6 +19,7 @@ public class FachadaGUI {
     private VAutentificacion vaut;
     private VPrincipalAdmin vadmin;
     private VPrincipalInversor vinversor;
+    private VPrincipalEmpresa vempresa;
 
     public static void muestraExcepcion(Throwable t) {
         System.out.println(t.getMessage());
@@ -51,6 +52,18 @@ public class FachadaGUI {
 
     public void iniciarInversor() {
         // ya no necesitamos la ventana de inicio
+        this.vi.dispose();
+        // iniciamos la vista de usuario de mercado
+        this.vinversor = new VPrincipalInversor();
+        vinversor.setVisible(true);
+    }
+    
+    public void iniciarEmpresa(){
+        //ya no necesitamos la ventana de inicio
+        this.vi.dispose();
+        //iniciamos la vista de usuario de mercado
+        this.vempresa = new VPrincipalEmpresa();
+        vempresa.setVisible(true);
         this.vi.dispose();
         // iniciamos la vista de usuario de mercado
         this.vinversor = new VPrincipalInversor();
