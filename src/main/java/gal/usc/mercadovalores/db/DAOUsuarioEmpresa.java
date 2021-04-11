@@ -30,8 +30,12 @@ public final class DAOUsuarioEmpresa extends DAO<UsuarioEmpresa> {
 			resultSet = preparedStatement.executeQuery();
 			while (resultSet.next()) {
                 UsuarioEmpresa usuario;
-                usuario = new UsuarioEmpresa(resultSet.getString("id"), resultSet.getString("clave"), resultSet.getDouble("saldo"), resultSet.getString("direccion"), resultSet.getString("telefono"), EstadoUsuario.getByName(resultSet.getString("estado")), null, resultSet.getString("cif"), resultSet.getString("nombre_comercial"), resultSet.getDouble("importe_bloqueado"), null);
-				setFinal.add(usuario);
+				try {
+					usuario = new UsuarioEmpresa(resultSet.getString("id"), resultSet.getString("clave"), resultSet.getDouble("saldo"), resultSet.getString("direccion"), resultSet.getString("telefono"), EstadoUsuario.getByName(resultSet.getString("estado")), resultSet.getString("cif"), resultSet.getString("nombre_comercial"), resultSet.getDouble("importe_bloqueado"));
+					setFinal.add(usuario);
+				} catch (EnumConstantNotPresentException e) {
+					FachadaAplicacion.muestraExcepcion(e);
+				}
 			}
 		} catch (SQLException e) {
 			FachadaAplicacion.muestraExcepcion(e);
