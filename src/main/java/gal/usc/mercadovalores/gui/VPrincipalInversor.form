@@ -58,7 +58,7 @@
   </NonVisualComponents>
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="3"/>
-    <Property name="title" type="java.lang.String" value="Ventana  Mercado"/>
+    <Property name="title" type="java.lang.String" value="Ventana Inversor"/>
   </Properties>
   <SyntheticProperties>
     <SyntheticProperty name="menuBar" type="java.lang.String" value="Menu"/>
@@ -152,7 +152,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel1">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Informaci&#xf3;n del usuario:"/>
+        <Property name="text" type="java.lang.String" value="Informaci&#xf3;n del inversor:"/>
       </Properties>
     </Component>
   </SubComponents>

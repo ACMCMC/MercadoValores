@@ -44,7 +44,7 @@ public class VPrincipalInversor extends javax.swing.JFrame {
         jMenu1.setText("jMenu1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Ventana  Mercado");
+        setTitle("Ventana Inversor");
 
         TablaDatos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -66,7 +66,7 @@ public class VPrincipalInversor extends javax.swing.JFrame {
 
         SalirBoton.setText("Salir");
 
-        jLabel1.setText("Información del usuario:");
+        jLabel1.setText("Información del inversor:");
 
         CuentaMenu.setText("Cuenta");
 
