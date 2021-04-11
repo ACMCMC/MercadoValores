@@ -47,10 +47,8 @@ public class FachadaAplicacion {
     
     public void iniciarEmpresa(){
         this.fgui.iniciarEmpresa();
-
-    public static void muestraExcepcion(Throwable t) {
-        FachadaGUI.muestraExcepcion(t);
-
+    }
+    
     public static void muestraExcepcion(Throwable t) {
         FachadaGUI.muestraExcepcion(t);
     }
