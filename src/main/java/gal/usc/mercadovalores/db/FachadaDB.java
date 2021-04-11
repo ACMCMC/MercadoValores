@@ -12,6 +12,11 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.Connection;
+<<<<<<< HEAD
+import java.util.Collection;
+import java.util.HashSet;
+=======
+>>>>>>> aaron
 import java.util.Properties;
 import java.util.Set;
 
@@ -25,6 +30,10 @@ public class FachadaDB {
     private Connection conexion;
     private DAOUsuarioEmpresa daoUsuarioEmpresa;
     private DAOUsuarioInversor daoUsuarioInversor;
+<<<<<<< HEAD
+    private DAOUsuarioRegulador daoUsuarioRegulador;
+=======
+>>>>>>> aaron
 
     public static FachadaDB getFachada() {
         return fachada;
@@ -71,14 +80,24 @@ public class FachadaDB {
     }
 
     public Set<UsuarioDeMercado> getUsuariosDeMercado() {
-        return null;
+        Set<UsuarioDeMercado> set = new HashSet<>();
+        set.addAll(getUsuariosEmpresa());
+        set.addAll(getUsuariosInversores());
+        return set;
     }
+<<<<<<< HEAD
+    
+=======
 
+>>>>>>> aaron
     public Set<Usuario> getUsuarios() {
-        return null;
+        Set<Usuario> set = new HashSet<>();
+        set.addAll(getUsuariosDeMercado());
+        set.add(getUsuarioRegulador());
+        return set;
     }
 
     public UsuarioRegulador getUsuarioRegulador() {
-        return null;
+        return daoUsuarioRegulador.get();
     }
 }

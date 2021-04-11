@@ -20,6 +20,12 @@ public abstract class DAO<T> {
 		this.conexion = con;
 	}
 
+<<<<<<< HEAD
+	protected Connection getConexion() {
+		return this.conexion;
+	}
+
+=======
 	public Set<T> getAll() {
 		Set<T> setFinal = new HashSet<>();
 
@@ -48,4 +54,5 @@ public abstract class DAO<T> {
 	protected abstract String getNombreTabla();
 
 	protected abstract T getTFromRS(ResultSet rs) throws SQLException;
+>>>>>>> aaron
 }

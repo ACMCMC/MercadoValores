@@ -27,27 +27,90 @@ public class VPrincipalAdmin extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
+        SalirBoton = new javax.swing.JButton();
+        ComisionActualCajaTexto = new javax.swing.JTextField();
+        NuevaComisionBoton = new javax.swing.JButton();
+        ComisionActualTexto = new javax.swing.JLabel();
+        ComisionNuevaTexto = new javax.swing.JLabel();
+        NuevaComisionCaja = new javax.swing.JTextField();
+        BajaPagosBoton = new javax.swing.JButton();
+        Menu = new javax.swing.JMenuBar();
+        UsuarioMenu = new javax.swing.JMenu();
+        AltasMenuItem = new javax.swing.JMenuItem();
+        BajaMenuItem = new javax.swing.JMenuItem();
+        SaldosMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Regulador");
 
-        jLabel1.setText("VISTA ADMINISTRADOR");
+        SalirBoton.setText("Salir");
+
+        NuevaComisionBoton.setText("Actualizar");
+
+        ComisionActualTexto.setText("Valor de comisión compra/venta actual:");
+
+        ComisionNuevaTexto.setText("Establecer nuevo valor de comisión:");
+
+        BajaPagosBoton.setText("Dar de baja pagos de beneficios");
+        BajaPagosBoton.setToolTipText("");
+
+        UsuarioMenu.setText("Usuarios");
+
+        AltasMenuItem.setText("Confirmar altas");
+        UsuarioMenu.add(AltasMenuItem);
+
+        BajaMenuItem.setText("Confirmar bajas");
+        UsuarioMenu.add(BajaMenuItem);
+
+        SaldosMenuItem.setText("Modifcar saldos");
+        UsuarioMenu.add(SaldosMenuItem);
+
+        Menu.add(UsuarioMenu);
+
+        setJMenuBar(Menu);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(128, 128, 128)
-                .addComponent(jLabel1)
-                .addContainerGap(139, Short.MAX_VALUE))
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(BajaPagosBoton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(SalirBoton, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addComponent(ComisionNuevaTexto)
+                                .addGap(18, 18, 18)
+                                .addComponent(NuevaComisionCaja))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(ComisionActualTexto)
+                                .addGap(18, 18, 18)
+                                .addComponent(ComisionActualCajaTexto, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(18, 18, 18)
+                        .addComponent(NuevaComisionBoton, javax.swing.GroupLayout.DEFAULT_SIZE, 119, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(45, 45, 45)
-                .addComponent(jLabel1)
-                .addContainerGap(239, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(11, 11, 11)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(ComisionActualTexto)
+                    .addComponent(ComisionActualCajaTexto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(ComisionNuevaTexto)
+                    .addComponent(NuevaComisionCaja, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(NuevaComisionBoton))
+                .addGap(18, 18, 18)
+                .addComponent(BajaPagosBoton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 87, Short.MAX_VALUE)
+                .addComponent(SalirBoton)
+                .addContainerGap())
         );
 
         pack();
@@ -58,6 +121,17 @@ public class VPrincipalAdmin extends javax.swing.JFrame {
      */
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JMenuItem AltasMenuItem;
+    private javax.swing.JMenuItem BajaMenuItem;
+    private javax.swing.JButton BajaPagosBoton;
+    private javax.swing.JTextField ComisionActualCajaTexto;
+    private javax.swing.JLabel ComisionActualTexto;
+    private javax.swing.JLabel ComisionNuevaTexto;
+    private javax.swing.JMenuBar Menu;
+    private javax.swing.JButton NuevaComisionBoton;
+    private javax.swing.JTextField NuevaComisionCaja;
+    private javax.swing.JMenuItem SaldosMenuItem;
+    private javax.swing.JButton SalirBoton;
+    private javax.swing.JMenu UsuarioMenu;
     // End of variables declaration//GEN-END:variables
 }
