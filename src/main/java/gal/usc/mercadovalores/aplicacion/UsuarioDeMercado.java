@@ -12,7 +12,7 @@ import java.util.Map;
  * @author user
  */
 public abstract class UsuarioDeMercado extends Usuario {
-    
+
     //tipos de datos temporales -> pendiente de diccionario de datos
     //el resto de atributos se heredan de Usuario
     private String direccion;
@@ -20,19 +20,11 @@ public abstract class UsuarioDeMercado extends Usuario {
     private EstadoUsuario estado;
     private Map<UsuarioEmpresa, Integer> tenerParticipaciones;
 
-<<<<<<< HEAD
     public UsuarioDeMercado(String id, String clave, double saldo, String direccion, String telefono, EstadoUsuario estado) {
         super(id, clave, saldo);
         this.direccion = direccion;
         this.estado = estado;
         this.telefono = telefono;
-=======
-    public UsuarioDeMercado(String id, String clave, double saldo, String direccion, String telefono, EstadoUsuario estado, Map<UsuarioEmpresa, Integer> tenerParticipaciones) {
-        super(id, clave, saldo);
-        this.direccion = direccion;
-        this.estado = estado;
-        this.tenerParticipaciones = tenerParticipaciones;
->>>>>>> aaron
     }
 
     /**

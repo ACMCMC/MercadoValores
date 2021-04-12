@@ -1,4 +1,4 @@
-package gal.usc.mercadovalores.db;
+    package gal.usc.mercadovalores.db;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -12,16 +12,4 @@ public final class DAOUsuarioInversor extends DAO<UsuarioInversor> {
         super(con);
     }
 
-<<<<<<< HEAD
-=======
-    @Override
-    protected String getNombreTabla() {
-        return "usuario_inversor";
-    }
-
-    @Override
-    protected UsuarioInversor getTFromRS(ResultSet rs) throws SQLException {
-        return new UsuarioInversor(null, null, 0, null, null, null, null, null, null, null);
-    }
->>>>>>> aaron
 }

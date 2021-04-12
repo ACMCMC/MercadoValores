@@ -5,6 +5,12 @@
  */
 package gal.usc.mercadovalores.gui;
 import gal.usc.mercadovalores.aplicacion.FachadaAplicacion;
+import gal.usc.mercadovalores.aplicacion.Usuario;
+import gal.usc.mercadovalores.aplicacion.UsuarioRegulador;
+import gal.usc.mercadovalores.aplicacion.UsuarioEmpresa;
+import gal.usc.mercadovalores.aplicacion.UsuarioInversor;
+
+
 /**
  *
  * @author user
@@ -119,22 +125,22 @@ public class VAutentificacion extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void botonInicioSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonInicioSesionActionPerformed
-        
+        Usuario res = null;
         //comprobacion mediante dao de que es el adecuado
-        if(true){
+        if((res = fa.getUsuarioById(campoUsuario.getText(), this.campoContra.getText())) != null){
             //comprobamos si es el admin
-            if (campoUsuario.getText().equals("admin")) {
+            if (res instanceof UsuarioRegulador) {
                 //lanzamos ventana de admin
                 fa.iniciarAdmin();
-            }else{
-                //lanzamos ventana de usuario
+            }else if(res instanceof UsuarioEmpresa){
+                //lanzamos ventana de empresa
                 fa.iniciarEmpresa();
                 //ahora tenemos que diferenciar entre los inversores y las empresas
                 
                 //lanzamos ventana de inversor
-                fa.iniciarInversor();
 
-                //la ventana de empresa
+            }else if(res instanceof UsuarioInversor){
+                fa.iniciarInversor();
             }
         }
     }//GEN-LAST:event_botonInicioSesionActionPerformed

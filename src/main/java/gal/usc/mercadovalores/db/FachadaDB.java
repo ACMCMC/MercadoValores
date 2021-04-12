@@ -12,11 +12,10 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.Connection;
-<<<<<<< HEAD
 import java.util.Collection;
 import java.util.HashSet;
-=======
->>>>>>> aaron
+
+
 import java.util.Properties;
 import java.util.Set;
 
@@ -30,10 +29,8 @@ public class FachadaDB {
     private Connection conexion;
     private DAOUsuarioEmpresa daoUsuarioEmpresa;
     private DAOUsuarioInversor daoUsuarioInversor;
-<<<<<<< HEAD
     private DAOUsuarioRegulador daoUsuarioRegulador;
-=======
->>>>>>> aaron
+
 
     public static FachadaDB getFachada() {
         return fachada;
@@ -85,11 +82,7 @@ public class FachadaDB {
         set.addAll(getUsuariosInversores());
         return set;
     }
-<<<<<<< HEAD
-    
-=======
 
->>>>>>> aaron
     public Set<Usuario> getUsuarios() {
         Set<Usuario> set = new HashSet<>();
         set.addAll(getUsuariosDeMercado());
@@ -99,5 +92,31 @@ public class FachadaDB {
 
     public UsuarioRegulador getUsuarioRegulador() {
         return daoUsuarioRegulador.get();
+    }
+    
+    public Usuario obtenerUsuarioById(String id, String password){
+        Usuario res = null;
+        //si el id y contraseña son de regulador ::
+        if((res = daoUsuarioRegulador.get()) != null){
+            
+            //comprobamos los datos
+            if(res.getId().equals(id) && res.getClave().equals(password)){
+                            return res; 
+            }
+        //si son de una empresa
+        }
+        
+        if((res = daoUsuarioEmpresa.getById(id))!=null){
+            if(res.getClave().equals(password))
+            return res;
+        }
+        /*
+        if(res = daoUsuarioInversor.getByid(id,password)){
+            return res;
+        }else{
+            res = null;
+            return res;
+        }*/
+        return res;
     }
 }
