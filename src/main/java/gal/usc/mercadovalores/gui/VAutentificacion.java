@@ -54,6 +54,8 @@ public class VAutentificacion extends javax.swing.JDialog {
         botonAtras = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Iniciar Sesion");
+        setResizable(false);
 
         jLabel1.setText("MercadoValores");
 
@@ -62,7 +64,7 @@ public class VAutentificacion extends javax.swing.JDialog {
         jLabel3.setText("Contraseña:");
 
         botonInicioSesion.setText("Iniciar Sesión");
-        botonInicioSesion.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        botonInicioSesion.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         botonInicioSesion.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 botonInicioSesionActionPerformed(evt);
@@ -70,7 +72,7 @@ public class VAutentificacion extends javax.swing.JDialog {
         });
 
         botonAtras.setText("Volver Atrás");
-        botonAtras.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        botonAtras.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         botonAtras.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 botonAtrasMouseClicked(evt);

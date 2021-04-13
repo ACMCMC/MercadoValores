@@ -5,6 +5,7 @@
  */
 package gal.usc.mercadovalores.gui;
 import gal.usc.mercadovalores.aplicacion.UsuarioRegulador;
+import gal.usc.mercadovalores.aplicacion.FachadaAplicacion;
 
 
 /**
@@ -13,12 +14,14 @@ import gal.usc.mercadovalores.aplicacion.UsuarioRegulador;
  */
 public class VPrincipalAdmin extends javax.swing.JFrame {
     private UsuarioRegulador usr;
+    private FachadaAplicacion fa;
     /**
      * Creates new form VPrincipalAdmin
      * @param usr
      */
-    public VPrincipalAdmin(UsuarioRegulador usr) {
+    public VPrincipalAdmin(UsuarioRegulador usr, FachadaAplicacion fa) {
         this.usr = usr;
+        this.fa = fa;
         initComponents();
     }
 
@@ -46,6 +49,7 @@ public class VPrincipalAdmin extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Regulador");
+        setResizable(false);
 
         SalirBoton.setText("Salir");
 

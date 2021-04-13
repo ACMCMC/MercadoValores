@@ -5,6 +5,7 @@
  */
 package gal.usc.mercadovalores.gui;
 import gal.usc.mercadovalores.aplicacion.UsuarioEmpresa;
+import gal.usc.mercadovalores.aplicacion.FachadaAplicacion;
 
 /**
  *
@@ -12,14 +13,16 @@ import gal.usc.mercadovalores.aplicacion.UsuarioEmpresa;
  */
 public class VPrincipalEmpresa extends javax.swing.JFrame {
     private UsuarioEmpresa usr;
+    private FachadaAplicacion fa;
     /**
      * Creates new form VPrincipalMercado
      * @param usr
      */
-    public VPrincipalEmpresa(UsuarioEmpresa usr) {
+    public VPrincipalEmpresa(UsuarioEmpresa usr, FachadaAplicacion fa) {
         initComponents();
         this.usr = usr;
         this.ActualizarTablaDatos();
+        this.fa = fa;
     }
 
     /**
@@ -35,6 +38,7 @@ public class VPrincipalEmpresa extends javax.swing.JFrame {
         TablaDatos = new javax.swing.JTable();
         SalirBoton = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
+        BotonCerrarSesion = new javax.swing.JButton();
         Menu = new javax.swing.JMenuBar();
         CuentaMenu = new javax.swing.JMenu();
         ModificarMenuItem = new javax.swing.JMenuItem();
@@ -52,6 +56,7 @@ public class VPrincipalEmpresa extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Ventana  Empresa");
+        setResizable(false);
 
         TablaDatos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -66,16 +71,37 @@ public class VPrincipalEmpresa extends javax.swing.JFrame {
                 {"Participaciones creadas", null}
             },
             new String [] {
-                "Title 1", "Title 2"
+                "", ""
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        TablaDatos.setAutoscrolls(false);
         TablaDatos.setCellSelectionEnabled(true);
         TablaDatos.setTableHeader(null);
         jScrollPane2.setViewportView(TablaDatos);
 
         SalirBoton.setText("Salir");
+        SalirBoton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SalirBotonActionPerformed(evt);
+            }
+        });
 
-        jLabel1.setText("Información del usuario:");
+        jLabel1.setText("Información de la empresa:");
+
+        BotonCerrarSesion.setText("Cerrar Sesión");
+        BotonCerrarSesion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BotonCerrarSesionActionPerformed(evt);
+            }
+        });
 
         CuentaMenu.setText("Cuenta");
 
@@ -133,28 +159,29 @@ public class VPrincipalEmpresa extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(SalirBoton, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(33, 33, 33)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 345, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 258, Short.MAX_VALUE)))
-                .addContainerGap())
+                        .addComponent(BotonCerrarSesion)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(SalirBoton, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jLabel1)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 345, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(33, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(12, 12, 12)
+                .addGap(24, 24, 24)
                 .addComponent(jLabel1)
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 65, Short.MAX_VALUE)
-                .addComponent(SalirBoton)
-                .addContainerGap())
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(SalirBoton)
+                    .addComponent(BotonCerrarSesion))
+                .addGap(24, 24, 24))
         );
 
         pack();
@@ -163,6 +190,15 @@ public class VPrincipalEmpresa extends javax.swing.JFrame {
     private void AltaParticipacionMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AltaParticipacionMenuItemActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_AltaParticipacionMenuItemActionPerformed
+
+    //salimos de la aplicacion
+    private void SalirBotonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SalirBotonActionPerformed
+        System.exit(0);
+    }//GEN-LAST:event_SalirBotonActionPerformed
+
+    private void BotonCerrarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonCerrarSesionActionPerformed
+        this.fa.cerrarSesion(this);
+    }//GEN-LAST:event_BotonCerrarSesionActionPerformed
 
     private void ActualizarTablaDatos(){
         this.TablaDatos.setValueAt(usr.getId(), 0, 1);
@@ -182,6 +218,7 @@ public class VPrincipalEmpresa extends javax.swing.JFrame {
     private javax.swing.JMenuItem BajaParticipacionMenuItem;
     private javax.swing.JMenuItem BajaVentaMenuItem;
     private javax.swing.JMenu BeneficiosMenu;
+    private javax.swing.JButton BotonCerrarSesion;
     private javax.swing.JMenuItem ComprarMenuItem;
     private javax.swing.JMenu CuentaMenu;
     private javax.swing.JMenuBar Menu;

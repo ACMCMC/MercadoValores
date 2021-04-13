@@ -56,4 +56,8 @@ public class FachadaAplicacion {
     public Usuario getUsuarioById(String id, String password){
         return FachadaDB.getFachada().obtenerUsuarioById(id, password);
     }
+    
+    public void cerrarSesion(javax.swing.JFrame frame){
+        this.fgui.cerrarSesion(frame);
+    }
 }

@@ -47,7 +47,7 @@ public class FachadaGUI {
         // ya no necesitamos la ventana de inicio
         this.vi.dispose();
         // iniciamos la vista de administrador
-        this.vadmin = new VPrincipalAdmin(usr);
+        this.vadmin = new VPrincipalAdmin(usr, fa);
         vadmin.setVisible(true);
     }
 
@@ -55,7 +55,7 @@ public class FachadaGUI {
         // ya no necesitamos la ventana de inicio
         this.vi.dispose();
         // iniciamos la vista de usuario de mercado
-        this.vinversor = new VPrincipalInversor(usr);
+        this.vinversor = new VPrincipalInversor(usr,fa);
         vinversor.setVisible(true);
     }
 
@@ -63,9 +63,13 @@ public class FachadaGUI {
         //ya no necesitamos la ventana de inicio
         this.vi.dispose();
         //iniciamos la vista de empresa
-        this.vempresa = new VPrincipalEmpresa(usr);
+        this.vempresa = new VPrincipalEmpresa(usr, fa);
         vempresa.setVisible(true);
-
-
+    }
+    
+    public void cerrarSesion(javax.swing.JFrame frame){
+        frame.dispose();
+        this.vi = new VInicio(this.fa);        
+        vi.setVisible(true);
     }
 }
