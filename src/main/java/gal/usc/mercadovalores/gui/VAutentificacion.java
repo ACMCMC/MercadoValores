@@ -132,16 +132,15 @@ public class VAutentificacion extends javax.swing.JDialog {
             //comprobamos si es el admin
             if (res instanceof UsuarioRegulador) {
                 //lanzamos ventana de admin
-                fa.iniciarAdmin();
+                fa.iniciarAdmin((UsuarioRegulador) res);
             }else if(res instanceof UsuarioEmpresa){
                 //lanzamos ventana de empresa
                 fa.iniciarEmpresa((UsuarioEmpresa)res);
                 //ahora tenemos que diferenciar entre los inversores y las empresas
 
                 //lanzamos ventana de inversor
-
             }else if(res instanceof UsuarioInversor){
-                fa.iniciarInversor();
+                fa.iniciarInversor((UsuarioInversor) res);
             }
         }
     }//GEN-LAST:event_botonInicioSesionActionPerformed

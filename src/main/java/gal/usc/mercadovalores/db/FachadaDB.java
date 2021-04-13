@@ -107,6 +107,11 @@ public class FachadaDB {
             }
         }
 
+        res = daoUsuarioInversor.getById(id);
+        if(res!=null){
+            return res;
+        }
+        
         //si el id y contraseña son de regulador
         res = daoUsuarioRegulador.get();
         if(res != null){
@@ -115,16 +120,10 @@ public class FachadaDB {
             if(res.getId().equals(id) && res.getClave().equals(password)){
                 return res;
             }
-        }
-
-
-        /*
-        if(res = daoUsuarioInversor.getByid(id,password)){
-            return res;
         }else{
             res = null;
             return res;
-        }*/
+        }
         return res;
     }
 }

@@ -4,18 +4,25 @@
  * and open the template in the editor.
  */
 package gal.usc.mercadovalores.gui;
+import gal.usc.mercadovalores.aplicacion.UsuarioInversor;
+
 
 /**
  *
  * @author icaro
  */
 public class VPrincipalInversor extends javax.swing.JFrame {
-
+    private UsuarioInversor usr;
+    
     /**
      * Creates new form VPrincipalMercado
+     * 
+     * @param usr
      */
-    public VPrincipalInversor() {
+    public VPrincipalInversor(UsuarioInversor usr) {
+        this.usr = usr;
         initComponents();
+        this.ActualizarTablaDatos();
     }
 
     /**
@@ -126,6 +133,12 @@ public class VPrincipalInversor extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void ActualizarTablaDatos(){
+        this.TablaDatos.setValueAt(usr.getId(), 0, 1);
+        this.TablaDatos.setValueAt(usr.getSaldo(), 1, 1);
+        this.TablaDatos.setValueAt(usr.getDireccion(), 2, 1);
+        this.TablaDatos.setValueAt(usr.getTelefono(), 3, 1);
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem BajaMenuItem;

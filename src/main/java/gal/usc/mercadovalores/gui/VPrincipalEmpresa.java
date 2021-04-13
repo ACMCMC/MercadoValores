@@ -14,6 +14,7 @@ public class VPrincipalEmpresa extends javax.swing.JFrame {
     private UsuarioEmpresa usr;
     /**
      * Creates new form VPrincipalMercado
+     * @param usr
      */
     public VPrincipalEmpresa(UsuarioEmpresa usr) {
         initComponents();

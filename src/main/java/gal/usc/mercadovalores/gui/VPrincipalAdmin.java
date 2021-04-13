@@ -4,17 +4,21 @@
  * and open the template in the editor.
  */
 package gal.usc.mercadovalores.gui;
+import gal.usc.mercadovalores.aplicacion.UsuarioRegulador;
+
 
 /**
  *
  * @author user
  */
 public class VPrincipalAdmin extends javax.swing.JFrame {
-
+    private UsuarioRegulador usr;
     /**
      * Creates new form VPrincipalAdmin
+     * @param usr
      */
-    public VPrincipalAdmin() {
+    public VPrincipalAdmin(UsuarioRegulador usr) {
+        this.usr = usr;
         initComponents();
     }
 

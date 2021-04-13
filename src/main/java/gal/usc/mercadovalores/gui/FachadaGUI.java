@@ -6,6 +6,9 @@
 package gal.usc.mercadovalores.gui;
 import gal.usc.mercadovalores.aplicacion.FachadaAplicacion;
 import gal.usc.mercadovalores.aplicacion.UsuarioEmpresa;
+import gal.usc.mercadovalores.aplicacion.UsuarioInversor;
+import gal.usc.mercadovalores.aplicacion.UsuarioRegulador;
+
 
 /**
  *
@@ -40,19 +43,19 @@ public class FachadaGUI {
     }
 
     // aplicacion de admin (regulador de mercado)
-    public void iniciarAdmin() {
+    public void iniciarAdmin(UsuarioRegulador usr) {
         // ya no necesitamos la ventana de inicio
         this.vi.dispose();
         // iniciamos la vista de administrador
-        this.vadmin = new VPrincipalAdmin();
+        this.vadmin = new VPrincipalAdmin(usr);
         vadmin.setVisible(true);
     }
 
-    public void iniciarInversor() {
+    public void iniciarInversor(UsuarioInversor usr) {
         // ya no necesitamos la ventana de inicio
         this.vi.dispose();
         // iniciamos la vista de usuario de mercado
-        this.vinversor = new VPrincipalInversor();
+        this.vinversor = new VPrincipalInversor(usr);
         vinversor.setVisible(true);
     }
 
