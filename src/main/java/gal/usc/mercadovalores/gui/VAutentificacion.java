@@ -125,16 +125,17 @@ public class VAutentificacion extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void botonInicioSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonInicioSesionActionPerformed
-        Usuario res = null;
+        Usuario res;
+        res = fa.getUsuarioById(campoUsuario.getText(), this.campoContra.getText());
         //comprobacion mediante dao de que es el adecuado
-        if((res = fa.getUsuarioById(campoUsuario.getText(), this.campoContra.getText())) != null){
+            if(res != null){
             //comprobamos si es el admin
             if (res instanceof UsuarioRegulador) {
                 //lanzamos ventana de admin
                 fa.iniciarAdmin();
             }else if(res instanceof UsuarioEmpresa){
                 //lanzamos ventana de empresa
-                fa.iniciarEmpresa();
+                fa.iniciarEmpresa((UsuarioEmpresa)res);
                 //ahora tenemos que diferenciar entre los inversores y las empresas
                 
                 //lanzamos ventana de inversor

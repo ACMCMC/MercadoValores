@@ -4,18 +4,21 @@
  * and open the template in the editor.
  */
 package gal.usc.mercadovalores.gui;
+import gal.usc.mercadovalores.aplicacion.UsuarioEmpresa;
 
 /**
  *
  * @author icaro
  */
 public class VPrincipalEmpresa extends javax.swing.JFrame {
-
+    private UsuarioEmpresa usr;
     /**
      * Creates new form VPrincipalMercado
      */
-    public VPrincipalEmpresa() {
+    public VPrincipalEmpresa(UsuarioEmpresa usr) {
         initComponents();
+        this.usr = usr;
+        this.ActualizarTablaDatos();
     }
 
     /**
@@ -51,7 +54,7 @@ public class VPrincipalEmpresa extends javax.swing.JFrame {
 
         TablaDatos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {"ID", null},
+                {"ID", ""},
                 {"Saldo", null},
                 {"Direccion", null},
                 {"Telefono", null},
@@ -160,6 +163,15 @@ public class VPrincipalEmpresa extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_AltaParticipacionMenuItemActionPerformed
 
+    private void ActualizarTablaDatos(){
+        this.TablaDatos.setValueAt(usr.getId(), 0, 1);
+        this.TablaDatos.setValueAt(usr.getSaldo(), 1, 1);
+        this.TablaDatos.setValueAt(usr.getDireccion(), 2, 1);
+        this.TablaDatos.setValueAt(usr.getTelefono(), 3, 1);
+        this.TablaDatos.setValueAt(usr.getCif(), 4, 1);
+        this.TablaDatos.setValueAt(usr.getNombreComercial(), 5, 1);
+        this.TablaDatos.setValueAt(usr.getImporteBloqueado(), 6, 1);
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem AltaPagoMenuItem;

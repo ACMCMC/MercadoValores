@@ -163,7 +163,17 @@
                   <Data value="Participaciones "/>
                   <Data value="Participaciones creadas"/>
                 </Column>
-                <Column editable="true" title="Title 2" type="java.lang.Object"/>
+                <Column editable="true" title="Title 2" type="java.lang.Object">
+                  <Data value=""/>
+                  <Data value="null"/>
+                  <Data value="null"/>
+                  <Data value="null"/>
+                  <Data value="null"/>
+                  <Data value="null"/>
+                  <Data value="null"/>
+                  <Data value="null"/>
+                  <Data value="null"/>
+                </Column>
               </Table>
             </Property>
             <Property name="cellSelectionEnabled" type="boolean" value="true"/>

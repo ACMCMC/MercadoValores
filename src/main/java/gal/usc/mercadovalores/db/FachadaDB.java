@@ -96,20 +96,28 @@ public class FachadaDB {
     
     public Usuario obtenerUsuarioById(String id, String password){
         Usuario res = null;
-        //si el id y contraseña son de regulador ::
-        if((res = daoUsuarioRegulador.get()) != null){
+        
+        //si son de una empresa
+        res = daoUsuarioEmpresa.getById(id);
+        if(res!= null){
+        
+            //comprobamos que la clave coincida
+            if(res.getClave().equals(password)){
+                return res;
+            }
+        }
+        
+        //si el id y contraseña son de regulador 
+        res = daoUsuarioRegulador.get();
+        if(res != null){
             
             //comprobamos los datos
             if(res.getId().equals(id) && res.getClave().equals(password)){
-                            return res; 
+                return res; 
             }
-        //si son de una empresa
         }
         
-        if((res = daoUsuarioEmpresa.getById(id))!=null){
-            if(res.getClave().equals(password))
-            return res;
-        }
+
         /*
         if(res = daoUsuarioInversor.getByid(id,password)){
             return res;
