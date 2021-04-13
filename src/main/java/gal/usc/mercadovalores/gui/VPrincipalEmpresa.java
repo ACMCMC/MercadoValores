@@ -4,18 +4,21 @@
  * and open the template in the editor.
  */
 package gal.usc.mercadovalores.gui;
+import gal.usc.mercadovalores.aplicacion.UsuarioEmpresa;
 
 /**
  *
  * @author icaro
  */
 public class VPrincipalEmpresa extends javax.swing.JFrame {
-
+    private UsuarioEmpresa usr;
     /**
      * Creates new form VPrincipalMercado
      */
-    public VPrincipalEmpresa() {
+    public VPrincipalEmpresa(UsuarioEmpresa usr) {
         initComponents();
+        this.usr = usr;
+        this.ActualizarTablaDatos();
     }
 
     /**
@@ -51,7 +54,7 @@ public class VPrincipalEmpresa extends javax.swing.JFrame {
 
         TablaDatos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {"ID", null},
+                {"ID", ""},
                 {"Saldo", null},
                 {"Direccion", null},
                 {"Telefono", null},
@@ -136,19 +139,19 @@ public class VPrincipalEmpresa extends javax.swing.JFrame {
                         .addComponent(SalirBoton, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 345, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel1))
+                            .addComponent(jLabel1)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 345, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(0, 258, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(12, 12, 12)
                 .addComponent(jLabel1)
-                .addGap(13, 13, 13)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 53, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 65, Short.MAX_VALUE)
                 .addComponent(SalirBoton)
                 .addContainerGap())
         );
@@ -160,6 +163,15 @@ public class VPrincipalEmpresa extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_AltaParticipacionMenuItemActionPerformed
 
+    private void ActualizarTablaDatos(){
+        this.TablaDatos.setValueAt(usr.getId(), 0, 1);
+        this.TablaDatos.setValueAt(usr.getSaldo(), 1, 1);
+        this.TablaDatos.setValueAt(usr.getDireccion(), 2, 1);
+        this.TablaDatos.setValueAt(usr.getTelefono(), 3, 1);
+        this.TablaDatos.setValueAt(usr.getCif(), 4, 1);
+        this.TablaDatos.setValueAt(usr.getNombreComercial(), 5, 1);
+        this.TablaDatos.setValueAt(usr.getImporteBloqueado(), 6, 1);
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem AltaPagoMenuItem;

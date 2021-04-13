@@ -20,7 +20,7 @@ public class FachadaAplicacion {
     public FachadaAplicacion() {
         this.fgui = new FachadaGUI(this);
     }
-    
+
     public static void main(String args[]){
         FachadaAplicacion fa;
         fa= new FachadaAplicacion();
@@ -28,28 +28,32 @@ public class FachadaAplicacion {
 
         Set<UsuarioEmpresa> s = FachadaDB.getFachada().getUsuariosEmpresa();
     }
-    
+
     public void iniciarAplicacion(){
         this.fgui.iniciarAplicacion();
     }
-    
+
     public void iniciarSesion(){
         this.fgui.iniciarSesion();
     }
-    
+
     public void iniciarAdmin(){
         this.fgui.iniciarAdmin();
     }
-    
+
     public void iniciarInversor(){
         this.fgui.iniciarInversor();
     }
-    
-    public void iniciarEmpresa(){
-        this.fgui.iniciarEmpresa();
+
+    public void iniciarEmpresa(UsuarioEmpresa usr){
+        this.fgui.iniciarEmpresa(usr);
     }
-    
+
     public static void muestraExcepcion(Throwable t) {
         FachadaGUI.muestraExcepcion(t);
+    }
+
+    public Usuario getUsuarioById(String id, String password){
+        return FachadaDB.getFachada().obtenerUsuarioById(id, password);
     }
 }

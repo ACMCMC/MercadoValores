@@ -5,6 +5,12 @@
  */
 package gal.usc.mercadovalores.gui;
 import gal.usc.mercadovalores.aplicacion.FachadaAplicacion;
+import gal.usc.mercadovalores.aplicacion.Usuario;
+import gal.usc.mercadovalores.aplicacion.UsuarioRegulador;
+import gal.usc.mercadovalores.aplicacion.UsuarioEmpresa;
+import gal.usc.mercadovalores.aplicacion.UsuarioInversor;
+
+
 /**
  *
  * @author user
@@ -13,7 +19,7 @@ public class VAutentificacion extends javax.swing.JDialog {
 
     private FachadaAplicacion fa;
 
-    
+
     /**
      * Creates new form VAutentificacion
      */
@@ -21,7 +27,7 @@ public class VAutentificacion extends javax.swing.JDialog {
         super(parent, modal);
         this.fa = fa;
         initComponents();
-        
+
         this.addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
             public void windowClosing(java.awt.event.WindowEvent e) {
@@ -119,22 +125,23 @@ public class VAutentificacion extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void botonInicioSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonInicioSesionActionPerformed
-        
+        Usuario res;
+        res = fa.getUsuarioById(campoUsuario.getText(), this.campoContra.getText());
         //comprobacion mediante dao de que es el adecuado
-        if(true){
+            if(res != null){
             //comprobamos si es el admin
-            if (campoUsuario.getText().equals("admin")) {
+            if (res instanceof UsuarioRegulador) {
                 //lanzamos ventana de admin
                 fa.iniciarAdmin();
-            }else{
-                //lanzamos ventana de usuario
-                fa.iniciarEmpresa();
+            }else if(res instanceof UsuarioEmpresa){
+                //lanzamos ventana de empresa
+                fa.iniciarEmpresa((UsuarioEmpresa)res);
                 //ahora tenemos que diferenciar entre los inversores y las empresas
-                
-                //lanzamos ventana de inversor
-                fa.iniciarInversor();
 
-                //la ventana de empresa
+                //lanzamos ventana de inversor
+
+            }else if(res instanceof UsuarioInversor){
+                fa.iniciarInversor();
             }
         }
     }//GEN-LAST:event_botonInicioSesionActionPerformed
@@ -142,7 +149,7 @@ public class VAutentificacion extends javax.swing.JDialog {
     private void botonAtrasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_botonAtrasMouseClicked
         // TODO add your handling code here:
         this.dispose();
-        
+
     }//GEN-LAST:event_botonAtrasMouseClicked
 
     /**

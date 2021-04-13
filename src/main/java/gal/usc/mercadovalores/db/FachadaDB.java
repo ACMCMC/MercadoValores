@@ -14,6 +14,8 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.util.Collection;
 import java.util.HashSet;
+
+
 import java.util.Properties;
 import java.util.Set;
 
@@ -28,6 +30,7 @@ public class FachadaDB {
     private DAOUsuarioEmpresa daoUsuarioEmpresa;
     private DAOUsuarioInversor daoUsuarioInversor;
     private DAOUsuarioRegulador daoUsuarioRegulador;
+
 
     public static FachadaDB getFachada() {
         return fachada;
@@ -79,7 +82,7 @@ public class FachadaDB {
         set.addAll(getUsuariosInversores());
         return set;
     }
-    
+
     public Set<Usuario> getUsuarios() {
         Set<Usuario> set = new HashSet<>();
         set.addAll(getUsuariosDeMercado());
@@ -89,5 +92,39 @@ public class FachadaDB {
 
     public UsuarioRegulador getUsuarioRegulador() {
         return daoUsuarioRegulador.get();
+    }
+
+    public Usuario obtenerUsuarioById(String id, String password){
+        Usuario res = null;
+
+        //si son de una empresa
+        res = daoUsuarioEmpresa.getById(id);
+        if(res!= null){
+
+            //comprobamos que la clave coincida
+            if(res.getClave().equals(password)){
+                return res;
+            }
+        }
+
+        //si el id y contraseña son de regulador
+        res = daoUsuarioRegulador.get();
+        if(res != null){
+
+            //comprobamos los datos
+            if(res.getId().equals(id) && res.getClave().equals(password)){
+                return res;
+            }
+        }
+
+
+        /*
+        if(res = daoUsuarioInversor.getByid(id,password)){
+            return res;
+        }else{
+            res = null;
+            return res;
+        }*/
+        return res;
     }
 }

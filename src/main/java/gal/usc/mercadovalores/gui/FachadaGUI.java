@@ -5,9 +5,7 @@
  */
 package gal.usc.mercadovalores.gui;
 import gal.usc.mercadovalores.aplicacion.FachadaAplicacion;
-
-
-import gal.usc.mercadovalores.aplicacion.FachadaAplicacion;
+import gal.usc.mercadovalores.aplicacion.UsuarioEmpresa;
 
 /**
  *
@@ -57,16 +55,14 @@ public class FachadaGUI {
         this.vinversor = new VPrincipalInversor();
         vinversor.setVisible(true);
     }
-    
-    public void iniciarEmpresa(){
+
+    public void iniciarEmpresa(UsuarioEmpresa usr){
         //ya no necesitamos la ventana de inicio
         this.vi.dispose();
-        //iniciamos la vista de usuario de mercado
-        this.vempresa = new VPrincipalEmpresa();
+        //iniciamos la vista de empresa
+        this.vempresa = new VPrincipalEmpresa(usr);
         vempresa.setVisible(true);
-        this.vi.dispose();
-        // iniciamos la vista de usuario de mercado
-        this.vinversor = new VPrincipalInversor();
-        vinversor.setVisible(true);
+
+
     }
 }

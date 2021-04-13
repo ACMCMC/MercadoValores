@@ -15,7 +15,7 @@ public final class DAOUsuarioInversor extends DAO<UsuarioInversor> {
     public DAOUsuarioInversor(Connection con) {
         super(con);
     }
-    
+
     public UsuarioInversor getById(String idToGet) {
 		UsuarioInversor usuario = null;
 
