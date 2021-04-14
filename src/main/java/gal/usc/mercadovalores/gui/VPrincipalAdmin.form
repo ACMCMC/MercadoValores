@@ -32,6 +32,9 @@
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="3"/>
     <Property name="title" type="java.lang.String" value="Regulador"/>
+    <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+      <Color blue="42" green="2d" red="2b" type="rgb"/>
+    </Property>
     <Property name="resizable" type="boolean" value="false"/>
   </Properties>
   <SyntheticProperties>
@@ -55,53 +58,46 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="33" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="BajaPagosBoton" max="32767" attributes="0"/>
-                  <Group type="102" alignment="1" attributes="0">
-                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                      <Component id="SalirBoton" min="-2" pref="67" max="-2" attributes="0"/>
-                  </Group>
                   <Group type="102" alignment="0" attributes="0">
                       <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
-                              <Component id="ComisionNuevaTexto" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Component id="NuevaComisionCaja" max="32767" attributes="0"/>
-                          </Group>
-                          <Group type="102" attributes="0">
-                              <Component id="ComisionActualTexto" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Component id="ComisionActualCajaTexto" min="-2" pref="70" max="-2" attributes="0"/>
-                          </Group>
+                          <Component id="NuevaComisionBoton" alignment="0" max="32767" attributes="0"/>
+                          <Component id="ComisionActualTexto" alignment="0" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Component id="NuevaComisionBoton" pref="119" max="32767" attributes="0"/>
+                      <Component id="ComisionActualCajaTexto" min="-2" pref="90" max="-2" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="1" attributes="0">
+                      <Group type="103" groupAlignment="1" attributes="0">
+                          <Component id="BajaPagosBoton" alignment="0" pref="311" max="32767" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                              <Component id="SalirBoton" min="-2" pref="80" max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
+                      <EmptySpace min="-2" pref="33" max="-2" attributes="0"/>
                   </Group>
               </Group>
-              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="1" attributes="0">
-              <EmptySpace min="-2" pref="11" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="ComisionActualTexto" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="ComisionActualCajaTexto" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace type="separate" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="ComisionNuevaTexto" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="NuevaComisionCaja" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="NuevaComisionBoton" alignment="3" min="-2" max="-2" attributes="0"/>
-              </Group>
-              <EmptySpace type="separate" max="-2" attributes="0"/>
-              <Component id="BajaPagosBoton" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="87" max="32767" attributes="0"/>
-              <Component id="SalirBoton" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
+              <Component id="NuevaComisionBoton" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
+              <Component id="BajaPagosBoton" min="-2" max="-2" attributes="0"/>
+              <EmptySpace pref="136" max="32767" attributes="0"/>
+              <Component id="SalirBoton" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -111,6 +107,9 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Salir"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="SalirBotonActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JTextField" name="ComisionActualCajaTexto">
     </Component>
@@ -121,15 +120,8 @@
     </Component>
     <Component class="javax.swing.JLabel" name="ComisionActualTexto">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Valor de comisi&#xf3;n compra/venta actual:"/>
+        <Property name="text" type="java.lang.String" value="Comisi&#xf3;n actual:"/>
       </Properties>
-    </Component>
-    <Component class="javax.swing.JLabel" name="ComisionNuevaTexto">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Establecer nuevo valor de comisi&#xf3;n:"/>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JTextField" name="NuevaComisionCaja">
     </Component>
     <Component class="javax.swing.JButton" name="BajaPagosBoton">
       <Properties>

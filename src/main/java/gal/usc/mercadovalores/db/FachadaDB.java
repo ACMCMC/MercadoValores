@@ -123,10 +123,9 @@ public class FachadaDB {
             if(res.getClave().equals(password)){
                 return res;
             }
-        }else{
-            res = null;
-            return res;
         }
+        
+        res = null;
         return res;
     }
 }

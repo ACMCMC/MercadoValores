@@ -41,6 +41,7 @@ public class VPrincipalInversor extends javax.swing.JFrame {
         TablaDatos = new javax.swing.JTable();
         SalirBoton = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
+        CerrarSesionBoton = new javax.swing.JButton();
         Menu = new javax.swing.JMenuBar();
         CuentaMenu = new javax.swing.JMenu();
         ModificarMenuItem = new javax.swing.JMenuItem();
@@ -91,6 +92,13 @@ public class VPrincipalInversor extends javax.swing.JFrame {
 
         jLabel1.setText("Información del inversor:");
 
+        CerrarSesionBoton.setText("Cerrar Sesión");
+        CerrarSesionBoton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CerrarSesionBotonActionPerformed(evt);
+            }
+        });
+
         CuentaMenu.setText("Cuenta");
 
         ModificarMenuItem.setText("Modificar Datos");
@@ -123,8 +131,11 @@ public class VPrincipalInversor extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(33, 33, 33)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(SalirBoton, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(CerrarSesionBoton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(SalirBoton, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addComponent(jLabel1)
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 345, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -136,9 +147,11 @@ public class VPrincipalInversor extends javax.swing.JFrame {
                 .addGap(24, 24, 24)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 80, Short.MAX_VALUE)
-                .addComponent(SalirBoton)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 96, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(SalirBoton)
+                    .addComponent(CerrarSesionBoton))
                 .addGap(24, 24, 24))
         );
 
@@ -150,6 +163,10 @@ public class VPrincipalInversor extends javax.swing.JFrame {
         System.exit(0);
     }//GEN-LAST:event_SalirBotonActionPerformed
 
+    private void CerrarSesionBotonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CerrarSesionBotonActionPerformed
+        fa.cerrarSesion(this);
+    }//GEN-LAST:event_CerrarSesionBotonActionPerformed
+
     private void ActualizarTablaDatos(){
         this.TablaDatos.setValueAt(usr.getId(), 0, 1);
         this.TablaDatos.setValueAt(usr.getSaldo(), 1, 1);
@@ -160,6 +177,7 @@ public class VPrincipalInversor extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem BajaMenuItem;
     private javax.swing.JMenuItem BajaVentaMenuItem;
+    private javax.swing.JButton CerrarSesionBoton;
     private javax.swing.JMenuItem ComprarMenuItem;
     private javax.swing.JMenu CuentaMenu;
     private javax.swing.JMenuBar Menu;
