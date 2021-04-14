@@ -90,4 +90,14 @@ public class FachadaDB {
     public UsuarioRegulador getUsuarioRegulador() {
         return daoUsuarioRegulador.get();
     }
+
+    public void add(Usuario u) {
+        if (u instanceof UsuarioEmpresa) {
+            daoUsuarioEmpresa.add((UsuarioEmpresa) u);
+        } else if (u instanceof UsuarioDeMercado) {
+
+        } else {
+            throw new IllegalArgumentException("No se acepta el tipo de usuario seleccionado");
+        }
+    }
 }
