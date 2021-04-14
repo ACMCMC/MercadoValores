@@ -62,7 +62,7 @@ public class FachadaDB {
         } catch (java.sql.SQLException e) {
             FachadaAplicacion.muestraExcepcion(e);
         }
-
+        daoUsuarioRegulador = new DAOUsuarioRegulador(conexion);
         daoUsuarioEmpresa = new DAOUsuarioEmpresa(conexion);
         daoUsuarioInversor = new DAOUsuarioInversor(conexion);
     }
@@ -109,15 +109,18 @@ public class FachadaDB {
 
         res = daoUsuarioInversor.getById(id);
         if(res!=null){
-            return res;
+            
+            if(res.getClave().equals(password)){
+                return res;
+            }
         }
         
         //si el id y contraseña son de regulador
-        res = daoUsuarioRegulador.get();
+        res = daoUsuarioRegulador.getById(id);
         if(res != null){
 
             //comprobamos los datos
-            if(res.getId().equals(id) && res.getClave().equals(password)){
+            if(res.getClave().equals(password)){
                 return res;
             }
         }else{
