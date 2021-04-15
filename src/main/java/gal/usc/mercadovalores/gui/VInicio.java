@@ -5,7 +5,6 @@
  */
 package gal.usc.mercadovalores.gui;
 import gal.usc.mercadovalores.aplicacion.FachadaAplicacion;
-import javafx.scene.paint.Color;
 
 /**
  *
