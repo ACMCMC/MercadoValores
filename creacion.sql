@@ -75,6 +75,18 @@ CREATE TABLE anuncio_venta(
         	on update cascade
         	on delete cascade);
 
+CREATE FUNCTION comprueba_participaciones() RETURNS trigger AS $comprueba_participaciones$
+    BEGIN
+		 IF SUM (num_participaciones) + NEW.num_participaciones > tener_participaciones.num_participaciones THEN
+            		RAISE EXCEPTION 'El número de participaciones a la venta no puede exceder el total poseído';
+		 END IF;
+		 RETURN NEW;
+    END;
+$comprueba_participaciones$ LANGUAGE plpgsql;
+
+CREATE TRIGGER comprueba_participaciones BEFORE INSERT OR UPDATE ON anuncio_venta
+    FOR EACH ROW EXECUTE PROCEDURE comprueba_participaciones();
+
 -- Para obtener la tabla en la que se cumple la restricción la consulta sería:(No he comprobado que de datos correctos, solo se que se ejecuta)
 
 SELECT anuncio_venta.*
