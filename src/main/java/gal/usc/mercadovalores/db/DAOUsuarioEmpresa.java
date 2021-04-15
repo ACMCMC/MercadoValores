@@ -105,7 +105,6 @@ public final class DAOUsuarioEmpresa extends DAO<UsuarioEmpresa> {
 		return usuario;
 	}
 
-<<<<<<< HEAD
     public DAOUsuarioEmpresa(Connection con) {
         super(con);
     }
@@ -188,7 +187,4 @@ public final class DAOUsuarioEmpresa extends DAO<UsuarioEmpresa> {
 		}
 	}
 >>>>>>> a8098808bd520d7dc504ed4fe78cbc735f9049d8
-=======
-
->>>>>>> aaron
 }
