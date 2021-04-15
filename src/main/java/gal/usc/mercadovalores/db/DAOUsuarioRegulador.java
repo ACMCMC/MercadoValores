@@ -38,5 +38,28 @@ public final class DAOUsuarioRegulador extends DAO<UsuarioRegulador> {
 
         return regulador;
     }
-
+    
+    public void update(UsuarioRegulador user){
+        PreparedStatement preparedStatement = null;
+        try {
+			getConexion().setAutoCommit(false);
+			preparedStatement = getConexion().prepareStatement(
+					"update usuario_empresa set clave=?, saldo=?, comision_actual=? where id=?");
+			preparedStatement.setString(1, user.getClave());
+			preparedStatement.setDouble(2, user.getSaldo());
+			preparedStatement.setDouble(3, user.getComision_actual());
+			preparedStatement.setString(4, user.getId());
+			preparedStatement.executeUpdate();
+			preparedStatement.close();
+			getConexion().commit();
+		} catch (SQLException e) {
+			FachadaAplicacion.muestraExcepcion(e);
+		} finally {
+			try {
+				preparedStatement.close();
+			} catch (SQLException e) {
+				FachadaAplicacion.muestraExcepcion(e);
+			}
+		}
+    }
 }
