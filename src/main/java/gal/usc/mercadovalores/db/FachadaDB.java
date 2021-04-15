@@ -6,7 +6,7 @@
 package gal.usc.mercadovalores.db;
 
 import gal.usc.mercadovalores.aplicacion.*;
-import gal.usc.mercadovalores.gui.FachadaGUI;
+import gal.usc.mercadovalores.gui.*;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -14,8 +14,6 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.util.Collection;
 import java.util.HashSet;
-
-
 import java.util.Properties;
 import java.util.Set;
 
@@ -53,7 +51,8 @@ public class FachadaDB {
             usuario.setProperty("user", configuracion.getProperty("usuario"));
             usuario.setProperty("password", configuracion.getProperty("clave"));
             usuario.setProperty("ssl", "true");
-            String url = "jdbc:" + gestor + "://" + configuracion.getProperty("servidor") + ":" + configuracion.getProperty("puerto") + "/" + configuracion.getProperty("baseDatos");
+            String url = "jdbc:" + gestor + "://" + configuracion.getProperty("servidor") + ":"
+                    + configuracion.getProperty("puerto") + "/" + configuracion.getProperty("baseDatos");
             this.conexion = java.sql.DriverManager.getConnection(url, usuario);
         } catch (FileNotFoundException f) {
             FachadaAplicacion.muestraExcepcion(f);
@@ -94,38 +93,35 @@ public class FachadaDB {
         return daoUsuarioRegulador.get();
     }
 
-    public Usuario obtenerUsuarioById(String id, String password){
+    public Usuario getUsuarioById(String id) {
         Usuario res = null;
 
-        //si son de una empresa
+        // si son de una empresa
         res = daoUsuarioEmpresa.getById(id);
-        if(res!= null){
-
-            //comprobamos que la clave coincida
-            if(res.getClave().equals(password)){
-                return res;
-            }
+        if (res != null) {
+            return res;
         }
 
         res = daoUsuarioInversor.getById(id);
-        if(res!=null){
-            
-            if(res.getClave().equals(password)){
-                return res;
-            }
+        if (res != null) {
+            return res;
         }
-        
-        //si el id y contraseña son de regulador
-        res = daoUsuarioRegulador.getById(id);
-        if(res != null){
 
-            //comprobamos los datos
-            if(res.getClave().equals(password)){
-                return res;
-            }
+        // si el id y contraseña son de regulador
+        res = daoUsuarioRegulador.getById(id);
+        if (res != null) {
+            return res;
         }
-        
-        res = null;
         return res;
+    }
+
+    public void add(Usuario u) {
+        if (u instanceof UsuarioEmpresa) {
+            daoUsuarioEmpresa.add((UsuarioEmpresa) u);
+        } else if (u instanceof UsuarioDeMercado) {
+
+        } else {
+            throw new IllegalArgumentException("No se acepta el tipo de usuario seleccionado");
+        }
     }
 }

@@ -73,6 +73,7 @@ public final class DAOUsuarioEmpresa extends DAO<UsuarioEmpresa> {
 					.prepareStatement("select * from usuario_empresa inner join usuario_mercado using(id) where id=?");
 			preparedStatement.setString(1, idToGet);
 			resultSet = preparedStatement.executeQuery();
+			getConexion().commit();
 			if (resultSet.next()) {
 				try {
 					String id = resultSet.getString("id");
@@ -104,5 +105,90 @@ public final class DAOUsuarioEmpresa extends DAO<UsuarioEmpresa> {
 		return usuario;
 	}
 
+<<<<<<< HEAD
+    public DAOUsuarioEmpresa(Connection con) {
+        super(con);
+    }
 
+    @Override
+    protected String getNombreTabla() {
+        return "usuario_empresa";
+    }
+
+    @Override
+    protected UsuarioEmpresa getTFromRS(ResultSet rs) throws SQLException {
+        return new UsuarioEmpresa(null, null, 0, null, null, null, null, null, null, 0, null);
+    }
+
+	public void update(UsuarioEmpresa u) {
+		PreparedStatement preparedStatement = null;
+
+		try {
+			getConexion().setAutoCommit(false);
+			preparedStatement = getConexion().prepareStatement(
+					"update usuario_empresa set cif=?, nombre_comercial=?, importe_bloqueado=? where id=?");
+			preparedStatement.setString(1, u.getCif());
+			preparedStatement.setString(2, u.getNombreComercial());
+			preparedStatement.setDouble(3, u.getImporteBloqueado());
+			preparedStatement.setString(4, u.getId());
+			preparedStatement.executeUpdate();
+			preparedStatement.close();
+			preparedStatement = getConexion().prepareStatement(
+					"update usuario_mercado set clave=?, saldo=?, direccion=?, telefono=?, estado=CAST (? AS enum_estado) where id=?");
+			preparedStatement.setString(1, u.getClave());
+			preparedStatement.setDouble(2, u.getSaldo());
+			preparedStatement.setString(3, u.getDireccion());
+			preparedStatement.setString(4, u.getTelefono());
+			preparedStatement.setString(5, u.getEstado().toString());
+			preparedStatement.setString(6, u.getId());
+			preparedStatement.executeUpdate();
+			getConexion().commit();
+		} catch (SQLException e) {
+			FachadaAplicacion.muestraExcepcion(e);
+		} finally {
+			try {
+				preparedStatement.close();
+			} catch (SQLException e) {
+				FachadaAplicacion.muestraExcepcion(e);
+			}
+		}
+	}
+
+	public void add(UsuarioEmpresa u) {
+		PreparedStatement preparedStatement = null;
+
+		try {
+			getConexion().setAutoCommit(false);
+			preparedStatement = getConexion().prepareStatement(
+					"insert into usuario_mercado(clave, saldo, direccion, telefono, estado, id) values (?,?,?,?, CAST (? AS enum_estado),?)");
+			preparedStatement.setString(1, u.getClave());
+			preparedStatement.setDouble(2, u.getSaldo());
+			preparedStatement.setString(3, u.getDireccion());
+			preparedStatement.setString(4, u.getTelefono());
+			preparedStatement.setString(5, u.getEstado().toString());
+			preparedStatement.setString(6, u.getId());
+			preparedStatement.executeUpdate();
+			preparedStatement.close();
+			preparedStatement = getConexion().prepareStatement(
+					"insert into usuario_empresa(cif, nombre_comercial, importe_bloqueado, id) values (?,?,?,?)");
+			preparedStatement.setString(1, u.getCif());
+			preparedStatement.setString(2, u.getNombreComercial());
+			preparedStatement.setDouble(3, u.getImporteBloqueado());
+			preparedStatement.setString(4, u.getId());
+			preparedStatement.executeUpdate();
+			getConexion().commit();
+		} catch (SQLException e) {
+			FachadaAplicacion.muestraExcepcion(e);
+		} finally {
+			try {
+				preparedStatement.close();
+			} catch (SQLException e) {
+				FachadaAplicacion.muestraExcepcion(e);
+			}
+		}
+	}
+>>>>>>> a8098808bd520d7dc504ed4fe78cbc735f9049d8
+=======
+
+>>>>>>> aaron
 }
