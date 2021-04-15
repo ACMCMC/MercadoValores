@@ -27,6 +27,7 @@ public class FachadaAplicacion {
         fa.iniciarAplicacion();
 
         Set<UsuarioEmpresa> s = FachadaDB.getFachada().getUsuariosEmpresa();
+        FachadaDB.getFachada().add(new UsuarioEmpresa("u1", "clave", 0, "Direccion", "981000000", EstadoUsuario.SOLICITANDO_ALTA, "ASDFGHJK", "Empresa comercial", 0));
     }
 
     public void iniciarAplicacion(){
