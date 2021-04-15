@@ -29,6 +29,7 @@ public class FachadaDB {
     private DAOUsuarioInversor daoUsuarioInversor;
     private DAOUsuarioRegulador daoUsuarioRegulador;
 
+
     public static FachadaDB getFachada() {
         return fachada;
     }
@@ -81,9 +82,6 @@ public class FachadaDB {
         return set;
     }
 
-=======
-
->>>>>>> a8098808bd520d7dc504ed4fe78cbc735f9049d8
     public Set<Usuario> getUsuarios() {
         Set<Usuario> set = new HashSet<>();
         set.addAll(getUsuariosDeMercado());

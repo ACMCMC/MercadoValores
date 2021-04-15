@@ -65,5 +65,8 @@ public final class DAOUsuarioInversor extends DAO<UsuarioInversor> {
 
 		return usuario;
 	}
+<<<<<<< HEAD
 >>>>>>> a8098808bd520d7dc504ed4fe78cbc735f9049d8
+=======
+>>>>>>> aaron
 }

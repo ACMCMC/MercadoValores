@@ -11,12 +11,6 @@ import java.util.HashSet;
 
 import gal.usc.mercadovalores.aplicacion.EstadoUsuario;
 import gal.usc.mercadovalores.aplicacion.FachadaAplicacion;
-=======
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.function.Function;
-
->>>>>>> aaron
 import gal.usc.mercadovalores.aplicacion.UsuarioEmpresa;
 
 public final class DAOUsuarioEmpresa extends DAO<UsuarioEmpresa> {
@@ -111,6 +105,7 @@ public final class DAOUsuarioEmpresa extends DAO<UsuarioEmpresa> {
 		return usuario;
 	}
 
+<<<<<<< HEAD
     public DAOUsuarioEmpresa(Connection con) {
         super(con);
     }
@@ -193,4 +188,7 @@ public final class DAOUsuarioEmpresa extends DAO<UsuarioEmpresa> {
 		}
 	}
 >>>>>>> a8098808bd520d7dc504ed4fe78cbc735f9049d8
+=======
+
+>>>>>>> aaron
 }
