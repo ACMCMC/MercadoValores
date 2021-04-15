@@ -73,7 +73,9 @@ CREATE TABLE anuncio_venta(
         	on delete cascade,
 	foreign key (id_2) references usuario_mercado
         	on update cascade
-        	on delete cascade);
+        	on delete cascade
+CONSTRAINT valores CHECK (precio >= 0::double precision AND comision_en_fecha >= 0::double precision AND num_participaciones > 0::double precision) NOT VALID
+);
 
 CREATE FUNCTION comprueba_participaciones() RETURNS trigger AS $comprueba_participaciones$
     BEGIN
