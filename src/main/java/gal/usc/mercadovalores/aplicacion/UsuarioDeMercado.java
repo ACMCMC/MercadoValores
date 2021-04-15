@@ -12,7 +12,7 @@ import java.util.Map;
  * @author user
  */
 public abstract class UsuarioDeMercado extends Usuario {
-    
+
     //tipos de datos temporales -> pendiente de diccionario de datos
     //el resto de atributos se heredan de Usuario
     private String direccion;

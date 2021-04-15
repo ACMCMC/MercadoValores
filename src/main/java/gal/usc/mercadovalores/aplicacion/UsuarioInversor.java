@@ -4,7 +4,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * @author 
+ * @author
  */
 public final class UsuarioInversor extends UsuarioDeMercado {
     private String dni;

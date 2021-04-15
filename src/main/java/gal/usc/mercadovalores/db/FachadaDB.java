@@ -6,17 +6,14 @@
 package gal.usc.mercadovalores.db;
 
 import gal.usc.mercadovalores.aplicacion.*;
-import gal.usc.mercadovalores.gui.FachadaGUI;
+import gal.usc.mercadovalores.gui.*;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.Connection;
-<<<<<<< HEAD
 import java.util.Collection;
 import java.util.HashSet;
-=======
->>>>>>> aaron
 import java.util.Properties;
 import java.util.Set;
 
@@ -30,10 +27,7 @@ public class FachadaDB {
     private Connection conexion;
     private DAOUsuarioEmpresa daoUsuarioEmpresa;
     private DAOUsuarioInversor daoUsuarioInversor;
-<<<<<<< HEAD
     private DAOUsuarioRegulador daoUsuarioRegulador;
-=======
->>>>>>> aaron
 
     public static FachadaDB getFachada() {
         return fachada;
@@ -56,7 +50,8 @@ public class FachadaDB {
             usuario.setProperty("user", configuracion.getProperty("usuario"));
             usuario.setProperty("password", configuracion.getProperty("clave"));
             usuario.setProperty("ssl", "true");
-            String url = "jdbc:" + gestor + "://" + configuracion.getProperty("servidor") + ":" + configuracion.getProperty("puerto") + "/" + configuracion.getProperty("baseDatos");
+            String url = "jdbc:" + gestor + "://" + configuracion.getProperty("servidor") + ":"
+                    + configuracion.getProperty("puerto") + "/" + configuracion.getProperty("baseDatos");
             this.conexion = java.sql.DriverManager.getConnection(url, usuario);
         } catch (FileNotFoundException f) {
             FachadaAplicacion.muestraExcepcion(f);
@@ -65,7 +60,7 @@ public class FachadaDB {
         } catch (java.sql.SQLException e) {
             FachadaAplicacion.muestraExcepcion(e);
         }
-
+        daoUsuarioRegulador = new DAOUsuarioRegulador(conexion);
         daoUsuarioEmpresa = new DAOUsuarioEmpresa(conexion);
         daoUsuarioInversor = new DAOUsuarioInversor(conexion);
     }
@@ -85,11 +80,10 @@ public class FachadaDB {
         set.addAll(getUsuariosInversores());
         return set;
     }
-<<<<<<< HEAD
-    
+
 =======
 
->>>>>>> aaron
+>>>>>>> a8098808bd520d7dc504ed4fe78cbc735f9049d8
     public Set<Usuario> getUsuarios() {
         Set<Usuario> set = new HashSet<>();
         set.addAll(getUsuariosDeMercado());
@@ -99,5 +93,37 @@ public class FachadaDB {
 
     public UsuarioRegulador getUsuarioRegulador() {
         return daoUsuarioRegulador.get();
+    }
+
+    public Usuario getUsuarioById(String id) {
+        Usuario res = null;
+
+        // si son de una empresa
+        res = daoUsuarioEmpresa.getById(id);
+        if (res != null) {
+            return res;
+        }
+
+        res = daoUsuarioInversor.getById(id);
+        if (res != null) {
+            return res;
+        }
+
+        // si el id y contraseña son de regulador
+        res = daoUsuarioRegulador.getById(id);
+        if (res != null) {
+            return res;
+        }
+        return res;
+    }
+
+    public void add(Usuario u) {
+        if (u instanceof UsuarioEmpresa) {
+            daoUsuarioEmpresa.add((UsuarioEmpresa) u);
+        } else if (u instanceof UsuarioDeMercado) {
+
+        } else {
+            throw new IllegalArgumentException("No se acepta el tipo de usuario seleccionado");
+        }
     }
 }

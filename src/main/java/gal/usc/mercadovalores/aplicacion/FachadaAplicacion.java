@@ -37,19 +37,23 @@ public class FachadaAplicacion {
         this.fgui.iniciarSesion();
     }
 
-    public void iniciarAdmin(){
-        this.fgui.iniciarAdmin();
+    public void iniciarAdmin(UsuarioRegulador usr){
+        this.fgui.iniciarAdmin(usr);
     }
 
-    public void iniciarInversor(){
-        this.fgui.iniciarInversor();
+    public void iniciarInversor(UsuarioInversor usr){
+        this.fgui.iniciarInversor(usr);
     }
 
-    public void iniciarEmpresa(){
-        this.fgui.iniciarEmpresa();
+    public void iniciarEmpresa(UsuarioEmpresa usr){
+        this.fgui.iniciarEmpresa(usr);
     }
 
     public static void muestraExcepcion(Throwable t) {
         FachadaGUI.muestraExcepcion(t);
+    }
+
+    public void cerrarSesion(javax.swing.JFrame frame){
+        this.fgui.cerrarSesion(frame);
     }
 }
