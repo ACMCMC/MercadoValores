@@ -14,6 +14,8 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.util.Collection;
 import java.util.HashSet;
+
+
 import java.util.Properties;
 import java.util.Set;
 
@@ -28,6 +30,7 @@ public class FachadaDB {
     private DAOUsuarioEmpresa daoUsuarioEmpresa;
     private DAOUsuarioInversor daoUsuarioInversor;
     private DAOUsuarioRegulador daoUsuarioRegulador;
+
 
     public static FachadaDB getFachada() {
         return fachada;
@@ -59,7 +62,7 @@ public class FachadaDB {
         } catch (java.sql.SQLException e) {
             FachadaAplicacion.muestraExcepcion(e);
         }
-
+        daoUsuarioRegulador = new DAOUsuarioRegulador(conexion);
         daoUsuarioEmpresa = new DAOUsuarioEmpresa(conexion);
         daoUsuarioInversor = new DAOUsuarioInversor(conexion);
     }
@@ -79,7 +82,7 @@ public class FachadaDB {
         set.addAll(getUsuariosInversores());
         return set;
     }
-    
+
     public Set<Usuario> getUsuarios() {
         Set<Usuario> set = new HashSet<>();
         set.addAll(getUsuariosDeMercado());
@@ -91,6 +94,39 @@ public class FachadaDB {
         return daoUsuarioRegulador.get();
     }
 
+    public Usuario obtenerUsuarioById(String id, String password){
+        Usuario res = null;
+
+        //si son de una empresa
+        res = daoUsuarioEmpresa.getById(id);
+        if(res!= null){
+
+            //comprobamos que la clave coincida
+            if(res.getClave().equals(password)){
+                return res;
+            }
+        }
+
+        res = daoUsuarioInversor.getById(id);
+        if(res!=null){
+            
+            if(res.getClave().equals(password)){
+                return res;
+            }
+        }
+        
+        //si el id y contraseña son de regulador
+        res = daoUsuarioRegulador.getById(id);
+        if(res != null){
+
+            //comprobamos los datos
+            if(res.getClave().equals(password)){
+                return res;
+            }
+        }
+        
+        res = null;
+        return res;
     public void add(Usuario u) {
         if (u instanceof UsuarioEmpresa) {
             daoUsuarioEmpresa.add((UsuarioEmpresa) u);

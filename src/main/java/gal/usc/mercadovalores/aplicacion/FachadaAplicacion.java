@@ -20,7 +20,7 @@ public class FachadaAplicacion {
     public FachadaAplicacion() {
         this.fgui = new FachadaGUI(this);
     }
-    
+
     public static void main(String args[]){
         FachadaAplicacion fa;
         fa= new FachadaAplicacion();
@@ -29,28 +29,36 @@ public class FachadaAplicacion {
         Set<UsuarioEmpresa> s = FachadaDB.getFachada().getUsuariosEmpresa();
         FachadaDB.getFachada().add(new UsuarioEmpresa("u1", "clave", 0, "Direccion", "981000000", EstadoUsuario.SOLICITANDO_ALTA, "ASDFGHJK", "Empresa comercial", 0));
     }
-    
+
     public void iniciarAplicacion(){
         this.fgui.iniciarAplicacion();
     }
-    
+
     public void iniciarSesion(){
         this.fgui.iniciarSesion();
     }
-    
-    public void iniciarAdmin(){
-        this.fgui.iniciarAdmin();
+
+    public void iniciarAdmin(UsuarioRegulador usr){
+        this.fgui.iniciarAdmin(usr);
     }
-    
-    public void iniciarInversor(){
-        this.fgui.iniciarInversor();
+
+    public void iniciarInversor(UsuarioInversor usr){
+        this.fgui.iniciarInversor(usr);
     }
-    
-    public void iniciarEmpresa(){
-        this.fgui.iniciarEmpresa();
+
+    public void iniciarEmpresa(UsuarioEmpresa usr){
+        this.fgui.iniciarEmpresa(usr);
     }
-    
+
     public static void muestraExcepcion(Throwable t) {
         FachadaGUI.muestraExcepcion(t);
+    }
+
+    public Usuario getUsuarioById(String id, String password){
+        return FachadaDB.getFachada().obtenerUsuarioById(id, password);
+    }
+    
+    public void cerrarSesion(javax.swing.JFrame frame){
+        this.fgui.cerrarSesion(frame);
     }
 }

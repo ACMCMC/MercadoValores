@@ -4,18 +4,27 @@
  * and open the template in the editor.
  */
 package gal.usc.mercadovalores.gui;
+import gal.usc.mercadovalores.aplicacion.UsuarioInversor;
+import gal.usc.mercadovalores.aplicacion.FachadaAplicacion;
 
 /**
  *
  * @author icaro
  */
 public class VPrincipalInversor extends javax.swing.JFrame {
-
+    private UsuarioInversor usr;
+    private FachadaAplicacion fa;
+    
     /**
      * Creates new form VPrincipalMercado
+     * 
+     * @param usr
      */
-    public VPrincipalInversor() {
+    public VPrincipalInversor(UsuarioInversor usr, FachadaAplicacion fa) {
+        this.usr = usr;
+        this.fa = fa;
         initComponents();
+        this.ActualizarTablaDatos();
     }
 
     /**
@@ -32,6 +41,7 @@ public class VPrincipalInversor extends javax.swing.JFrame {
         TablaDatos = new javax.swing.JTable();
         SalirBoton = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
+        CerrarSesionBoton = new javax.swing.JButton();
         Menu = new javax.swing.JMenuBar();
         CuentaMenu = new javax.swing.JMenu();
         ModificarMenuItem = new javax.swing.JMenuItem();
@@ -45,6 +55,7 @@ public class VPrincipalInversor extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Ventana Inversor");
+        setResizable(false);
 
         TablaDatos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -57,16 +68,36 @@ public class VPrincipalInversor extends javax.swing.JFrame {
                 {"Participaciones ", null}
             },
             new String [] {
-                "Title 1", "Title 2"
+                "", ""
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         TablaDatos.setCellSelectionEnabled(true);
         TablaDatos.setTableHeader(null);
         jScrollPane2.setViewportView(TablaDatos);
 
         SalirBoton.setText("Salir");
+        SalirBoton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SalirBotonActionPerformed(evt);
+            }
+        });
 
         jLabel1.setText("Información del inversor:");
+
+        CerrarSesionBoton.setText("Cerrar Sesión");
+        CerrarSesionBoton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CerrarSesionBotonActionPerformed(evt);
+            }
+        });
 
         CuentaMenu.setText("Cuenta");
 
@@ -99,37 +130,54 @@ public class VPrincipalInversor extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(SalirBoton, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(33, 33, 33)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 345, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 258, Short.MAX_VALUE)))
-                .addContainerGap())
+                        .addComponent(CerrarSesionBoton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(SalirBoton, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jLabel1)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 345, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(33, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(24, 24, 24)
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 90, Short.MAX_VALUE)
-                .addComponent(SalirBoton)
-                .addContainerGap())
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 96, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(SalirBoton)
+                    .addComponent(CerrarSesionBoton))
+                .addGap(24, 24, 24))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    //salimos de la aplicación
+    private void SalirBotonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SalirBotonActionPerformed
+        System.exit(0);
+    }//GEN-LAST:event_SalirBotonActionPerformed
+
+    private void CerrarSesionBotonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CerrarSesionBotonActionPerformed
+        fa.cerrarSesion(this);
+    }//GEN-LAST:event_CerrarSesionBotonActionPerformed
+
+    private void ActualizarTablaDatos(){
+        this.TablaDatos.setValueAt(usr.getId(), 0, 1);
+        this.TablaDatos.setValueAt(usr.getSaldo(), 1, 1);
+        this.TablaDatos.setValueAt(usr.getDireccion(), 2, 1);
+        this.TablaDatos.setValueAt(usr.getTelefono(), 3, 1);
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem BajaMenuItem;
     private javax.swing.JMenuItem BajaVentaMenuItem;
+    private javax.swing.JButton CerrarSesionBoton;
     private javax.swing.JMenuItem ComprarMenuItem;
     private javax.swing.JMenu CuentaMenu;
     private javax.swing.JMenuBar Menu;

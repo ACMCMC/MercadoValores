@@ -5,9 +5,10 @@
  */
 package gal.usc.mercadovalores.gui;
 import gal.usc.mercadovalores.aplicacion.FachadaAplicacion;
+import gal.usc.mercadovalores.aplicacion.UsuarioEmpresa;
+import gal.usc.mercadovalores.aplicacion.UsuarioInversor;
+import gal.usc.mercadovalores.aplicacion.UsuarioRegulador;
 
-
-import gal.usc.mercadovalores.aplicacion.FachadaAplicacion;
 
 /**
  *
@@ -42,31 +43,33 @@ public class FachadaGUI {
     }
 
     // aplicacion de admin (regulador de mercado)
-    public void iniciarAdmin() {
+    public void iniciarAdmin(UsuarioRegulador usr) {
         // ya no necesitamos la ventana de inicio
         this.vi.dispose();
         // iniciamos la vista de administrador
-        this.vadmin = new VPrincipalAdmin();
+        this.vadmin = new VPrincipalAdmin(usr, fa);
         vadmin.setVisible(true);
     }
 
-    public void iniciarInversor() {
+    public void iniciarInversor(UsuarioInversor usr) {
         // ya no necesitamos la ventana de inicio
         this.vi.dispose();
         // iniciamos la vista de usuario de mercado
-        this.vinversor = new VPrincipalInversor();
+        this.vinversor = new VPrincipalInversor(usr,fa);
         vinversor.setVisible(true);
     }
-    
-    public void iniciarEmpresa(){
+
+    public void iniciarEmpresa(UsuarioEmpresa usr){
         //ya no necesitamos la ventana de inicio
         this.vi.dispose();
-        //iniciamos la vista de usuario de mercado
-        this.vempresa = new VPrincipalEmpresa();
+        //iniciamos la vista de empresa
+        this.vempresa = new VPrincipalEmpresa(usr, fa);
         vempresa.setVisible(true);
-        this.vi.dispose();
-        // iniciamos la vista de usuario de mercado
-        this.vinversor = new VPrincipalInversor();
-        vinversor.setVisible(true);
+    }
+    
+    public void cerrarSesion(javax.swing.JFrame frame){
+        frame.dispose();
+        this.vi = new VInicio(this.fa);        
+        vi.setVisible(true);
     }
 }
