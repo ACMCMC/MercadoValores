@@ -171,5 +171,4 @@ public final class DAOUsuarioEmpresa extends DAO<UsuarioEmpresa> {
 			}
 		}
 	}
-
 }
