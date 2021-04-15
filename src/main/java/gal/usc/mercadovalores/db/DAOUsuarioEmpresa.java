@@ -105,21 +105,7 @@ public final class DAOUsuarioEmpresa extends DAO<UsuarioEmpresa> {
 		return usuario;
 	}
 
-    public DAOUsuarioEmpresa(Connection con) {
-        super(con);
-    }
-
-    @Override
-    protected String getNombreTabla() {
-        return "usuario_empresa";
-    }
-
-    @Override
-    protected UsuarioEmpresa getTFromRS(ResultSet rs) throws SQLException {
-        return new UsuarioEmpresa(null, null, 0, null, null, null, null, null, null, 0, null);
-    }
-
-	public void update(UsuarioEmpresa u) {
+        public void update(UsuarioEmpresa u) {
 		PreparedStatement preparedStatement = null;
 
 		try {
@@ -186,5 +172,4 @@ public final class DAOUsuarioEmpresa extends DAO<UsuarioEmpresa> {
 			}
 		}
 	}
->>>>>>> a8098808bd520d7dc504ed4fe78cbc735f9049d8
 }

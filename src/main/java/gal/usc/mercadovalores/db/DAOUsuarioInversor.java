@@ -16,16 +16,6 @@ public final class DAOUsuarioInversor extends DAO<UsuarioInversor> {
         super(con);
     }
 
-    @Override
-    protected String getNombreTabla() {
-        return "usuario_inversor";
-    }
-
-    @Override
-    protected UsuarioInversor getTFromRS(ResultSet rs) throws SQLException {
-        return new UsuarioInversor(null, null, 0, null, null, null, null, null, null, null);
-    }
-
     public UsuarioInversor getById(String idToGet) {
 		UsuarioInversor usuario = null;
 
@@ -65,8 +55,5 @@ public final class DAOUsuarioInversor extends DAO<UsuarioInversor> {
 
 		return usuario;
 	}
-<<<<<<< HEAD
->>>>>>> a8098808bd520d7dc504ed4fe78cbc735f9049d8
-=======
->>>>>>> aaron
+
 }
