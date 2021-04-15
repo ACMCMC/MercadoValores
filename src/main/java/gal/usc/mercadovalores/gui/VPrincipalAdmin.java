@@ -4,17 +4,24 @@
  * and open the template in the editor.
  */
 package gal.usc.mercadovalores.gui;
+import gal.usc.mercadovalores.aplicacion.UsuarioRegulador;
+import gal.usc.mercadovalores.aplicacion.FachadaAplicacion;
+
 
 /**
  *
  * @author user
  */
 public class VPrincipalAdmin extends javax.swing.JFrame {
-
+    private UsuarioRegulador usr;
+    private FachadaAplicacion fa;
     /**
      * Creates new form VPrincipalAdmin
+     * @param usr
      */
-    public VPrincipalAdmin() {
+    public VPrincipalAdmin(UsuarioRegulador usr, FachadaAplicacion fa) {
+        this.usr = usr;
+        this.fa = fa;
         initComponents();
     }
 
@@ -31,8 +38,6 @@ public class VPrincipalAdmin extends javax.swing.JFrame {
         ComisionActualCajaTexto = new javax.swing.JTextField();
         NuevaComisionBoton = new javax.swing.JButton();
         ComisionActualTexto = new javax.swing.JLabel();
-        ComisionNuevaTexto = new javax.swing.JLabel();
-        NuevaComisionCaja = new javax.swing.JTextField();
         BajaPagosBoton = new javax.swing.JButton();
         Menu = new javax.swing.JMenuBar();
         UsuarioMenu = new javax.swing.JMenu();
@@ -42,14 +47,19 @@ public class VPrincipalAdmin extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Regulador");
+        setBackground(new java.awt.Color(43, 45, 66));
+        setResizable(false);
 
         SalirBoton.setText("Salir");
+        SalirBoton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SalirBotonActionPerformed(evt);
+            }
+        });
 
         NuevaComisionBoton.setText("Actualizar");
 
-        ComisionActualTexto.setText("Valor de comisión compra/venta actual:");
-
-        ComisionNuevaTexto.setText("Establecer nuevo valor de comisión:");
+        ComisionActualTexto.setText("Comisión actual:");
 
         BajaPagosBoton.setText("Dar de baja pagos de beneficios");
         BajaPagosBoton.setToolTipText("");
@@ -74,47 +84,45 @@ public class VPrincipalAdmin extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(33, 33, 33)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(BajaPagosBoton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(SalirBoton, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                .addComponent(ComisionNuevaTexto)
-                                .addGap(18, 18, 18)
-                                .addComponent(NuevaComisionCaja))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(ComisionActualTexto)
-                                .addGap(18, 18, 18)
-                                .addComponent(ComisionActualCajaTexto, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(NuevaComisionBoton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(ComisionActualTexto, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(18, 18, 18)
-                        .addComponent(NuevaComisionBoton, javax.swing.GroupLayout.DEFAULT_SIZE, 119, Short.MAX_VALUE)))
-                .addContainerGap())
+                        .addComponent(ComisionActualCajaTexto, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(BajaPagosBoton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 311, Short.MAX_VALUE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(SalirBoton, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(33, 33, 33))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(11, 11, 11)
+                .addGap(24, 24, 24)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(ComisionActualTexto)
                     .addComponent(ComisionActualCajaTexto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(ComisionNuevaTexto)
-                    .addComponent(NuevaComisionCaja, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(NuevaComisionBoton))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(NuevaComisionBoton)
+                .addGap(27, 27, 27)
                 .addComponent(BajaPagosBoton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 87, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 136, Short.MAX_VALUE)
                 .addComponent(SalirBoton)
-                .addContainerGap())
+                .addGap(24, 24, 24))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void SalirBotonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SalirBotonActionPerformed
+        System.exit(0);
+    }//GEN-LAST:event_SalirBotonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -126,10 +134,8 @@ public class VPrincipalAdmin extends javax.swing.JFrame {
     private javax.swing.JButton BajaPagosBoton;
     private javax.swing.JTextField ComisionActualCajaTexto;
     private javax.swing.JLabel ComisionActualTexto;
-    private javax.swing.JLabel ComisionNuevaTexto;
     private javax.swing.JMenuBar Menu;
     private javax.swing.JButton NuevaComisionBoton;
-    private javax.swing.JTextField NuevaComisionCaja;
     private javax.swing.JMenuItem SaldosMenuItem;
     private javax.swing.JButton SalirBoton;
     private javax.swing.JMenu UsuarioMenu;
