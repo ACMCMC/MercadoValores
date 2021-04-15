@@ -4,9 +4,7 @@ INSERT INTO usuario_mercado(id, clave, saldo, direccion, telefono, estado) VALUE
 INSERT INTO usuario_empresa(id, cif, nombre_comercial, importe_bloqueado) VALUES ('usr1', 'fwewrew3', 'nombre', 0.0);
 		 
 Insert into usuario_regulador (id,clave,saldo,comision_actual)
-Values ('Reg','asdf',0.0,0.1),
-('Reg1','asdf',0.0,0.1),
- ('Reg2','asdf',0.0,0.1);
+Values ('Reg','asdf',0.0,0.1);
 
 Insert into usuario_mercado (id,clave,saldo,direccion,telefono,estado)
 Values ('Tim','red',1000.73,'Gotham','+1578543221','DADO_DE_ALTA'),
