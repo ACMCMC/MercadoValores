@@ -124,9 +124,8 @@ public class FachadaDB {
                 return res;
             }
         }
-        
-        res = null;
-        return res;
+        return null;
+    }
     public void add(Usuario u) {
         if (u instanceof UsuarioEmpresa) {
             daoUsuarioEmpresa.add((UsuarioEmpresa) u);
