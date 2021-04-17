@@ -105,7 +105,7 @@ public final class DAOUsuarioEmpresa extends DAO<UsuarioEmpresa> {
 		return usuario;
 	}
 
-        public void update(UsuarioEmpresa u) {
+         public void update(UsuarioEmpresa u) {
 		PreparedStatement preparedStatement = null;
 
 		try {
