@@ -176,6 +176,12 @@ public class VRegistro extends javax.swing.JDialog {
 
         botonRegistroInversor.setText("Registrarse");
 
+        botonRegistroInversor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonRegistroInversorActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -259,26 +265,26 @@ public class VRegistro extends javax.swing.JDialog {
     }//GEN-LAST:event_nombreUsuarioEmpresaActionPerformed
 
     private void botonRegistroEmpresaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonRegistroEmpresaActionPerformed
-     
-        //intentamos registrar una empresa        
+
+        //intentamos registrar una empresa
         //comprobamos que ningún campo esté vacío
-        if(!this.cifEmpresa.getText().isEmpty() && 
+        if(!this.cifEmpresa.getText().isEmpty() &&
            !this.nombreEmpresa.getText().isEmpty() &&
            !this.nombreUsuarioEmpresa.getText().isEmpty() &&
            !this.passEmpresa.getText().isEmpty() &&
            !this.telfEmpresa.getText().isEmpty() &&
            !this.dirEmpresa.getText().isEmpty()){
-            
+
             UsuarioEmpresa u = new UsuarioEmpresa(this.nombreUsuarioEmpresa.getText(),
             this.passEmpresa.getText(),0.,this.dirEmpresa.getText(),this.telfEmpresa.getText(),
             EstadoUsuario.SOLICITANDO_ALTA,this.cifEmpresa.getText(),this.nombreEmpresa.getText(),0.);
-            
+
             FachadaDB.getFachada().add(u);
-            
+
             //abrimos ventana de aviso
             VAviso x = new VAviso(this.parentX,true,"La cuenta necesita ser confirmada, espere para iniciar sesión");
             x.setVisible(true);
-            
+
             this.cifEmpresa.setText("");
             this.nombreEmpresa.setText("");
             this.nombreUsuarioEmpresa.setText("");
@@ -286,11 +292,40 @@ public class VRegistro extends javax.swing.JDialog {
             this.telfEmpresa.setText("");
             this.dirEmpresa.setText("");
         }
-        
+
     }//GEN-LAST:event_botonRegistroEmpresaActionPerformed
 
-    
-    
+    private void botonRegistroInversorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonRegistroEmpresaActionPerformed
+
+        //intentamos registrar una empresa
+        //comprobamos que ningún campo esté vacío
+        if(!this.dniInversor.getText().isEmpty() &&
+           !this.jTextField1.getText().isEmpty() &&
+           !this.nombreUsuarioInversor.getText().isEmpty() &&
+           !this.passInversor.getText().isEmpty() &&
+           !this.telfInversor.getText().isEmpty() &&
+           !this.dirInversor.getText().isEmpty()){
+
+            UsuarioEmpresa u = new UsuarioInversor(this.nombreUsuarioInversor.getText(),
+            this.passInversor.getText(),0.,this.dirInversor.getText(),this.telfInversor.getText(),
+            EstadoUsuario.SOLICITANDO_ALTA,this.dniInversor.getText(),this.jTextField1.getText());
+
+            FachadaDB.getFachada().add(u);
+
+            //abrimos ventana de aviso
+            VAviso x = new VAviso(this.parentX,true,"La cuenta necesita ser confirmada, espere para iniciar sesión");
+            x.setVisible(true);
+
+            this.dniInversor.setText("");
+            this.jTextField1.setText("");
+            this.nombreUsuarioInversor.setText("");
+            this.passInversor.setText("");
+            this.telfInversor.setText("");
+            this.dirInversor.setText("");
+        }
+
+    }//GEN-LAST:event_botonRegistroEmpresaActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton botonRegistroEmpresa;
     private javax.swing.JButton botonRegistroInversor;
