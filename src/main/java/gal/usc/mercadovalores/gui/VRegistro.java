@@ -5,12 +5,17 @@
  */
 package gal.usc.mercadovalores.gui;
 import gal.usc.mercadovalores.aplicacion.FachadaAplicacion;
+import gal.usc.mercadovalores.db.FachadaDB;
+import gal.usc.mercadovalores.aplicacion.UsuarioEmpresa;
+import gal.usc.mercadovalores.aplicacion.EstadoUsuario;
+
 /**
  *
  * @author user
  */
 public class VRegistro extends javax.swing.JDialog {
     private FachadaAplicacion fa;
+    private java.awt.Frame parentX;
     /**
      * Creates new form VRegistro
      */
@@ -18,6 +23,7 @@ public class VRegistro extends javax.swing.JDialog {
         super(parent, modal);
         this.fa = fa;
         initComponents();
+        this.parentX = parent;
     }
 
     /**
@@ -82,6 +88,11 @@ public class VRegistro extends javax.swing.JDialog {
         jLabel6.setText("CIF:");
 
         botonRegistroEmpresa.setText("Registrarse");
+        botonRegistroEmpresa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonRegistroEmpresaActionPerformed(evt);
+            }
+        });
 
         jLabel15.setText("Nombre:");
 
@@ -139,9 +150,9 @@ public class VRegistro extends javax.swing.JDialog {
                     .addComponent(jLabel6)
                     .addComponent(cifEmpresa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(nombreEmpresa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel15))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel15)
+                    .addComponent(nombreEmpresa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(29, 29, 29)
                 .addComponent(botonRegistroEmpresa)
                 .addGap(24, 24, 24))
@@ -246,6 +257,37 @@ public class VRegistro extends javax.swing.JDialog {
     private void nombreUsuarioEmpresaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nombreUsuarioEmpresaActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_nombreUsuarioEmpresaActionPerformed
+
+    private void botonRegistroEmpresaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonRegistroEmpresaActionPerformed
+     
+        //intentamos registrar una empresa        
+        //comprobamos que ningún campo esté vacío
+        if(!this.cifEmpresa.getText().isEmpty() && 
+           !this.nombreEmpresa.getText().isEmpty() &&
+           !this.nombreUsuarioEmpresa.getText().isEmpty() &&
+           !this.passEmpresa.getText().isEmpty() &&
+           !this.telfEmpresa.getText().isEmpty() &&
+           !this.dirEmpresa.getText().isEmpty()){
+            
+            UsuarioEmpresa u = new UsuarioEmpresa(this.nombreUsuarioEmpresa.getText(),
+            this.passEmpresa.getText(),0.,this.dirEmpresa.getText(),this.telfEmpresa.getText(),
+            EstadoUsuario.SOLICITANDO_ALTA,this.cifEmpresa.getText(),this.nombreEmpresa.getText(),0.);
+            
+            FachadaDB.getFachada().add(u);
+            
+            //abrimos ventana de aviso
+            VAviso x = new VAviso(this.parentX,true,"La cuenta necesita ser confirmada, espere para iniciar sesión");
+            x.setVisible(true);
+            
+            this.cifEmpresa.setText("");
+            this.nombreEmpresa.setText("");
+            this.nombreUsuarioEmpresa.setText("");
+            this.passEmpresa.setText("");
+            this.telfEmpresa.setText("");
+            this.dirEmpresa.setText("");
+        }
+        
+    }//GEN-LAST:event_botonRegistroEmpresaActionPerformed
 
     
     
