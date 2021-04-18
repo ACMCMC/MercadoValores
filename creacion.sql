@@ -3,7 +3,7 @@ CREATE TABLE usuario_regulador(
   clave varchar(40),
   saldo double precision,
   comision_actual double precision,
-  primary key (id)
+  primary key (id),
 CONSTRAINT valores CHECK (saldo >= 0::double precision AND comision_actual >= 0::double precision) NOT VALID
 );
 
@@ -16,7 +16,7 @@ CREATE TABLE usuario_mercado(
     direccion varchar(256),
     telefono varchar(15), --15 valores porque si se pretendiese ser internacional haria falta el prefijo internacional
     estado enum_estado,
-    primary key (id)
+    primary key (id),
 CONSTRAINT valores CHECK (saldo >= 0::double precision) NOT VALID
 );
 
@@ -37,7 +37,7 @@ CREATE TABLE usuario_empresa(
   primary key (id),
     foreign key (id) references usuario_mercado
    		 on update cascade
-   		 on delete cascade
+   		 on delete cascade,
 CONSTRAINT valores CHECK (importe_bloqueado >= 0::double precision) NOT VALID
 );
 
@@ -48,7 +48,7 @@ CREATE TABLE beneficios(
   primary key (id,fecha_pago),
 	foreign key (id) references usuario_empresa
         	on update cascade
-        	on delete cascade
+        	on delete cascade,
 CONSTRAINT valores CHECK (importe_por_participacion >= 0::double precision) NOT VALID
 );
 
@@ -66,7 +66,7 @@ CREATE TABLE tener_participaciones(
         	on delete cascade,
 	foreign key (id_2) references usuario_mercado
         	on update cascade
-        	on delete cascade
+        	on delete cascade,
 CONSTRAINT valores CHECK (num_participaciones >= 0::double precision) NOT VALID
 );
 
@@ -83,29 +83,33 @@ CREATE TABLE anuncio_venta(
         	on delete cascade,
 	foreign key (id_2) references usuario_mercado
         	on update cascade
-        	on delete cascade
+        	on delete cascade,
 CONSTRAINT valores CHECK (precio >= 0::double precision AND comision_en_fecha >= 0::double precision AND num_participaciones > 0::double precision) NOT VALID
 );
 
 CREATE FUNCTION comprueba_participaciones() RETURNS trigger AS $comprueba_participaciones$
+    DECLARE
+		total double precision;
+		max double precision;
     BEGIN
-		 IF SUM (num_participaciones) + NEW.num_participaciones > tener_participaciones.num_participaciones THEN
+		SELECT SUM(num_participaciones) into total
+		FROM anuncio_venta
+		WHERE id_1=NEW.id_1
+		  AND id_2=NEW.id_2;
+		  
+		SELECT num_participaciones into max
+		FROM tener_participaciones
+		WHERE id_1=NEW.id_1
+		  AND id_2=NEW.id_2;
+		
+		 IF  total +NEW.num_participaciones > max THEN
             		RAISE EXCEPTION 'El número de participaciones a la venta no puede exceder el total poseído';
 		 END IF;
+		 
 		 RETURN NEW;
     END;
 $comprueba_participaciones$ LANGUAGE plpgsql;
 
 CREATE TRIGGER comprueba_participaciones BEFORE INSERT OR UPDATE ON anuncio_venta
-    FOR EACH ROW EXECUTE PROCEDURE comprueba_participaciones();
-
--- Para obtener la tabla en la que se cumple la restricción la consulta sería:(No he comprobado que de datos correctos, solo se que se ejecuta)
-
-SELECT anuncio_venta.*
-FROM tener_participaciones,anuncio_venta,
-	(SELECT SUM(num_participaciones) as a
-	FROM anuncio_venta) as A
-WHERE tener_participaciones.id_1=anuncio_venta.id_1
-  AND tener_participaciones.id_2=anuncio_venta.id_2
-  AND A.a<=tener_participaciones.num_participaciones
+FOR EACH ROW EXECUTE PROCEDURE comprueba_participaciones();
 
