@@ -7,6 +7,7 @@ package gal.usc.mercadovalores.gui;
 import gal.usc.mercadovalores.aplicacion.FachadaAplicacion;
 import gal.usc.mercadovalores.db.FachadaDB;
 import gal.usc.mercadovalores.aplicacion.UsuarioEmpresa;
+import gal.usc.mercadovalores.aplicacion.UsuarioInversor;
 import gal.usc.mercadovalores.aplicacion.EstadoUsuario;
 
 /**
@@ -64,7 +65,7 @@ public class VRegistro extends javax.swing.JDialog {
         dirInversor = new javax.swing.JTextField();
         telfInversor = new javax.swing.JTextField();
         dniInversor = new javax.swing.JTextField();
-        jTextField1 = new javax.swing.JTextField();
+        nombreInversor = new javax.swing.JTextField();
         botonRegistroInversor = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -175,7 +176,6 @@ public class VRegistro extends javax.swing.JDialog {
         jLabel14.setText("Nombre completo:");
 
         botonRegistroInversor.setText("Registrarse");
-
         botonRegistroInversor.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 botonRegistroInversorActionPerformed(evt);
@@ -206,7 +206,7 @@ public class VRegistro extends javax.swing.JDialog {
                                 .addComponent(dirInversor)
                                 .addComponent(telfInversor)
                                 .addComponent(dniInversor, javax.swing.GroupLayout.DEFAULT_SIZE, 140, Short.MAX_VALUE))
-                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(nombreInversor, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(botonRegistroInversor))))
                 .addContainerGap(33, Short.MAX_VALUE))
         );
@@ -238,7 +238,7 @@ public class VRegistro extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel14)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(nombreInversor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
                 .addComponent(botonRegistroInversor)
                 .addGap(24, 24, 24))
@@ -260,11 +260,11 @@ public class VRegistro extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void nombreUsuarioEmpresaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nombreUsuarioEmpresaActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_nombreUsuarioEmpresaActionPerformed
-
-    private void botonRegistroEmpresaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonRegistroEmpresaActionPerformed
+    private void nombreUsuarioEmpresaActionPerformed(java.awt.event.ActionEvent evt){
+        
+    }
+    
+    private void botonRegistroEmpresaActionPerformed(java.awt.event.ActionEvent evt) {
 
         //intentamos registrar una empresa
         //comprobamos que ningún campo esté vacío
@@ -293,22 +293,21 @@ public class VRegistro extends javax.swing.JDialog {
             this.dirEmpresa.setText("");
         }
 
-    }//GEN-LAST:event_botonRegistroEmpresaActionPerformed
+    }
 
-    private void botonRegistroInversorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonRegistroEmpresaActionPerformed
-
+    private void botonRegistroInversorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonRegistroInversorActionPerformed
         //intentamos registrar una empresa
         //comprobamos que ningún campo esté vacío
         if(!this.dniInversor.getText().isEmpty() &&
-           !this.jTextField1.getText().isEmpty() &&
+           !this.nombreInversor.getText().isEmpty() &&
            !this.nombreUsuarioInversor.getText().isEmpty() &&
            !this.passInversor.getText().isEmpty() &&
            !this.telfInversor.getText().isEmpty() &&
            !this.dirInversor.getText().isEmpty()){
 
-            UsuarioEmpresa u = new UsuarioInversor(this.nombreUsuarioInversor.getText(),
+            UsuarioInversor u = new UsuarioInversor(this.nombreUsuarioInversor.getText(),
             this.passInversor.getText(),0.,this.dirInversor.getText(),this.telfInversor.getText(),
-            EstadoUsuario.SOLICITANDO_ALTA,this.dniInversor.getText(),this.jTextField1.getText());
+            EstadoUsuario.SOLICITANDO_ALTA,this.dniInversor.getText(),this.nombreInversor.getText());
 
             FachadaDB.getFachada().add(u);
 
@@ -317,14 +316,13 @@ public class VRegistro extends javax.swing.JDialog {
             x.setVisible(true);
 
             this.dniInversor.setText("");
-            this.jTextField1.setText("");
+            this.nombreInversor.setText("");
             this.nombreUsuarioInversor.setText("");
             this.passInversor.setText("");
             this.telfInversor.setText("");
             this.dirInversor.setText("");
         }
-
-    }//GEN-LAST:event_botonRegistroEmpresaActionPerformed
+    }//GEN-LAST:event_botonRegistroInversorActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton botonRegistroEmpresa;
@@ -350,8 +348,8 @@ public class VRegistro extends javax.swing.JDialog {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField nombreEmpresa;
+    private javax.swing.JTextField nombreInversor;
     private javax.swing.JTextField nombreUsuarioEmpresa;
     private javax.swing.JTextField nombreUsuarioInversor;
     private javax.swing.JPasswordField passEmpresa;

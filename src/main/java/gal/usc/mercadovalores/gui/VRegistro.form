@@ -217,7 +217,7 @@
                                       <Component id="telfInversor" max="32767" attributes="0"/>
                                       <Component id="dniInversor" pref="140" max="32767" attributes="0"/>
                                   </Group>
-                                  <Component id="jTextField1" min="-2" pref="141" max="-2" attributes="0"/>
+                                  <Component id="nombreInversor" min="-2" pref="141" max="-2" attributes="0"/>
                                   <Component id="botonRegistroInversor" alignment="1" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
@@ -259,7 +259,7 @@
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="jLabel14" min="-2" max="-2" attributes="0"/>
-                          <Component id="jTextField1" min="-2" max="-2" attributes="0"/>
+                          <Component id="nombreInversor" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace pref="29" max="32767" attributes="0"/>
                       <Component id="botonRegistroInversor" min="-2" max="-2" attributes="0"/>
@@ -314,12 +314,15 @@
             </Component>
             <Component class="javax.swing.JTextField" name="dniInversor">
             </Component>
-            <Component class="javax.swing.JTextField" name="jTextField1">
+            <Component class="javax.swing.JTextField" name="nombreInversor">
             </Component>
             <Component class="javax.swing.JButton" name="botonRegistroInversor">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Registrarse"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="botonRegistroInversorActionPerformed"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>
