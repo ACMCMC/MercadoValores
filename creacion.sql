@@ -94,22 +94,21 @@ CREATE FUNCTION comprueba_participaciones() RETURNS trigger AS $comprueba_partic
     BEGIN
 		SELECT SUM(num_participaciones) into total
 		FROM anuncio_venta
-		WHERE id_1=NEW.id_1
-		  AND id_2=NEW.id_2;
+		WHERE id_1=new.id_1
+		  AND id_2=new.id_2;
 		  
 		SELECT num_participaciones into max
 		FROM tener_participaciones
-		WHERE id_1=NEW.id_1
-		  AND id_2=NEW.id_2;
+		WHERE id_1=new.id_1
+		  AND id_2=new.id_2;
 		
-		 IF  total +NEW.num_participaciones > max THEN
-            		RAISE EXCEPTION 'El número de participaciones a la venta no puede exceder el total poseído';
+		IF  total +new.num_participaciones <= max THEN
+            		RETURN new;
 		 END IF;
 		 
-		 RETURN NEW;
+		 RAISE EXCEPTION 'El número de participaciones a la venta no puede exceder el total poseído';
     END;
 $comprueba_participaciones$ LANGUAGE plpgsql;
 
 CREATE TRIGGER comprueba_participaciones BEFORE INSERT OR UPDATE ON anuncio_venta
 FOR EACH ROW EXECUTE PROCEDURE comprueba_participaciones();
-
