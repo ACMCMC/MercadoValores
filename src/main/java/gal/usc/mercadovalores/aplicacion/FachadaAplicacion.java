@@ -15,6 +15,7 @@ import java.util.Set;
  * @author acmc
  */
 public class FachadaAplicacion {
+    
     private FachadaGUI fgui;
 
     public FachadaAplicacion() {
@@ -61,5 +62,4 @@ public class FachadaAplicacion {
     public void cerrarSesion(javax.swing.JFrame frame){
         this.fgui.cerrarSesion(frame);
     }
-    
 }
