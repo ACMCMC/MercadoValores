@@ -86,7 +86,7 @@ CREATE TABLE anuncio_venta(
   CHECK (precio >= 0::double precision AND comision_en_fecha >= 0::double precision AND num_participaciones > 0::double precision)
 );
 
-CREATE FUNCTION comprueba_participaciones() RETURNS trigger AS $comprueba_participaciones$
+CREATE OR REPLACE FUNCTION comprueba_participaciones() RETURNS trigger AS $comprueba_participaciones$
     DECLARE
 		total double precision;
 		max double precision;
@@ -96,7 +96,7 @@ CREATE FUNCTION comprueba_participaciones() RETURNS trigger AS $comprueba_partic
 		WHERE id1=new.id1
 		  AND id2=new.id2;
 		  
-		SELECT num_participaciones into max
+		SELECT SUM(num_participaciones) into max
 		FROM tener_participaciones
 		WHERE id1=new.id1
 		  AND id2=new.id2;
