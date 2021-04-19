@@ -36,6 +36,11 @@ public class FachadaAplicacion {
     public void iniciarSesion(){
         this.fgui.iniciarSesion();
     }
+        
+    public void registro(){
+        this.fgui.registro();
+    }
+
 
     public void iniciarAdmin(UsuarioRegulador usr){
         this.fgui.iniciarAdmin(usr);
@@ -56,4 +61,5 @@ public class FachadaAplicacion {
     public void cerrarSesion(javax.swing.JFrame frame){
         this.fgui.cerrarSesion(frame);
     }
+    
 }

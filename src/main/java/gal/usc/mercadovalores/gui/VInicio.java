@@ -5,6 +5,7 @@
  */
 package gal.usc.mercadovalores.gui;
 import gal.usc.mercadovalores.aplicacion.FachadaAplicacion;
+import javafx.scene.paint.Color;
 
 /**
  *
@@ -120,7 +121,8 @@ public class VInicio extends javax.swing.JFrame {
 
     //manejo del registro de un usuario nuevo
     private void botonRegistrarUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonRegistrarUsuarioActionPerformed
-        //llamamos a fachada gui que crea ventana de registro y salimos
+        //llamamos a fachada gui que crea ventana de registro
+        fa.registro();
     }//GEN-LAST:event_botonRegistrarUsuarioActionPerformed
 
     /**

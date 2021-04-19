@@ -55,4 +55,5 @@ public final class DAOUsuarioInversor extends DAO<UsuarioInversor> {
 
 		return usuario;
 	}
+
 }
