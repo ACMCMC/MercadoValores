@@ -107,6 +107,7 @@ public final class DAOUsuarioEmpresa extends DAO<UsuarioEmpresa> {
 <<<<<<< HEAD
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     public DAOUsuarioEmpresa(Connection con) {
         super(con);
     }
@@ -127,6 +128,9 @@ public final class DAOUsuarioEmpresa extends DAO<UsuarioEmpresa> {
         
 >>>>>>> dca1e7b75e8eb954770e4769e8fe64918cadba19
 	public void update(UsuarioEmpresa u) {
+=======
+         public void update(UsuarioEmpresa u) {
+>>>>>>> aaron
 		PreparedStatement preparedStatement = null;
 
 		try {
@@ -194,6 +198,7 @@ public final class DAOUsuarioEmpresa extends DAO<UsuarioEmpresa> {
 		}
 	}
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> a8098808bd520d7dc504ed4fe78cbc735f9049d8
 =======
 
@@ -225,4 +230,6 @@ public final class DAOUsuarioEmpresa extends DAO<UsuarioEmpresa> {
 		}
         }
 >>>>>>> dca1e7b75e8eb954770e4769e8fe64918cadba19
+=======
+>>>>>>> aaron
 }

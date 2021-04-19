@@ -16,17 +16,7 @@ public final class DAOUsuarioInversor extends DAO<UsuarioInversor> {
     public DAOUsuarioInversor(Connection con) {
         super(con);
     }
-    
 
-    @Override
-    protected String getNombreTabla() {
-        return "usuario_inversor";
-    }
-
-    @Override
-    protected UsuarioInversor getTFromRS(ResultSet rs) throws SQLException {
-        return new UsuarioInversor(null, null, 0, null, null, null, null, null, null, null);
-    }
 
     public UsuarioInversor getById(String idToGet) {
 		UsuarioInversor usuario = null;
@@ -69,13 +59,8 @@ public final class DAOUsuarioInversor extends DAO<UsuarioInversor> {
 
 		return usuario;
 	}
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> a8098808bd520d7dc504ed4fe78cbc735f9049d8
-=======
->>>>>>> aaron
-=======
-    
+
+
     public void add(UsuarioInversor user){
 		PreparedStatement preparedStatement = null;
 
@@ -91,7 +76,7 @@ public final class DAOUsuarioInversor extends DAO<UsuarioInversor> {
 			preparedStatement.setString(6, user.getId());
 			preparedStatement.executeUpdate();
 			preparedStatement.close();
-                        
+
 			preparedStatement = getConexion().prepareStatement(
 					"insert into usuario_inversor(dni, nombre_completo, id) values (?,?,?)");
 			preparedStatement.setString(1, user.getDni());
@@ -109,9 +94,9 @@ public final class DAOUsuarioInversor extends DAO<UsuarioInversor> {
 			}
 		}
     }
-    
+
     public void update(UsuarioInversor user){
-        
+
 		PreparedStatement preparedStatement = null;
 
 		try {
@@ -143,8 +128,8 @@ public final class DAOUsuarioInversor extends DAO<UsuarioInversor> {
 			}
 		}
     }
-    
-    
+
+
     public Set<UsuarioInversor> getAll() {
 		Set<UsuarioInversor> setFinal = new HashSet<>();
 
@@ -184,8 +169,8 @@ public final class DAOUsuarioInversor extends DAO<UsuarioInversor> {
 
 		return setFinal;
 	}
-  
-    
+
+
      public void delete(UsuarioInversor user){
                 PreparedStatement preparedStatement = null;
                 try {
@@ -210,7 +195,5 @@ public final class DAOUsuarioInversor extends DAO<UsuarioInversor> {
 			}
 		}
         }
-    
 
->>>>>>> dca1e7b75e8eb954770e4769e8fe64918cadba19
 }
