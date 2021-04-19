@@ -91,7 +91,7 @@ CREATE OR REPLACE FUNCTION comprueba_participaciones() RETURNS trigger AS $compr
 		total double precision;
 		max double precision;
     BEGIN
-		SELECT SUM(num_participaciones) into total
+		SELECT SUM(num_participaciones) - old.num_participaciones into total
 		FROM anuncio_venta
 		WHERE id1=new.id1
 		  AND id2=new.id2;
