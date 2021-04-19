@@ -15,6 +15,7 @@ import java.util.Set;
  * @author acmc
  */
 public class FachadaAplicacion {
+    
     private FachadaGUI fgui;
 
     public FachadaAplicacion() {
@@ -36,6 +37,11 @@ public class FachadaAplicacion {
     public void iniciarSesion(){
         this.fgui.iniciarSesion();
     }
+        
+    public void registro(){
+        this.fgui.registro();
+    }
+
 
     public void iniciarAdmin(UsuarioRegulador usr){
         this.fgui.iniciarAdmin(usr);

@@ -108,8 +108,8 @@ public class FachadaDB {
         }
 
         // si el id y contraseña son de regulador
-        res = daoUsuarioRegulador.getById(id);
-        if (res != null) {
+        res = daoUsuarioRegulador.get();
+        if (res != null && res.getId().equals(id)) {
             return res;
         }
         return res;
@@ -119,7 +119,7 @@ public class FachadaDB {
         if (u instanceof UsuarioEmpresa) {
             daoUsuarioEmpresa.add((UsuarioEmpresa) u);
         } else if (u instanceof UsuarioDeMercado) {
-
+            daoUsuarioInversor.add((UsuarioInversor) u);
         } else {
             throw new IllegalArgumentException("No se acepta el tipo de usuario seleccionado");
         }

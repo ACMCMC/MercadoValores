@@ -104,6 +104,7 @@ public final class DAOUsuarioEmpresa extends DAO<UsuarioEmpresa> {
 
 		return usuario;
 	}
+<<<<<<< HEAD
 
 <<<<<<< HEAD
     public DAOUsuarioEmpresa(Connection con) {
@@ -120,6 +121,11 @@ public final class DAOUsuarioEmpresa extends DAO<UsuarioEmpresa> {
         return new UsuarioEmpresa(null, null, 0, null, null, null, null, null, null, 0, null);
     }
 
+=======
+        
+        
+        
+>>>>>>> dca1e7b75e8eb954770e4769e8fe64918cadba19
 	public void update(UsuarioEmpresa u) {
 		PreparedStatement preparedStatement = null;
 
@@ -134,7 +140,7 @@ public final class DAOUsuarioEmpresa extends DAO<UsuarioEmpresa> {
 			preparedStatement.executeUpdate();
 			preparedStatement.close();
 			preparedStatement = getConexion().prepareStatement(
-					"update usuario_mercado set clave=?, saldo=?, direccion=?, telefono=?, estado=CAST (? AS enum_estado) where id=?");
+					"update usuario_mercado set clave=?, saldo=?, direccion=?, telefono=?, estado=? where id=?");
 			preparedStatement.setString(1, u.getClave());
 			preparedStatement.setDouble(2, u.getSaldo());
 			preparedStatement.setString(3, u.getDireccion());
@@ -160,7 +166,7 @@ public final class DAOUsuarioEmpresa extends DAO<UsuarioEmpresa> {
 		try {
 			getConexion().setAutoCommit(false);
 			preparedStatement = getConexion().prepareStatement(
-					"insert into usuario_mercado(clave, saldo, direccion, telefono, estado, id) values (?,?,?,?, CAST (? AS enum_estado),?)");
+					"insert into usuario_mercado(clave, saldo, direccion, telefono, estado, id) values (?,?,?,?,?,?)");
 			preparedStatement.setString(1, u.getClave());
 			preparedStatement.setDouble(2, u.getSaldo());
 			preparedStatement.setString(3, u.getDireccion());
@@ -187,8 +193,36 @@ public final class DAOUsuarioEmpresa extends DAO<UsuarioEmpresa> {
 			}
 		}
 	}
+<<<<<<< HEAD
 >>>>>>> a8098808bd520d7dc504ed4fe78cbc735f9049d8
 =======
 
 >>>>>>> aaron
+=======
+        
+        public void delete(UsuarioEmpresa user){
+                PreparedStatement preparedStatement = null;
+                try {
+			getConexion().setAutoCommit(false);
+			preparedStatement = getConexion().prepareStatement(
+					"delete from usuario_empresa where id=?");
+			preparedStatement.setString(1, user.getId());
+			preparedStatement.executeUpdate();
+			preparedStatement.close();
+			preparedStatement = getConexion().prepareStatement(
+					"delete from usuario_mercado where id=?");
+			preparedStatement.setString(1, user.getId());
+			preparedStatement.executeUpdate();
+			getConexion().commit();
+		} catch (SQLException e) {
+			FachadaAplicacion.muestraExcepcion(e);
+		} finally {
+			try {
+				preparedStatement.close();
+			} catch (SQLException e) {
+				FachadaAplicacion.muestraExcepcion(e);
+			}
+		}
+        }
+>>>>>>> dca1e7b75e8eb954770e4769e8fe64918cadba19
 }

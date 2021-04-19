@@ -41,6 +41,12 @@ public class FachadaGUI {
         this.vaut = new VAutentificacion(vi, true, fa);
         vaut.setVisible(true);
     }
+    
+    public void registro(){
+        VRegistro vreg = new VRegistro(vi, true, fa);
+        vreg.setVisible(true);
+    }
+
 
     // aplicacion de admin (regulador de mercado)
     public void iniciarAdmin(UsuarioRegulador usr) {
