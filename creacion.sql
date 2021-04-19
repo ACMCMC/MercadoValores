@@ -56,31 +56,31 @@ CREATE TABLE beneficios(
 );
 
 CREATE TABLE tener_participaciones(
-  id_1 varchar(30),
-  id_2 varchar(30),
+  id1 varchar(30),
+  id2 varchar(30),
   num_participaciones double precision,
-  primary key (id_1,id_2),
-	foreign key (id_1) references usuario_empresa
+  primary key (id1,id2),
+	foreign key (id1) references usuario_empresa
         	on update cascade
         	on delete cascade,
-	foreign key (id_2) references usuario_mercado
+	foreign key (id2) references usuario_mercado
         	on update cascade
         	on delete cascade,
   CHECK (num_participaciones >= 0::double precision)
 );
 
 CREATE TABLE anuncio_venta(
-  id_1 varchar(30),
-  id_2 varchar(30),
+  id1 varchar(30),
+  id2 varchar(30),
   num_participaciones double precision,
   fecha_pago timestamp,
   precio double precision,
   comision_en_fecha double precision,
-  primary key (id_1,id_2,fecha_pago),
-	foreign key (id_1) references usuario_empresa
+  primary key (id1,id2,fecha_pago),
+	foreign key (id1) references usuario_empresa
         	on update cascade
         	on delete cascade,
-	foreign key (id_2) references usuario_mercado
+	foreign key (id2) references usuario_mercado
         	on update cascade
         	on delete cascade,
   CHECK (precio >= 0::double precision AND comision_en_fecha >= 0::double precision AND num_participaciones > 0::double precision)
@@ -93,13 +93,13 @@ CREATE FUNCTION comprueba_participaciones() RETURNS trigger AS $comprueba_partic
     BEGIN
 		SELECT SUM(num_participaciones) into total
 		FROM anuncio_venta
-		WHERE id_1=new.id_1
-		  AND id_2=new.id_2;
+		WHERE id1=new.id1
+		  AND id2=new.id2;
 		  
 		SELECT num_participaciones into max
 		FROM tener_participaciones
-		WHERE id_1=new.id_1
-		  AND id_2=new.id_2;
+		WHERE id1=new.id1
+		  AND id2=new.id2;
 		
 		IF new.num_participaciones > max THEN
             		RAISE EXCEPTION 'El número de participaciones a la venta no puede exceder el total poseído';
