@@ -15,12 +15,13 @@ import java.util.Set;
  * @author acmc
  */
 public class FachadaAplicacion {
+    
     private FachadaGUI fgui;
 
     public FachadaAplicacion() {
         this.fgui = new FachadaGUI(this);
     }
-    
+
     public static void main(String args[]){
         FachadaAplicacion fa;
         fa= new FachadaAplicacion();
@@ -28,28 +29,38 @@ public class FachadaAplicacion {
 
         Set<UsuarioEmpresa> s = FachadaDB.getFachada().getUsuariosEmpresa();
     }
-    
+
     public void iniciarAplicacion(){
         this.fgui.iniciarAplicacion();
     }
-    
+
     public void iniciarSesion(){
         this.fgui.iniciarSesion();
     }
-    
-    public void iniciarAdmin(){
-        this.fgui.iniciarAdmin();
+        
+    public void registro(){
+        this.fgui.registro();
     }
-    
-    public void iniciarInversor(){
-        this.fgui.iniciarInversor();
+
+
+    public void iniciarAdmin(UsuarioRegulador usr){
+        this.fgui.iniciarAdmin(usr);
     }
-    
-    public void iniciarEmpresa(){
-        this.fgui.iniciarEmpresa();
+
+    public void iniciarInversor(UsuarioInversor usr){
+        this.fgui.iniciarInversor(usr);
     }
-    
+
+    public void iniciarEmpresa(UsuarioEmpresa usr){
+        this.fgui.iniciarEmpresa(usr);
+    }
+
     public static void muestraExcepcion(Throwable t) {
         FachadaGUI.muestraExcepcion(t);
     }
+    
+    public void cerrarSesion(javax.swing.JFrame frame){
+        this.fgui.cerrarSesion(frame);
+    }
+
 }

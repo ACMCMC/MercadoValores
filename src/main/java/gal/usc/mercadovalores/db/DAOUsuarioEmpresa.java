@@ -1,6 +1,7 @@
 package gal.usc.mercadovalores.db;
 
 import java.sql.Connection;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -13,6 +14,7 @@ import gal.usc.mercadovalores.aplicacion.FachadaAplicacion;
 import gal.usc.mercadovalores.aplicacion.UsuarioEmpresa;
 
 public final class DAOUsuarioEmpresa extends DAO<UsuarioEmpresa> {
+
 
 	public DAOUsuarioEmpresa(Connection con) {
 		super(con);
@@ -71,6 +73,7 @@ public final class DAOUsuarioEmpresa extends DAO<UsuarioEmpresa> {
 					.prepareStatement("select * from usuario_empresa inner join usuario_mercado using(id) where id=?");
 			preparedStatement.setString(1, idToGet);
 			resultSet = preparedStatement.executeQuery();
+			getConexion().commit();
 			if (resultSet.next()) {
 				try {
 					String id = resultSet.getString("id");

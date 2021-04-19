@@ -6,7 +6,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import gal.usc.mercadovalores.aplicacion.FachadaAplicacion;
-import gal.usc.mercadovalores.aplicacion.UsuarioInversor;
 import gal.usc.mercadovalores.aplicacion.UsuarioRegulador;
 
 public final class DAOUsuarioRegulador extends DAO<UsuarioRegulador> {

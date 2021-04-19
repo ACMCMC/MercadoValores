@@ -9,6 +9,7 @@ import java.sql.SQLException;
 
 import gal.usc.mercadovalores.aplicacion.UsuarioInversor;
 import java.sql.PreparedStatement;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -18,7 +19,8 @@ public final class DAOUsuarioInversor extends DAO<UsuarioInversor> {
         super(con);
     }
     
-   public UsuarioInversor getById(String idToGet) {
+
+    public UsuarioInversor getById(String idToGet) {
 		UsuarioInversor usuario = null;
 
 		PreparedStatement preparedStatement = null;
@@ -195,6 +197,5 @@ public final class DAOUsuarioInversor extends DAO<UsuarioInversor> {
 		}
         }
     
-
 
 }
