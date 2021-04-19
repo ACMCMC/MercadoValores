@@ -41,6 +41,12 @@ public class FachadaGUI {
         this.vaut = new VAutentificacion(vi, true, fa);
         vaut.setVisible(true);
     }
+    
+    public void registro(){
+        VRegistro vreg = new VRegistro(vi, true, fa);
+        vreg.setVisible(true);
+    }
+
 
     // aplicacion de admin (regulador de mercado)
     public void iniciarAdmin(UsuarioRegulador usr) {
@@ -66,10 +72,10 @@ public class FachadaGUI {
         this.vempresa = new VPrincipalEmpresa(usr, fa);
         vempresa.setVisible(true);
     }
-    
+
     public void cerrarSesion(javax.swing.JFrame frame){
         frame.dispose();
-        this.vi = new VInicio(this.fa);        
+        this.vi = new VInicio(this.fa);
         vi.setVisible(true);
     }
 }
