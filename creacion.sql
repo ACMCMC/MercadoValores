@@ -77,7 +77,7 @@ CREATE TABLE anuncio_venta(
   fecha_pago timestamp,
   precio double precision,
   comision_en_fecha double precision,
-  primary key (id_1,id_2,comision_en_fecha),
+  primary key (id_1,id_2,fecha_pago),
 	foreign key (id_1) references usuario_empresa
         	on update cascade
         	on delete cascade,
@@ -102,11 +102,16 @@ CREATE FUNCTION comprueba_participaciones() RETURNS trigger AS $comprueba_partic
 		WHERE id_1=new.id_1
 		  AND id_2=new.id_2;
 		
-		IF  total +new.num_participaciones <= max THEN
-            		RETURN new;
-		 END IF;
+		IF new.num_participaciones > max THEN
+            		RAISE EXCEPTION 'El número de participaciones a la venta no puede exceder el total poseído';
+		END IF;
+		IF total IS NOT NULL THEN
+            		IF total+new.num_participaciones > max THEN
+				RAISE EXCEPTION 'El número de participaciones a la venta no puede exceder el total poseído';
+			END IF;
+		END IF;
+		RETURN NEW;
 		 
-		 RAISE EXCEPTION 'El número de participaciones a la venta no puede exceder el total poseído';
     END;
 $comprueba_participaciones$ LANGUAGE plpgsql;
 
