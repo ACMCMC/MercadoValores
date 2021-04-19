@@ -25,12 +25,11 @@ Values ('Opti','20021/12/31 17:00:00.00', 4.00),
 ('SI','2021/5/9 00:00:00.00',50);
 
 Insert into tener_participaciones (id1,id2,num_participaciones)
-Values ('Opti','Bruce', 6.0),
-('WW','Tim',10.0),
-('SI','WW',5.0);
-
+Values ('Bruce','Opti', 6),
+('Tim','WW',10),
+('WW','SI',5);
 
 Insert into anuncio_venta (id1,id2,num_participaciones,fecha_pago,precio,comision_en_fecha)
-Values ('Opti','Bruce', 3.0,'2021/4/12 13:00:00.59',14.0,0.05),
-('WW','Tim',2.0,'2021/4/2 14:20:50.29',25.0,0.07),
-('SI','WW',1.0,'2021/3/2 10:24:52.29',23.24,0.1);
+Values ('Bruce','Opti', 3,'2021/4/12 13:00:00.59',14.0,0.05),
+('Tim','WW',2,'2021/4/2 14:20:50.29',25.0,0.07),
+('WW','SI',1,'2021/3/2 10:24:52.29',23.24,0.1);
