@@ -11,14 +11,14 @@ import gal.usc.mercadovalores.aplicacion.UsuarioInversor;
 import java.sql.PreparedStatement;
 import java.util.HashSet;
 import java.util.Set;
-
 public final class DAOUsuarioInversor extends DAO<UsuarioInversor> {
 
     public DAOUsuarioInversor(Connection con) {
         super(con);
     }
     
-   public UsuarioInversor getById(String idToGet) {
+
+    public UsuarioInversor getById(String idToGet) {
 		UsuarioInversor usuario = null;
 
 		PreparedStatement preparedStatement = null;
@@ -66,7 +66,7 @@ public final class DAOUsuarioInversor extends DAO<UsuarioInversor> {
 		try {
 			getConexion().setAutoCommit(false);
 			preparedStatement = getConexion().prepareStatement(
-					"insert into usuario_mercado(clave, saldo, direccion, telefono, estado, id) values (?,?,?,?,?,?)");
+					"insert into usuario_mercado(clave, saldo, direccion, telefono, estado, id) values (?,?,?,?,CAST (? AS enum_estado),?)");
 			preparedStatement.setString(1, user.getClave());
 			preparedStatement.setDouble(2, user.getSaldo());
 			preparedStatement.setString(3, user.getDireccion());
@@ -77,7 +77,7 @@ public final class DAOUsuarioInversor extends DAO<UsuarioInversor> {
 			preparedStatement.close();
                         
 			preparedStatement = getConexion().prepareStatement(
-					"insert into usuario_inversor(dni, nombre_completo, id) values (?,?,?,?)");
+					"insert into usuario_inversor(dni, nombre_completo, id) values (?,?,?)");
 			preparedStatement.setString(1, user.getDni());
 			preparedStatement.setString(2, user.getNombreCompleto());
 			preparedStatement.setString(3, user.getId());
@@ -195,6 +195,5 @@ public final class DAOUsuarioInversor extends DAO<UsuarioInversor> {
 		}
         }
     
-
 
 }
