@@ -104,33 +104,10 @@ public final class DAOUsuarioEmpresa extends DAO<UsuarioEmpresa> {
 
 		return usuario;
 	}
-<<<<<<< HEAD
-
-<<<<<<< HEAD
-<<<<<<< HEAD
-    public DAOUsuarioEmpresa(Connection con) {
-        super(con);
-    }
-
-    @Override
-    protected String getNombreTabla() {
-        return "usuario_empresa";
-    }
-
-    @Override
-    protected UsuarioEmpresa getTFromRS(ResultSet rs) throws SQLException {
-        return new UsuarioEmpresa(null, null, 0, null, null, null, null, null, null, 0, null);
-    }
-
-=======
         
         
         
->>>>>>> dca1e7b75e8eb954770e4769e8fe64918cadba19
 	public void update(UsuarioEmpresa u) {
-=======
-         public void update(UsuarioEmpresa u) {
->>>>>>> aaron
 		PreparedStatement preparedStatement = null;
 
 		try {
@@ -197,13 +174,6 @@ public final class DAOUsuarioEmpresa extends DAO<UsuarioEmpresa> {
 			}
 		}
 	}
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> a8098808bd520d7dc504ed4fe78cbc735f9049d8
-=======
-
->>>>>>> aaron
-=======
         
         public void delete(UsuarioEmpresa user){
                 PreparedStatement preparedStatement = null;
@@ -229,7 +199,4 @@ public final class DAOUsuarioEmpresa extends DAO<UsuarioEmpresa> {
 			}
 		}
         }
->>>>>>> dca1e7b75e8eb954770e4769e8fe64918cadba19
-=======
->>>>>>> aaron
 }
