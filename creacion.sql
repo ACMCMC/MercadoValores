@@ -1,10 +1,10 @@
 CREATE TABLE usuario_regulador(
-  id varchar(30) ,
+  id varchar(30),
   clave varchar(40),
   saldo double precision,
   comision_actual double precision,
   primary key (id),
-CONSTRAINT valores CHECK (saldo >= 0::double precision AND comision_actual >= 0::double precision) NOT VALID
+CONSTRAINT valores CHECK (saldo >= 0::double precision AND comision_actual >= 0::double precision)
 );
 
 CREATE TYPE enum_estado AS ENUM ('SOLICITANDO_ALTA', 'SOLICITANDO_BAJA', 'DADO_DE_ALTA');
@@ -13,11 +13,11 @@ CREATE TABLE usuario_mercado(
     id varchar(30),
     clave varchar(40),
     saldo double precision,
-    direccion varchar(256),
+    direccion text,
     telefono varchar(15), --15 valores porque si se pretendiese ser internacional haria falta el prefijo internacional
     estado enum_estado,
     primary key (id),
-CONSTRAINT valores CHECK (saldo >= 0::double precision) NOT VALID
+CONSTRAINT valores CHECK (saldo >= 0::double precision)
 );
 
 CREATE TABLE usuario_inversor(
@@ -38,7 +38,8 @@ CREATE TABLE usuario_empresa(
     foreign key (id) references usuario_mercado
    		 on update cascade
    		 on delete cascade,
-CONSTRAINT valores CHECK (importe_bloqueado >= 0::double precision) NOT VALID
+CONSTRAINT valores CHECK (importe_bloqueado >= 0::double precision),
+CONSTRAINT valores CHECK (cif SIMILAR TO '\d{8}[A-Z]')
 );
 
 CREATE TABLE beneficios(
@@ -49,12 +50,8 @@ CREATE TABLE beneficios(
 	foreign key (id) references usuario_empresa
         	on update cascade
         	on delete cascade,
-CONSTRAINT valores CHECK (importe_por_participacion >= 0::double precision) NOT VALID
+CONSTRAINT valores CHECK (importe_por_participacion >= 0::double precision)
 );
-
-
-
-
 
 CREATE TABLE tener_participaciones(
   id_1 varchar(30),
@@ -67,7 +64,7 @@ CREATE TABLE tener_participaciones(
 	foreign key (id_2) references usuario_mercado
         	on update cascade
         	on delete cascade,
-CONSTRAINT valores CHECK (num_participaciones >= 0::double precision) NOT VALID
+CONSTRAINT valores CHECK (num_participaciones >= 0::double precision)
 );
 
 CREATE TABLE anuncio_venta(
@@ -84,7 +81,7 @@ CREATE TABLE anuncio_venta(
 	foreign key (id_2) references usuario_mercado
         	on update cascade
         	on delete cascade,
-CONSTRAINT valores CHECK (precio >= 0::double precision AND comision_en_fecha >= 0::double precision AND num_participaciones > 0::double precision) NOT VALID
+CONSTRAINT valores CHECK (precio >= 0::double precision AND comision_en_fecha >= 0::double precision AND num_participaciones > 0::double precision)
 );
 
 CREATE FUNCTION comprueba_participaciones() RETURNS trigger AS $comprueba_participaciones$
