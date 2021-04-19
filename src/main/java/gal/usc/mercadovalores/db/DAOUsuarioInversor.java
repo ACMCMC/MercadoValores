@@ -17,6 +17,7 @@ public final class DAOUsuarioInversor extends DAO<UsuarioInversor> {
         super(con);
     }
 
+
     public UsuarioInversor getById(String idToGet) {
 		UsuarioInversor usuario = null;
 
@@ -24,6 +25,7 @@ public final class DAOUsuarioInversor extends DAO<UsuarioInversor> {
 		ResultSet resultSet;
 
 		try {
+                        getConexion().setAutoCommit(false);
 			preparedStatement = getConexion()
 					.prepareStatement("select * from usuario_inversor inner join usuario_mercado using(id) where id=?");
 			preparedStatement.setString(1, idToGet);
@@ -40,6 +42,7 @@ public final class DAOUsuarioInversor extends DAO<UsuarioInversor> {
 					String nombreCompleto = resultSet.getString("nombre_completo");
 
 					usuario = new UsuarioInversor(id, clave, saldo, direccion, telefono, estado, cif, nombreCompleto);
+                                        getConexion().commit();
 				} catch (EnumConstantNotPresentException e) {
 					FachadaAplicacion.muestraExcepcion(e);
 				}
@@ -56,7 +59,8 @@ public final class DAOUsuarioInversor extends DAO<UsuarioInversor> {
 
 		return usuario;
 	}
-    
+
+
     public void add(UsuarioInversor user){
 		PreparedStatement preparedStatement = null;
 
@@ -72,7 +76,7 @@ public final class DAOUsuarioInversor extends DAO<UsuarioInversor> {
 			preparedStatement.setString(6, user.getId());
 			preparedStatement.executeUpdate();
 			preparedStatement.close();
-                        
+
 			preparedStatement = getConexion().prepareStatement(
 					"insert into usuario_inversor(dni, nombre_completo, id) values (?,?,?)");
 			preparedStatement.setString(1, user.getDni());
@@ -90,9 +94,9 @@ public final class DAOUsuarioInversor extends DAO<UsuarioInversor> {
 			}
 		}
     }
-    
+
     public void update(UsuarioInversor user){
-        
+
 		PreparedStatement preparedStatement = null;
 
 		try {
@@ -124,8 +128,8 @@ public final class DAOUsuarioInversor extends DAO<UsuarioInversor> {
 			}
 		}
     }
-    
-    
+
+
     public Set<UsuarioInversor> getAll() {
 		Set<UsuarioInversor> setFinal = new HashSet<>();
 
@@ -165,8 +169,8 @@ public final class DAOUsuarioInversor extends DAO<UsuarioInversor> {
 
 		return setFinal;
 	}
-  
-    
+
+
      public void delete(UsuarioInversor user){
                 PreparedStatement preparedStatement = null;
                 try {

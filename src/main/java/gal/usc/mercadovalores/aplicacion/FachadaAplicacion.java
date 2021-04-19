@@ -15,6 +15,7 @@ import java.util.Set;
  * @author acmc
  */
 public class FachadaAplicacion {
+    
     private FachadaGUI fgui;
 
     public FachadaAplicacion() {
