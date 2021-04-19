@@ -15,4 +15,12 @@ public final class UsuarioInversor extends UsuarioDeMercado {
         this.dni = dni;
         this.nombre_completo = nombre_completo;
     }
+    
+    public String getDni(){
+        return this.dni;
+    }
+    
+    public String getNombreCompleto(){
+        return this.nombre_completo;
+    }
 }

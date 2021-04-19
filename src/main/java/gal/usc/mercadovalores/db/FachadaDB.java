@@ -119,7 +119,7 @@ public class FachadaDB {
         if (u instanceof UsuarioEmpresa) {
             daoUsuarioEmpresa.add((UsuarioEmpresa) u);
         } else if (u instanceof UsuarioDeMercado) {
-
+            daoUsuarioInversor.add((UsuarioInversor) u);
         } else {
             throw new IllegalArgumentException("No se acepta el tipo de usuario seleccionado");
         }
