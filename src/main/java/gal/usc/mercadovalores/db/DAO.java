@@ -27,7 +27,7 @@ public abstract class DAO<T> {
 	protected Connection startTransaction() {
 		try {
 			this.conexion.setAutoCommit(false);
-			this.conexion.abort(null);
+			this.conexion.rollback();
 		} catch (SQLException e) {
 		}
 		return this.conexion;
