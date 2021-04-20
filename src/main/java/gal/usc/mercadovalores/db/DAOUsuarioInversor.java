@@ -16,7 +16,7 @@ public final class DAOUsuarioInversor extends DAO<UsuarioInversor> {
     public DAOUsuarioInversor(Connection con) {
         super(con);
     }
-
+    
 
     public UsuarioInversor getById(String idToGet) {
 		UsuarioInversor usuario = null;
@@ -59,8 +59,7 @@ public final class DAOUsuarioInversor extends DAO<UsuarioInversor> {
 
 		return usuario;
 	}
-
-
+    
     public void add(UsuarioInversor user){
 		PreparedStatement preparedStatement = null;
 
@@ -76,7 +75,7 @@ public final class DAOUsuarioInversor extends DAO<UsuarioInversor> {
 			preparedStatement.setString(6, user.getId());
 			preparedStatement.executeUpdate();
 			preparedStatement.close();
-
+                        
 			preparedStatement = getConexion().prepareStatement(
 					"insert into usuario_inversor(dni, nombre_completo, id) values (?,?,?)");
 			preparedStatement.setString(1, user.getDni());
@@ -94,9 +93,9 @@ public final class DAOUsuarioInversor extends DAO<UsuarioInversor> {
 			}
 		}
     }
-
+    
     public void update(UsuarioInversor user){
-
+        
 		PreparedStatement preparedStatement = null;
 
 		try {
@@ -128,8 +127,8 @@ public final class DAOUsuarioInversor extends DAO<UsuarioInversor> {
 			}
 		}
     }
-
-
+    
+    
     public Set<UsuarioInversor> getAll() {
 		Set<UsuarioInversor> setFinal = new HashSet<>();
 
@@ -169,8 +168,8 @@ public final class DAOUsuarioInversor extends DAO<UsuarioInversor> {
 
 		return setFinal;
 	}
-
-
+  
+    
      public void delete(UsuarioInversor user){
                 PreparedStatement preparedStatement = null;
                 try {
@@ -195,5 +194,6 @@ public final class DAOUsuarioInversor extends DAO<UsuarioInversor> {
 			}
 		}
         }
+    
 
 }
