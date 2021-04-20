@@ -15,19 +15,20 @@ import gal.usc.mercadovalores.aplicacion.UsuarioEmpresa;
 
 public final class DAOUsuarioEmpresa extends DAO<UsuarioEmpresa> {
 
-
 	public DAOUsuarioEmpresa(Connection con) {
 		super(con);
 	}
 
 	public Set<UsuarioEmpresa> getAll() {
+		Connection c = startTransaction();
 		Set<UsuarioEmpresa> setFinal = new HashSet<>();
 
 		PreparedStatement preparedStatement = null;
 		ResultSet resultSet;
 
 		try {
-			preparedStatement = getConexion().prepareStatement("select * from usuario_empresa inner join usuario_mercado using(id)");
+			preparedStatement = getConexion()
+					.prepareStatement("select * from usuario_empresa inner join usuario_mercado using(id)");
 			resultSet = preparedStatement.executeQuery();
 			while (resultSet.next()) {
 				UsuarioEmpresa usuario;
@@ -63,6 +64,7 @@ public final class DAOUsuarioEmpresa extends DAO<UsuarioEmpresa> {
 	}
 
 	public UsuarioEmpresa getById(String idToGet) {
+		Connection c = startTransaction();
 		UsuarioEmpresa usuario = null;
 
 		PreparedStatement preparedStatement = null;
@@ -104,10 +106,9 @@ public final class DAOUsuarioEmpresa extends DAO<UsuarioEmpresa> {
 
 		return usuario;
 	}
-        
-        
-        
+
 	public void update(UsuarioEmpresa u) {
+		Connection c = startTransaction();
 		PreparedStatement preparedStatement = null;
 
 		try {
@@ -141,7 +142,8 @@ public final class DAOUsuarioEmpresa extends DAO<UsuarioEmpresa> {
 		}
 	}
 
-	public void add(UsuarioEmpresa u) {
+	public void add(UsuarioEmpresa u) throws SQLException {
+		Connection c = startTransaction();
 		PreparedStatement preparedStatement = null;
 
 		try {
@@ -165,7 +167,7 @@ public final class DAOUsuarioEmpresa extends DAO<UsuarioEmpresa> {
 			preparedStatement.executeUpdate();
 			getConexion().commit();
 		} catch (SQLException e) {
-			FachadaAplicacion.muestraExcepcion(e);
+			throw e;
 		} finally {
 			try {
 				preparedStatement.close();
@@ -174,18 +176,17 @@ public final class DAOUsuarioEmpresa extends DAO<UsuarioEmpresa> {
 			}
 		}
 	}
-        
-        public void delete(UsuarioEmpresa user){
-                PreparedStatement preparedStatement = null;
-                try {
+
+	public void delete(UsuarioEmpresa user) {
+		Connection c = startTransaction();
+		PreparedStatement preparedStatement = null;
+		try {
 			getConexion().setAutoCommit(false);
-			preparedStatement = getConexion().prepareStatement(
-					"delete from usuario_empresa where id=?");
+			preparedStatement = getConexion().prepareStatement("delete from usuario_empresa where id=?");
 			preparedStatement.setString(1, user.getId());
 			preparedStatement.executeUpdate();
 			preparedStatement.close();
-			preparedStatement = getConexion().prepareStatement(
-					"delete from usuario_mercado where id=?");
+			preparedStatement = getConexion().prepareStatement("delete from usuario_mercado where id=?");
 			preparedStatement.setString(1, user.getId());
 			preparedStatement.executeUpdate();
 			getConexion().commit();
@@ -198,5 +199,5 @@ public final class DAOUsuarioEmpresa extends DAO<UsuarioEmpresa> {
 				FachadaAplicacion.muestraExcepcion(e);
 			}
 		}
-        }
+	}
 }

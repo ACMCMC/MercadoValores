@@ -12,6 +12,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Properties;
@@ -115,7 +116,7 @@ public class FachadaDB {
         return res;
     }
 
-    public void add(Usuario u) {
+    public void add(Usuario u) throws SQLException {
         if (u instanceof UsuarioEmpresa) {
             daoUsuarioEmpresa.add((UsuarioEmpresa) u);
         } else if (u instanceof UsuarioDeMercado) {
