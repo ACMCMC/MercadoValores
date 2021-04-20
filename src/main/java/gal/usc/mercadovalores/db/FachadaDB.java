@@ -71,8 +71,7 @@ public class FachadaDB {
     }
 
     public Set<UsuarioInversor> getUsuariosInversores() {
-        // Aquí se devuelve null
-        return null;
+        return daoUsuarioInversor.getAll();
     }
 
     public Set<UsuarioDeMercado> getUsuariosDeMercado() {

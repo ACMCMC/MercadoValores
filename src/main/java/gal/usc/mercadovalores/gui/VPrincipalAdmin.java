@@ -4,8 +4,14 @@
  * and open the template in the editor.
  */
 package gal.usc.mercadovalores.gui;
+import gal.usc.mercadovalores.aplicacion.EstadoUsuario;
 import gal.usc.mercadovalores.aplicacion.UsuarioRegulador;
 import gal.usc.mercadovalores.aplicacion.FachadaAplicacion;
+import gal.usc.mercadovalores.aplicacion.UsuarioDeMercado;
+import gal.usc.mercadovalores.db.FachadaDB;
+import java.util.Set;
+import java.util.ArrayList;
+
 
 
 /**
@@ -23,6 +29,7 @@ public class VPrincipalAdmin extends javax.swing.JFrame {
         this.usr = usr;
         this.fa = fa;
         initComponents();
+        this.updateTabla();
     }
 
     /**
@@ -39,6 +46,9 @@ public class VPrincipalAdmin extends javax.swing.JFrame {
         NuevaComisionBoton = new javax.swing.JButton();
         ComisionActualTexto = new javax.swing.JLabel();
         BajaPagosBoton = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tablaUsuarios = new javax.swing.JTable();
+        botonAutorizar = new javax.swing.JButton();
         Menu = new javax.swing.JMenuBar();
         UsuarioMenu = new javax.swing.JMenu();
         AltasMenuItem = new javax.swing.JMenuItem();
@@ -64,9 +74,24 @@ public class VPrincipalAdmin extends javax.swing.JFrame {
         BajaPagosBoton.setText("Dar de baja pagos de beneficios");
         BajaPagosBoton.setToolTipText("");
 
+        tablaUsuarios.setModel(new TablaUsuarios());
+        jScrollPane1.setViewportView(tablaUsuarios);
+
+        botonAutorizar.setText("Autorizar");
+        botonAutorizar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonAutorizarActionPerformed(evt);
+            }
+        });
+
         UsuarioMenu.setText("Usuarios");
 
         AltasMenuItem.setText("Confirmar altas");
+        AltasMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                AltasMenuItemActionPerformed(evt);
+            }
+        });
         UsuarioMenu.add(AltasMenuItem);
 
         BajaMenuItem.setText("Confirmar bajas");
@@ -95,10 +120,15 @@ public class VPrincipalAdmin extends javax.swing.JFrame {
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(BajaPagosBoton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 311, Short.MAX_VALUE)
+                            .addComponent(BajaPagosBoton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 352, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
                                 .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(SalirBoton, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(botonAutorizar)
+                                    .addComponent(SalirBoton, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addGap(33, 33, 33))))
         );
         layout.setVerticalGroup(
@@ -112,7 +142,11 @@ public class VPrincipalAdmin extends javax.swing.JFrame {
                 .addComponent(NuevaComisionBoton)
                 .addGap(27, 27, 27)
                 .addComponent(BajaPagosBoton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 136, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(botonAutorizar)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 13, Short.MAX_VALUE)
                 .addComponent(SalirBoton)
                 .addGap(24, 24, 24))
         );
@@ -124,6 +158,35 @@ public class VPrincipalAdmin extends javax.swing.JFrame {
         System.exit(0);
     }//GEN-LAST:event_SalirBotonActionPerformed
 
+    private void AltasMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AltasMenuItemActionPerformed
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_AltasMenuItemActionPerformed
+
+    //este boton permite autorizar las altas de usuarios nuevos
+    private void botonAutorizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonAutorizarActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_botonAutorizarActionPerformed
+
+    
+    //funcion que actualiza usuarios de la tabla que se muestra al regulador
+    //esto permite autorizar facilmente el alta y baja de usuarios
+    private void updateTabla(){
+        TablaUsuarios uT = (TablaUsuarios) this.tablaUsuarios.getModel();
+        Set<UsuarioDeMercado> u = FachadaDB.getFachada().getUsuariosDeMercado();
+        ArrayList<UsuarioDeMercado> uM = new ArrayList<>();
+        
+        for(UsuarioDeMercado user: u){
+            
+            //filtramos los que estén esperando confimación de alta o de baja:
+            if(user.getEstado() == EstadoUsuario.SOLICITANDO_ALTA || user.getEstado() == EstadoUsuario.SOLICITANDO_BAJA){
+                uM.add(user);
+            }
+        }
+        
+        uT.setFilas(uM);
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -139,5 +202,8 @@ public class VPrincipalAdmin extends javax.swing.JFrame {
     private javax.swing.JMenuItem SaldosMenuItem;
     private javax.swing.JButton SalirBoton;
     private javax.swing.JMenu UsuarioMenu;
+    private javax.swing.JButton botonAutorizar;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable tablaUsuarios;
     // End of variables declaration//GEN-END:variables
 }
