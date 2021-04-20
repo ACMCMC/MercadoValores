@@ -165,7 +165,18 @@ public class VPrincipalAdmin extends javax.swing.JFrame {
 
     //este boton permite autorizar las altas de usuarios nuevos
     private void botonAutorizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonAutorizarActionPerformed
-        // TODO add your handling code here:
+        //si autorizo ->        
+        TablaUsuarios uT = (TablaUsuarios) this.tablaUsuarios.getModel();
+        UsuarioDeMercado user = uT.obtenerUsuario(this.tablaUsuarios.getSelectedRow());
+        
+        if(user.getEstado() == EstadoUsuario.SOLICITANDO_ALTA){
+            FachadaDB.getFachada().autorizarRegistro(user);
+        }else if(user.getEstado() == EstadoUsuario.SOLICITANDO_BAJA){
+            FachadaDB.getFachada().autorizarBaja(user);
+        }
+        
+        this.updateTabla();
+        
     }//GEN-LAST:event_botonAutorizarActionPerformed
 
     

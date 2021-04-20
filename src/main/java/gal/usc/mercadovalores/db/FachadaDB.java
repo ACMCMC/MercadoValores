@@ -71,6 +71,7 @@ public class FachadaDB {
     }
 
     public Set<UsuarioInversor> getUsuariosInversores() {
+        // Aquí se devuelve null
         return daoUsuarioInversor.getAll();
     }
 
@@ -121,6 +122,22 @@ public class FachadaDB {
             daoUsuarioInversor.add((UsuarioInversor) u);
         } else {
             throw new IllegalArgumentException("No se acepta el tipo de usuario seleccionado");
+        }
+    }
+    
+    public void  autorizarRegistro(UsuarioDeMercado u){
+        if(u instanceof UsuarioEmpresa){
+            //autorizamos registro usuario empresa
+        }else if(u instanceof UsuarioInversor){
+            //autorizamos registro de usuario inversor
+        }
+    }
+    
+    public void  autorizarBaja(UsuarioDeMercado u){
+        if(u instanceof UsuarioEmpresa){
+            //autorizamos registro usuario empresa
+        }else if(u instanceof UsuarioInversor){
+            //autorizamos registro de usuario inversor
         }
     }
 }
