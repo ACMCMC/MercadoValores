@@ -51,55 +51,52 @@ CREATE TABLE beneficios(
   primary key (id,fecha_pago),
 	foreign key (id) references usuario_empresa
         	on update cascade
-        	on delete cascade,
+        	on delete cascade, --si una empresa se borra desaparecen sus anuncios de pago de beneficios
   CHECK (importe_por_participacion >= 0::double precision)
 );
 
 CREATE TABLE tener_participaciones(
-  id_1 varchar(30),
-  id_2 varchar(30),
-  num_participaciones double precision,
-  primary key (id_1,id_2),
-	foreign key (id_1) references usuario_empresa
+  id1 varchar(30),
+  id2 varchar(30),
+  num_participaciones integer,
+  primary key (id1,id2),
+	foreign key (id1) references usuario_mercado(id)
         	on update cascade
-        	on delete cascade,
-	foreign key (id_2) references usuario_mercado
+        	on delete restrict, --restringido, si queremos borrar un usuario antes tenemos que hacer algo con sus participaciones
+	foreign key (id2) references usuario_empresa(id)
         	on update cascade
-        	on delete cascade,
-  CHECK (num_participaciones >= 0::double precision)
+        	on delete restrict, --idem
+  CHECK (num_participaciones >= 0::integer)
 );
 
 CREATE TABLE anuncio_venta(
-  id_1 varchar(30),
-  id_2 varchar(30),
-  num_participaciones double precision,
+  id1 varchar(30),
+  id2 varchar(30),
+  num_participaciones integer,
   fecha_pago timestamp,
   precio double precision,
   comision_en_fecha double precision,
-  primary key (id_1,id_2,fecha_pago),
-	foreign key (id_1) references usuario_empresa
+  primary key (id1,id2,fecha_pago),
+	foreign key (id1,id2) references tener_participaciones
         	on update cascade
-        	on delete cascade,
-	foreign key (id_2) references usuario_mercado
-        	on update cascade
-        	on delete cascade,
-  CHECK (precio >= 0::double precision AND comision_en_fecha >= 0::double precision AND num_participaciones > 0::double precision)
+        	on delete cascade, --si se borra el usuario se borran sus anuncios de venta. si se borra una empresa esto no entra en juego porque antes tiene que acabar con sus participaciones en el mercado
+  CHECK (precio >= 0::double precision AND comision_en_fecha >= 0::double precision AND num_participaciones > 0::integer)
 );
 
-CREATE FUNCTION comprueba_participaciones() RETURNS trigger AS $comprueba_participaciones$
+CREATE OR REPLACE FUNCTION comprueba_participaciones() RETURNS trigger AS $comprueba_participaciones$
     DECLARE
 		total double precision;
 		max double precision;
     BEGIN
-		SELECT SUM(num_participaciones) into total
+		SELECT COALESCE( SUM(num_participaciones) - old.num_participaciones, 0) into total
 		FROM anuncio_venta
-		WHERE id_1=new.id_1
-		  AND id_2=new.id_2;
+		WHERE id1=new.id1
+		  AND id2=new.id2;
 		  
-		SELECT num_participaciones into max
+		SELECT SUM(num_participaciones) into max
 		FROM tener_participaciones
-		WHERE id_1=new.id_1
-		  AND id_2=new.id_2;
+		WHERE id1=new.id1
+		  AND id2=new.id2;
 		
 		IF new.num_participaciones > max THEN
             		RAISE EXCEPTION 'El número de participaciones a la venta no puede exceder el total poseído';
@@ -116,3 +113,29 @@ $comprueba_participaciones$ LANGUAGE plpgsql;
 
 CREATE TRIGGER comprueba_participaciones BEFORE INSERT OR UPDATE ON anuncio_venta
 FOR EACH ROW EXECUTE PROCEDURE comprueba_participaciones();
+
+CREATE OR REPLACE VIEW pago_total_beneficios AS SELECT id, fecha_pago, COALESCE(importe_por_participacion*(SELECT SUM(num_participaciones) FROM tener_participaciones WHERE id2=beneficios.id), 0) AS importe_total FROM beneficios;
+
+CREATE OR REPLACE FUNCTION comprueba_pago_beneficios() RETURNS trigger AS $comprueba_pago_beneficios$
+    DECLARE
+		beneficios_a_pagar double precision;
+		max double precision;
+    BEGIN
+		SELECT COALESCE(SUM(new.num_participaciones*beneficios.importe_por_participacion),0) into beneficios_a_pagar
+		FROM beneficios
+		WHERE id=new.id2;
+		
+		SELECT saldo into max
+		FROM usuario_mercado
+		WHERE id=new.id2;
+		  
+		IF beneficios_a_pagar > max THEN
+            		RAISE EXCEPTION 'Los beneficios no podrían pagarse';
+		END IF;
+		RETURN NEW;
+		 
+    END;
+$comprueba_pago_beneficios$ LANGUAGE plpgsql;
+
+CREATE TRIGGER comprueba_pago_beneficios BEFORE INSERT OR UPDATE ON tener_participaciones
+FOR EACH ROW EXECUTE PROCEDURE comprueba_pago_beneficios();

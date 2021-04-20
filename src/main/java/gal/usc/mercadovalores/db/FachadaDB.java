@@ -29,7 +29,6 @@ public class FachadaDB {
     private DAOUsuarioInversor daoUsuarioInversor;
     private DAOUsuarioRegulador daoUsuarioRegulador;
 
-
     public static FachadaDB getFachada() {
         return fachada;
     }
@@ -54,6 +53,7 @@ public class FachadaDB {
             String url = "jdbc:" + gestor + "://" + configuracion.getProperty("servidor") + ":"
                     + configuracion.getProperty("puerto") + "/" + configuracion.getProperty("baseDatos");
             this.conexion = java.sql.DriverManager.getConnection(url, usuario);
+            this.conexion.setAutoCommit(false);
         } catch (FileNotFoundException f) {
             FachadaAplicacion.muestraExcepcion(f);
         } catch (IOException i) {
