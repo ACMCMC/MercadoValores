@@ -108,7 +108,7 @@ public final class DAOUsuarioInversor extends DAO<UsuarioInversor> {
 			preparedStatement.executeUpdate();
 			preparedStatement.close();
 			preparedStatement = getConexion().prepareStatement(
-					"update usuario_mercado set clave=?, saldo=?, direccion=?, telefono=?, estado=? where id=?");
+					"update usuario_mercado set clave=?, saldo=?, direccion=?, telefono=?, estado=CAST(? AS enum_estado) where id=?");
 			preparedStatement.setString(1, user.getClave());
 			preparedStatement.setDouble(2, user.getSaldo());
 			preparedStatement.setString(3, user.getDireccion());
