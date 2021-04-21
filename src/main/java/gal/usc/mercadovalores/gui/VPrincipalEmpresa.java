@@ -82,7 +82,7 @@ public class VPrincipalEmpresa extends javax.swing.JFrame {
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false
+                false, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -234,7 +234,7 @@ public class VPrincipalEmpresa extends javax.swing.JFrame {
     private void botonActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonActualizarActionPerformed
         // TODO add your handling code here:
         this.usr.setId((String) this.TablaDatos.getValueAt(0, 1));
-        this.usr.setSaldo((double) this.TablaDatos.getValueAt(1, 1));
+        //this.usr.setSaldo((double) this.TablaDatos.getValueAt(1, 1));
         this.usr.setDireccion((String) this.TablaDatos.getValueAt(2, 1));
         this.usr.setTelefono((String) this.TablaDatos.getValueAt(3, 1));
         this.usr.setCif((String) this.TablaDatos.getValueAt(4, 1));

@@ -223,7 +223,7 @@ public class VPrincipalInversor extends javax.swing.JFrame {
     private void botonUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonUpdateActionPerformed
         //actualizamos el usuario local
         this.usr.setId((String) this.TablaDatos.getValueAt(0, 1));
-        this.usr.setSaldo((double) this.TablaDatos.getValueAt(1, 1));
+        //this.usr.setSaldo((double) this.TablaDatos.getValueAt(1, 1));
         this.usr.setDireccion((String) this.TablaDatos.getValueAt(2, 1));
         this.usr.setTelefono((String) this.TablaDatos.getValueAt(3, 1));
         this.usr.setDni((String) this.TablaDatos.getValueAt(4, 1));
