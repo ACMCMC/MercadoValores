@@ -6,6 +6,7 @@
 package gal.usc.mercadovalores.gui;
 import gal.usc.mercadovalores.aplicacion.UsuarioEmpresa;
 import gal.usc.mercadovalores.aplicacion.FachadaAplicacion;
+import gal.usc.mercadovalores.db.FachadaDB;
 
 /**
  *
@@ -109,6 +110,11 @@ public class VPrincipalEmpresa extends javax.swing.JFrame {
         CuentaMenu.add(ModificarMenuItem);
 
         BajaMenuItem.setText("Solicitar Baja");
+        BajaMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BajaMenuItemActionPerformed(evt);
+            }
+        });
         CuentaMenu.add(BajaMenuItem);
 
         Menu.add(CuentaMenu);
@@ -199,6 +205,10 @@ public class VPrincipalEmpresa extends javax.swing.JFrame {
     private void BotonCerrarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonCerrarSesionActionPerformed
         this.fa.cerrarSesion(this);
     }//GEN-LAST:event_BotonCerrarSesionActionPerformed
+
+    private void BajaMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BajaMenuItemActionPerformed
+        FachadaDB.getFachada().solicitarBaja(this.usr);
+    }//GEN-LAST:event_BajaMenuItemActionPerformed
 
     private void ActualizarTablaDatos(){
         this.TablaDatos.setValueAt(usr.getId(), 0, 1);

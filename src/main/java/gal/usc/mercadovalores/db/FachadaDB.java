@@ -128,8 +128,10 @@ public class FachadaDB {
     public void  autorizarRegistro(UsuarioDeMercado u){
         if(u instanceof UsuarioEmpresa){
             //autorizamos registro usuario empresa
+            daoUsuarioEmpresa.autorizarRegistro((UsuarioEmpresa) u);
         }else if(u instanceof UsuarioInversor){
             //autorizamos registro de usuario inversor
+            daoUsuarioInversor.autorizarRegistro((UsuarioInversor) u);
         }
     }
     
@@ -138,6 +140,16 @@ public class FachadaDB {
             //autorizamos registro usuario empresa
         }else if(u instanceof UsuarioInversor){
             //autorizamos registro de usuario inversor
+        }
+    }
+    
+    public void  solicitarBaja(UsuarioDeMercado u){
+        if(u instanceof UsuarioEmpresa){                        
+            //actualizamos el estado del usuario empresa
+            daoUsuarioEmpresa.solicitarBaja((UsuarioEmpresa) u);
+        }else if(u instanceof UsuarioInversor){
+            //actualizamos el estado del usuario inversor
+            daoUsuarioInversor.solicitarBaja((UsuarioInversor) u);
         }
     }
 }
