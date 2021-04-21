@@ -19,7 +19,7 @@ import java.awt.Color;
 public class VPrincipalInversor extends javax.swing.JFrame {
     private UsuarioInversor usr;
     private FachadaAplicacion fa;
-    
+    private boolean modificando = false;
     /**
      * Creates new form VPrincipalMercado
      * 
@@ -30,6 +30,7 @@ public class VPrincipalInversor extends javax.swing.JFrame {
         this.fa = fa;
         initComponents();
         this.ActualizarTablaDatos();
+        this.botonUpdate.setEnabled(this.modificando);
     }
 
     /**
@@ -215,7 +216,8 @@ public class VPrincipalInversor extends javax.swing.JFrame {
     private void ModificarMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ModificarMenuItemActionPerformed
         //modificacion de los datos:
         //ponemos como visible el boton:
-        
+        this.modificando = !this.modificando;
+        this.botonUpdate.setEnabled(this.modificando);
     }//GEN-LAST:event_ModificarMenuItemActionPerformed
 
     private void botonUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonUpdateActionPerformed
@@ -227,7 +229,6 @@ public class VPrincipalInversor extends javax.swing.JFrame {
         this.usr.setDni((String) this.TablaDatos.getValueAt(4, 1));
         this.usr.setNombreCompleto((String) this.TablaDatos.getValueAt(5,1));
         
-        System.out.println("actualizando inversor:  "+this.usr.getNombreCompleto());
 
         Usuario res;
         res = FachadaDB.getFachada().getUsuarioById(this.usr.getId());

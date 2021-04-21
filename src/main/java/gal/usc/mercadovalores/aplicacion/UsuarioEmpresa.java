@@ -42,4 +42,18 @@ public final class UsuarioEmpresa extends UsuarioDeMercado {
     public Set<UsuarioDeMercado> getUsuariosConParticipaciones() {
         return null;
     }
+
+    public void setCif(String cif) {
+        this.cif = cif;
+    }
+
+    public void setNombreComercial(String nombreComercial) {
+        this.nombreComercial = nombreComercial;
+    }
+
+    public void setImporteBloqueado(double importeBloqueado) {
+        this.importeBloqueado = importeBloqueado;
+    }
+    
+    
 }

@@ -6,6 +6,9 @@
 package gal.usc.mercadovalores.gui;
 import gal.usc.mercadovalores.aplicacion.UsuarioEmpresa;
 import gal.usc.mercadovalores.aplicacion.FachadaAplicacion;
+import gal.usc.mercadovalores.aplicacion.Usuario;
+import gal.usc.mercadovalores.aplicacion.UsuarioInversor;
+import gal.usc.mercadovalores.aplicacion.UsuarioRegulador;
 import gal.usc.mercadovalores.db.FachadaDB;
 
 /**
@@ -15,6 +18,7 @@ import gal.usc.mercadovalores.db.FachadaDB;
 public class VPrincipalEmpresa extends javax.swing.JFrame {
     private UsuarioEmpresa usr;
     private FachadaAplicacion fa;
+    private boolean modificando;
     /**
      * Creates new form VPrincipalMercado
      * @param usr
@@ -24,6 +28,7 @@ public class VPrincipalEmpresa extends javax.swing.JFrame {
         this.usr = usr;
         this.ActualizarTablaDatos();
         this.fa = fa;
+        this.botonActualizar.setEnabled(this.modificando);
     }
 
     /**
@@ -40,6 +45,7 @@ public class VPrincipalEmpresa extends javax.swing.JFrame {
         SalirBoton = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         BotonCerrarSesion = new javax.swing.JButton();
+        botonActualizar = new javax.swing.JButton();
         Menu = new javax.swing.JMenuBar();
         CuentaMenu = new javax.swing.JMenu();
         ModificarMenuItem = new javax.swing.JMenuItem();
@@ -104,9 +110,21 @@ public class VPrincipalEmpresa extends javax.swing.JFrame {
             }
         });
 
+        botonActualizar.setText("Actualizar");
+        botonActualizar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonActualizarActionPerformed(evt);
+            }
+        });
+
         CuentaMenu.setText("Cuenta");
 
         ModificarMenuItem.setText("Modificar Datos");
+        ModificarMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ModificarMenuItemActionPerformed(evt);
+            }
+        });
         CuentaMenu.add(ModificarMenuItem);
 
         BajaMenuItem.setText("Solicitar Baja");
@@ -173,7 +191,8 @@ public class VPrincipalEmpresa extends javax.swing.JFrame {
                         .addComponent(SalirBoton, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addComponent(jLabel1)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 345, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 345, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(botonActualizar))
                 .addContainerGap(33, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -183,7 +202,9 @@ public class VPrincipalEmpresa extends javax.swing.JFrame {
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 64, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(botonActualizar)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(SalirBoton)
                     .addComponent(BotonCerrarSesion))
@@ -209,6 +230,37 @@ public class VPrincipalEmpresa extends javax.swing.JFrame {
     private void BajaMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BajaMenuItemActionPerformed
         FachadaDB.getFachada().solicitarBaja(this.usr);
     }//GEN-LAST:event_BajaMenuItemActionPerformed
+
+    private void botonActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonActualizarActionPerformed
+        // TODO add your handling code here:
+        this.usr.setId((String) this.TablaDatos.getValueAt(0, 1));
+        this.usr.setSaldo((double) this.TablaDatos.getValueAt(1, 1));
+        this.usr.setDireccion((String) this.TablaDatos.getValueAt(2, 1));
+        this.usr.setTelefono((String) this.TablaDatos.getValueAt(3, 1));
+        this.usr.setCif((String) this.TablaDatos.getValueAt(4, 1));
+        this.usr.setNombreComercial((String) this.TablaDatos.getValueAt(5,1));
+        
+        Usuario res;
+        res = FachadaDB.getFachada().getUsuarioById(this.usr.getId());
+        
+        if(res != null && res instanceof UsuarioEmpresa){
+            FachadaDB.getFachada().actualizarUser(this.usr);
+        }else if(res != null && (res instanceof UsuarioInversor || res instanceof UsuarioRegulador)){
+            System.out.println("Nombre de usuario no valido");
+        }else{
+            FachadaDB.getFachada().add(this.usr);
+        }
+        
+        this.ActualizarTablaDatos();
+        
+    }//GEN-LAST:event_botonActualizarActionPerformed
+
+    private void ModificarMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ModificarMenuItemActionPerformed
+        //Permite modificar los datos->
+        this.modificando = !this.modificando;
+        this.botonActualizar.setEnabled(this.modificando);
+
+    }//GEN-LAST:event_ModificarMenuItemActionPerformed
 
     private void ActualizarTablaDatos(){
         this.TablaDatos.setValueAt(usr.getId(), 0, 1);
@@ -238,6 +290,7 @@ public class VPrincipalEmpresa extends javax.swing.JFrame {
     private javax.swing.JButton SalirBoton;
     private javax.swing.JTable TablaDatos;
     private javax.swing.JMenuItem VenderMenuItem;
+    private javax.swing.JButton botonActualizar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane2;
     // End of variables declaration//GEN-END:variables

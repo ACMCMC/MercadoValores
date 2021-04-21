@@ -160,7 +160,6 @@ public class FachadaDB {
         if(u instanceof UsuarioEmpresa){
             daoUsuarioEmpresa.update((UsuarioEmpresa) u);
         }else if(u instanceof UsuarioInversor){
-            System.out.println("actualizando: "+((UsuarioInversor) u).getNombreCompleto());
             daoUsuarioInversor.update((UsuarioInversor) u);
         }
     }
