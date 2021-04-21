@@ -137,9 +137,12 @@ public class FachadaDB {
     
     public void  autorizarBaja(UsuarioDeMercado u){
         if(u instanceof UsuarioEmpresa){
-            //autorizamos registro usuario empresa
+            //autorizamos la baja usuario empresa
+            daoUsuarioEmpresa.delete((UsuarioEmpresa) u);
         }else if(u instanceof UsuarioInversor){
-            //autorizamos registro de usuario inversor
+            //autorizamos la baja de usuario inversor
+            daoUsuarioInversor.delete((UsuarioInversor) u);
+
         }
     }
     
