@@ -51,8 +51,6 @@ public class VPrincipalAdmin extends javax.swing.JFrame {
         botonAutorizar = new javax.swing.JButton();
         Menu = new javax.swing.JMenuBar();
         UsuarioMenu = new javax.swing.JMenu();
-        AltasMenuItem = new javax.swing.JMenuItem();
-        BajaMenuItem = new javax.swing.JMenuItem();
         SaldosMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -86,18 +84,12 @@ public class VPrincipalAdmin extends javax.swing.JFrame {
 
         UsuarioMenu.setText("Usuarios");
 
-        AltasMenuItem.setText("Confirmar altas");
-        AltasMenuItem.addActionListener(new java.awt.event.ActionListener() {
+        SaldosMenuItem.setText("Modifcar saldos");
+        SaldosMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                AltasMenuItemActionPerformed(evt);
+                SaldosMenuItemActionPerformed(evt);
             }
         });
-        UsuarioMenu.add(AltasMenuItem);
-
-        BajaMenuItem.setText("Confirmar bajas");
-        UsuarioMenu.add(BajaMenuItem);
-
-        SaldosMenuItem.setText("Modifcar saldos");
         UsuarioMenu.add(SaldosMenuItem);
 
         Menu.add(UsuarioMenu);
@@ -158,11 +150,6 @@ public class VPrincipalAdmin extends javax.swing.JFrame {
         System.exit(0);
     }//GEN-LAST:event_SalirBotonActionPerformed
 
-    private void AltasMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AltasMenuItemActionPerformed
-        // TODO add your handling code here:
-        
-    }//GEN-LAST:event_AltasMenuItemActionPerformed
-
     //este boton permite autorizar las altas de usuarios nuevos
     private void botonAutorizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonAutorizarActionPerformed
         //si autorizo ->        
@@ -178,6 +165,11 @@ public class VPrincipalAdmin extends javax.swing.JFrame {
         this.updateTabla();
         
     }//GEN-LAST:event_botonAutorizarActionPerformed
+
+    private void SaldosMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SaldosMenuItemActionPerformed
+        //abrir ventana de los saldos
+        this.fa.ventanaSaldos();
+    }//GEN-LAST:event_SaldosMenuItemActionPerformed
 
     
     //funcion que actualiza usuarios de la tabla que se muestra al regulador
@@ -203,8 +195,6 @@ public class VPrincipalAdmin extends javax.swing.JFrame {
      */
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JMenuItem AltasMenuItem;
-    private javax.swing.JMenuItem BajaMenuItem;
     private javax.swing.JButton BajaPagosBoton;
     private javax.swing.JTextField ComisionActualCajaTexto;
     private javax.swing.JLabel ComisionActualTexto;
