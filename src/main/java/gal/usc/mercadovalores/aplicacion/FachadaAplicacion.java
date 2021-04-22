@@ -62,4 +62,9 @@ public class FachadaAplicacion {
     public void cerrarSesion(javax.swing.JFrame frame){
         this.fgui.cerrarSesion(frame);
     }
+
+    public void ventanaSaldos(){
+        this.fgui.ventanaSaldos();
+    }
+
 }

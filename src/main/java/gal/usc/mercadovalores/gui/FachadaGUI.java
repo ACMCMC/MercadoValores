@@ -78,4 +78,9 @@ public class FachadaGUI {
         this.vi = new VInicio(this.fa);
         vi.setVisible(true);
     }
+    
+    public void ventanaSaldos(){
+        VSaldo vS = new VSaldo(this.vadmin,true);
+        vS.setVisible(true);
+    }
 }

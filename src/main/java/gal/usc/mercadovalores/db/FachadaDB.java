@@ -74,7 +74,7 @@ public class FachadaDB {
 
     public Set<UsuarioInversor> getUsuariosInversores() {
         // Aquí se devuelve null
-        return null;
+        return daoUsuarioInversor.getAll();
     }
 
     public Set<UsuarioDeMercado> getUsuariosDeMercado() {
@@ -129,5 +129,49 @@ public class FachadaDB {
 
     public Set<Participacion> getParticipacionesUsuarioDeMercado(UsuarioDeMercado u) {
         return null;
+    }
+}
+    
+    public void  autorizarRegistro(UsuarioDeMercado u){
+        if(u instanceof UsuarioEmpresa){
+            //autorizamos registro usuario empresa
+            daoUsuarioEmpresa.autorizarRegistro((UsuarioEmpresa) u);
+        }else if(u instanceof UsuarioInversor){
+            //autorizamos registro de usuario inversor
+            daoUsuarioInversor.autorizarRegistro((UsuarioInversor) u);
+        }
+    }
+    
+    public void  autorizarBaja(UsuarioDeMercado u){
+        if(u instanceof UsuarioEmpresa){
+            //autorizamos la baja usuario empresa
+            daoUsuarioEmpresa.delete((UsuarioEmpresa) u);
+        }else if(u instanceof UsuarioInversor){
+            //autorizamos la baja de usuario inversor
+            daoUsuarioInversor.delete((UsuarioInversor) u);
+
+        }
+    }
+    
+    public void  solicitarBaja(UsuarioDeMercado u){
+        if(u instanceof UsuarioEmpresa){                        
+            //actualizamos el estado del usuario empresa
+            daoUsuarioEmpresa.solicitarBaja((UsuarioEmpresa) u);
+        }else if(u instanceof UsuarioInversor){
+            //actualizamos el estado del usuario inversor
+            daoUsuarioInversor.solicitarBaja((UsuarioInversor) u);
+        }
+    }
+    
+    public void actualizarUser(UsuarioDeMercado u){
+        if(u instanceof UsuarioEmpresa){
+            daoUsuarioEmpresa.update((UsuarioEmpresa) u);
+        }else if(u instanceof UsuarioInversor){
+            daoUsuarioInversor.update((UsuarioInversor) u);
+        }
+    }
+    
+    public void actualizarComision(UsuarioRegulador u){
+        daoUsuarioRegulador.update(u);
     }
 }

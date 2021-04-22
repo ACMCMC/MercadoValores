@@ -13,11 +13,17 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="Modificar Datos"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ModificarMenuItemActionPerformed"/>
+              </Events>
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="BajaMenuItem">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Solicitar Baja"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="BajaMenuItemActionPerformed"/>
+              </Events>
             </MenuItem>
           </SubComponents>
         </Menu>
@@ -120,6 +126,7 @@
                       <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
                       <Component id="jScrollPane2" min="-2" pref="345" max="-2" attributes="0"/>
                   </Group>
+                  <Component id="botonActualizar" alignment="1" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace pref="33" max="32767" attributes="0"/>
           </Group>
@@ -132,7 +139,9 @@
               <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jScrollPane2" min="-2" pref="149" max="-2" attributes="0"/>
-              <EmptySpace pref="64" max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="botonActualizar" min="-2" max="-2" attributes="0"/>
+              <EmptySpace pref="26" max="32767" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="SalirBoton" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="BotonCerrarSesion" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -165,7 +174,7 @@
                   <Data value="Participaciones "/>
                   <Data value="Participaciones creadas"/>
                 </Column>
-                <Column editable="false" title="" type="java.lang.Object">
+                <Column editable="true" title="" type="java.lang.Object">
                   <Data value=""/>
                   <Data value="null"/>
                   <Data value="null"/>
@@ -206,6 +215,14 @@
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="BotonCerrarSesionActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="botonActualizar">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Actualizar"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="botonActualizarActionPerformed"/>
       </Events>
     </Component>
   </SubComponents>
