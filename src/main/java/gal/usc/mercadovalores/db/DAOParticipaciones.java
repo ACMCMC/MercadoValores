@@ -18,4 +18,12 @@ public class DAOParticipaciones extends DAO<Participacion> {
     public Set<Participacion> getParticipacionesUsuarioEmpresa(UsuarioEmpresa u) {
 
     }
+
+    public Participacion getParticipacionUsuarioDeMercadoYEmpresa(UsuarioDeMercado u, UsuarioEmpresa e) {
+
+    }
+
+    public void setParticipacion(Participacion p) {
+
+    }
 }
