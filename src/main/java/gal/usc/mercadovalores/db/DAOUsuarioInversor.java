@@ -193,6 +193,49 @@ public final class DAOUsuarioInversor extends DAO<UsuarioInversor> {
 				FachadaAplicacion.muestraExcepcion(e);
 			}
 		}
-	}
-
+        }
+    
+     public void autorizarRegistro(UsuarioInversor user){
+                PreparedStatement preparedStatement = null;
+                try {
+			getConexion().setAutoCommit(false);
+			preparedStatement = getConexion().prepareStatement(
+					"update usuario_mercado set estado=? where id=?");
+                        preparedStatement.setString(1, "DADO_DE_ALTA");
+			preparedStatement.setString(2, user.getId());
+			preparedStatement.executeUpdate();
+			getConexion().commit();
+		} catch (SQLException e) {
+			FachadaAplicacion.muestraExcepcion(e);
+		} finally {
+			try {
+				preparedStatement.close();
+			} catch (SQLException e) {
+				FachadaAplicacion.muestraExcepcion(e);
+			}
+		}
+        }
+     
+     public void solicitarBaja(UsuarioInversor user){
+                PreparedStatement preparedStatement = null;
+                try {
+			getConexion().setAutoCommit(false);
+			preparedStatement = getConexion().prepareStatement(
+					"update usuario_mercado set estado=? where id=?");
+                        preparedStatement.setString(1, "SOLICITANDO_BAJA");
+			preparedStatement.setString(2, user.getId());
+			preparedStatement.executeUpdate();
+			getConexion().commit();
+		} catch (SQLException e) {
+			FachadaAplicacion.muestraExcepcion(e);
+		} finally {
+			try {
+				preparedStatement.close();
+			} catch (SQLException e) {
+				FachadaAplicacion.muestraExcepcion(e);
+			}
+		}
+        }
+     
+     
 }
