@@ -175,4 +175,13 @@ public class FachadaDB {
     public void actualizarComision(UsuarioRegulador u) {
         daoUsuarioRegulador.update(u);
     }
+    
+    public void addParticipacion(UsuarioEmpresa usr, int p) throws SQLException{
+        daoUsuarioEmpresa.addParticipacion(usr,p);
+    }
+
+    public void removeParticipacion(UsuarioEmpresa usr, int p) throws SQLException{
+        daoUsuarioEmpresa.removeParticipacion(usr, p);
+    }
+    
 }
