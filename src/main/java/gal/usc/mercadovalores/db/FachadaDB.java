@@ -15,6 +15,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
@@ -124,5 +125,9 @@ public class FachadaDB {
         } else {
             throw new IllegalArgumentException("No se acepta el tipo de usuario seleccionado");
         }
+    }
+
+    public Set<Participacion> getParticipacionesUsuarioDeMercado(UsuarioDeMercado u) {
+        return null;
     }
 }
