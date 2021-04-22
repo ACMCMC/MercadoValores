@@ -1,6 +1,7 @@
 package gal.usc.mercadovalores.aplicacion;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -30,6 +31,24 @@ public final class UsuarioInversor extends UsuarioDeMercado {
 
     public void setNombreCompleto(String nombre_completo) {
         this.nombre_completo = nombre_completo;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final UsuarioInversor other = (UsuarioInversor) obj;
+        if (!Objects.equals(this.dni, other.dni)) {
+            return false;
+        }
+        return true;
     }
     
     
