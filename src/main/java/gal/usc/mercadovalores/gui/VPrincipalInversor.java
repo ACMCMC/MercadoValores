@@ -11,6 +11,9 @@ import gal.usc.mercadovalores.aplicacion.UsuarioInversor;
 import gal.usc.mercadovalores.aplicacion.FachadaAplicacion;
 import gal.usc.mercadovalores.db.FachadaDB;
 import java.awt.Color;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -238,7 +241,11 @@ public class VPrincipalInversor extends javax.swing.JFrame {
         }else if(res != null && (res instanceof UsuarioEmpresa || res instanceof UsuarioRegulador)){
             System.out.println("Nombre de usuario no valido");
         }else{
-            FachadaDB.getFachada().add(this.usr);
+            try {
+                FachadaDB.getFachada().add(this.usr);
+            } catch (SQLException ex) {
+                Logger.getLogger(VPrincipalInversor.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         
         this.ActualizarTablaDatos();

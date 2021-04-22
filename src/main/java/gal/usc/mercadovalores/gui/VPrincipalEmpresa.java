@@ -10,6 +10,9 @@ import gal.usc.mercadovalores.aplicacion.Usuario;
 import gal.usc.mercadovalores.aplicacion.UsuarioInversor;
 import gal.usc.mercadovalores.aplicacion.UsuarioRegulador;
 import gal.usc.mercadovalores.db.FachadaDB;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -248,7 +251,11 @@ public class VPrincipalEmpresa extends javax.swing.JFrame {
         }else if(res != null && (res instanceof UsuarioInversor || res instanceof UsuarioRegulador)){
             System.out.println("Nombre de usuario no valido");
         }else{
-            FachadaDB.getFachada().add(this.usr);
+            try {
+                FachadaDB.getFachada().add(this.usr);
+            } catch (SQLException ex) {
+                Logger.getLogger(VPrincipalEmpresa.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         
         this.ActualizarTablaDatos();

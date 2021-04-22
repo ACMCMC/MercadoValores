@@ -130,7 +130,7 @@ public class FachadaDB {
     public Set<Participacion> getParticipacionesUsuarioDeMercado(UsuarioDeMercado u) {
         return null;
     }
-}
+
     
     public void  autorizarRegistro(UsuarioDeMercado u){
         if(u instanceof UsuarioEmpresa){
