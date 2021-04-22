@@ -163,4 +163,8 @@ public class FachadaDB {
             daoUsuarioInversor.update((UsuarioInversor) u);
         }
     }
+    
+    public void actualizarComision(UsuarioRegulador u){
+        daoUsuarioRegulador.update(u);
+    }
 }

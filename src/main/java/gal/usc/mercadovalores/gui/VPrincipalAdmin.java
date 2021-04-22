@@ -30,6 +30,7 @@ public class VPrincipalAdmin extends javax.swing.JFrame {
         this.fa = fa;
         initComponents();
         this.updateTabla();
+        this.displayComision();
     }
 
     /**
@@ -66,6 +67,11 @@ public class VPrincipalAdmin extends javax.swing.JFrame {
         });
 
         NuevaComisionBoton.setText("Actualizar");
+        NuevaComisionBoton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                NuevaComisionBotonActionPerformed(evt);
+            }
+        });
 
         ComisionActualTexto.setText("Comisión actual:");
 
@@ -171,6 +177,14 @@ public class VPrincipalAdmin extends javax.swing.JFrame {
         this.fa.ventanaSaldos();
     }//GEN-LAST:event_SaldosMenuItemActionPerformed
 
+    private void NuevaComisionBotonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NuevaComisionBotonActionPerformed
+        //Actualizamos la comision actual
+        if(!this.ComisionActualCajaTexto.getText().isEmpty()){
+            this.usr.setComision_actual(Double.parseDouble(this.ComisionActualCajaTexto.getText()));
+            FachadaDB.getFachada().actualizarComision(this.usr);
+        }
+    }//GEN-LAST:event_NuevaComisionBotonActionPerformed
+
     
     //funcion que actualiza usuarios de la tabla que se muestra al regulador
     //esto permite autorizar facilmente el alta y baja de usuarios
@@ -188,6 +202,12 @@ public class VPrincipalAdmin extends javax.swing.JFrame {
         }
         
         uT.setFilas(uM);
+    }
+    
+    private void displayComision(){
+        Double comision = this.usr.getComision_actual();
+        String comStr = comision.toString();
+        this.ComisionActualCajaTexto.setText(comStr);
     }
     
     /**
