@@ -1,5 +1,6 @@
 package gal.usc.mercadovalores.aplicacion;
 import java.sql.Timestamp;
+import java.util.Objects;
 
 public class AnuncioVenta{
     private UsuarioEmpresa empresa;
@@ -99,4 +100,39 @@ public class AnuncioVenta{
         this.numero_participaciones = numero_participaciones;
     }
 
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final AnuncioVenta other = (AnuncioVenta) obj;
+        if (Double.doubleToLongBits(this.precio) != Double.doubleToLongBits(other.precio)) {
+            return false;
+        }
+        if (Double.doubleToLongBits(this.comision_en_fecha) != Double.doubleToLongBits(other.comision_en_fecha)) {
+            return false;
+        }
+        if (this.numero_participaciones != other.numero_participaciones) {
+            return false;
+        }
+        if (!Objects.equals(this.empresa, other.empresa)) {
+            return false;
+        }
+        if (!Objects.equals(this.vendedor, other.vendedor)) {
+            return false;
+        }
+        if (!Objects.equals(this.fecha, other.fecha)) {
+            return false;
+        }
+        return true;
+    }
+
+    
 }
