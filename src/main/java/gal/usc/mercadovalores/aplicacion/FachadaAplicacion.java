@@ -6,10 +6,6 @@
 package gal.usc.mercadovalores.aplicacion;
 import gal.usc.mercadovalores.gui.FachadaGUI;
 
-import gal.usc.mercadovalores.db.*;
-import gal.usc.mercadovalores.gui.*;
-import java.util.Set;
-
 /**
  *
  * @author acmc
@@ -26,8 +22,6 @@ public class FachadaAplicacion {
         FachadaAplicacion fa;
         fa= new FachadaAplicacion();
         fa.iniciarAplicacion();
-
-        Set<UsuarioEmpresa> s = FachadaDB.getFachada().getUsuariosEmpresa();
     }
 
     public void iniciarAplicacion(){
