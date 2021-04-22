@@ -222,6 +222,7 @@ public class VPrincipalInversor extends javax.swing.JFrame {
 
     private void botonUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonUpdateActionPerformed
         //actualizamos el usuario local
+        String idActual = this.usr.getId();
         this.usr.setId((String) this.TablaDatos.getValueAt(0, 1));
         //this.usr.setSaldo((double) this.TablaDatos.getValueAt(1, 1));
         this.usr.setDireccion((String) this.TablaDatos.getValueAt(2, 1));
@@ -233,12 +234,19 @@ public class VPrincipalInversor extends javax.swing.JFrame {
         Usuario res;
         res = FachadaDB.getFachada().getUsuarioById(this.usr.getId());
         
-        if(res != null && res instanceof UsuarioInversor){
+        if(res != null && res.getId().equals(idActual)){
             FachadaDB.getFachada().actualizarUser(this.usr);
-        }else if(res != null && (res instanceof UsuarioEmpresa || res instanceof UsuarioRegulador)){
-            System.out.println("Nombre de usuario no valido");
+        }else if(res != null ){
+            VAviso x = new VAviso(this,true,"Nombre de usuario ya en uso, por favor elige otro.");
+            x.setVisible(true);
+            this.usr.setId(idActual);
         }else{
-            FachadaDB.getFachada().add(this.usr);
+            try{
+                FachadaDB.getFachada().add(this.usr);
+            }catch(Exception e){
+                VAviso x = new VAviso(this,true,e.getMessage());
+                x.setVisible(true);
+            }
         }
         
         this.ActualizarTablaDatos();
