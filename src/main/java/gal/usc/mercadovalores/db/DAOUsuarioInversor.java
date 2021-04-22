@@ -11,21 +11,22 @@ import gal.usc.mercadovalores.aplicacion.UsuarioInversor;
 import java.sql.PreparedStatement;
 import java.util.HashSet;
 import java.util.Set;
+
 public final class DAOUsuarioInversor extends DAO<UsuarioInversor> {
 
-    public DAOUsuarioInversor(Connection con) {
-        super(con);
-    }
-    
+	public DAOUsuarioInversor(Connection con) {
+		super(con);
+	}
 
-    public UsuarioInversor getById(String idToGet) {
+	public UsuarioInversor getById(String idToGet) {
 		UsuarioInversor usuario = null;
+		Connection c = startTransaction();
 
 		PreparedStatement preparedStatement = null;
 		ResultSet resultSet;
 
 		try {
-                        getConexion().setAutoCommit(false);
+			getConexion().setAutoCommit(false);
 			preparedStatement = getConexion()
 					.prepareStatement("select * from usuario_inversor inner join usuario_mercado using(id) where id=?");
 			preparedStatement.setString(1, idToGet);
@@ -42,7 +43,7 @@ public final class DAOUsuarioInversor extends DAO<UsuarioInversor> {
 					String nombreCompleto = resultSet.getString("nombre_completo");
 
 					usuario = new UsuarioInversor(id, clave, saldo, direccion, telefono, estado, cif, nombreCompleto);
-                                        getConexion().commit();
+					getConexion().commit();
 				} catch (EnumConstantNotPresentException e) {
 					FachadaAplicacion.muestraExcepcion(e);
 				}
@@ -59,13 +60,13 @@ public final class DAOUsuarioInversor extends DAO<UsuarioInversor> {
 
 		return usuario;
 	}
-    
-    public void add(UsuarioInversor user){
+
+	public void add(UsuarioInversor user) throws SQLException {
 		PreparedStatement preparedStatement = null;
+		Connection c = startTransaction();
 
 		try {
-			getConexion().setAutoCommit(false);
-			preparedStatement = getConexion().prepareStatement(
+			preparedStatement = c.prepareStatement(
 					"insert into usuario_mercado(clave, saldo, direccion, telefono, estado, id) values (?,?,?,?,CAST (? AS enum_estado),?)");
 			preparedStatement.setString(1, user.getClave());
 			preparedStatement.setDouble(2, user.getSaldo());
@@ -75,16 +76,16 @@ public final class DAOUsuarioInversor extends DAO<UsuarioInversor> {
 			preparedStatement.setString(6, user.getId());
 			preparedStatement.executeUpdate();
 			preparedStatement.close();
-                        
-			preparedStatement = getConexion().prepareStatement(
-					"insert into usuario_inversor(dni, nombre_completo, id) values (?,?,?)");
+
+			preparedStatement = c
+					.prepareStatement("insert into usuario_inversor(dni, nombre_completo, id) values (?,?,?)");
 			preparedStatement.setString(1, user.getDni());
 			preparedStatement.setString(2, user.getNombreCompleto());
 			preparedStatement.setString(3, user.getId());
 			preparedStatement.executeUpdate();
-			getConexion().commit();
+			c.commit();
 		} catch (SQLException e) {
-			FachadaAplicacion.muestraExcepcion(e);
+			throw e;
 		} finally {
 			try {
 				preparedStatement.close();
@@ -92,16 +93,16 @@ public final class DAOUsuarioInversor extends DAO<UsuarioInversor> {
 				FachadaAplicacion.muestraExcepcion(e);
 			}
 		}
-    }
-    
-    public void update(UsuarioInversor user){
-        
+	}
+
+	public void update(UsuarioInversor user) {
+		Connection c = startTransaction();
 		PreparedStatement preparedStatement = null;
 
 		try {
 			getConexion().setAutoCommit(false);
-			preparedStatement = getConexion().prepareStatement(
-					"update usuario_inversor set dni=?, nombre_completo=? where id=?");
+			preparedStatement = getConexion()
+					.prepareStatement("update usuario_inversor set dni=?, nombre_completo=? where id=?");
 			preparedStatement.setString(1, user.getDni());
 			preparedStatement.setString(2, user.getNombreCompleto());
 			preparedStatement.setString(3, user.getId());
@@ -126,17 +127,18 @@ public final class DAOUsuarioInversor extends DAO<UsuarioInversor> {
 				FachadaAplicacion.muestraExcepcion(e);
 			}
 		}
-    }
-    
-    
-    public Set<UsuarioInversor> getAll() {
+	}
+
+	public Set<UsuarioInversor> getAll() {
+		Connection c = startTransaction();
 		Set<UsuarioInversor> setFinal = new HashSet<>();
 
 		PreparedStatement preparedStatement = null;
 		ResultSet resultSet;
 
 		try {
-			preparedStatement = getConexion().prepareStatement("select * from usuario_inversor inner join usuario_mercado using(id)");
+			preparedStatement = getConexion()
+					.prepareStatement("select * from usuario_inversor inner join usuario_mercado using(id)");
 			resultSet = preparedStatement.executeQuery();
 			while (resultSet.next()) {
 				UsuarioInversor usuario;
@@ -168,19 +170,17 @@ public final class DAOUsuarioInversor extends DAO<UsuarioInversor> {
 
 		return setFinal;
 	}
-  
-    
-     public void delete(UsuarioInversor user){
-                PreparedStatement preparedStatement = null;
-                try {
+
+	public void delete(UsuarioInversor user) {
+		Connection c = startTransaction();
+		PreparedStatement preparedStatement = null;
+		try {
 			getConexion().setAutoCommit(false);
-			preparedStatement = getConexion().prepareStatement(
-					"delete from usuario_inversor where id=?");
+			preparedStatement = getConexion().prepareStatement("delete from usuario_inversor where id=?");
 			preparedStatement.setString(1, user.getId());
 			preparedStatement.executeUpdate();
 			preparedStatement.close();
-			preparedStatement = getConexion().prepareStatement(
-					"delete from usuario_mercado where id=?");
+			preparedStatement = getConexion().prepareStatement("delete from usuario_mercado where id=?");
 			preparedStatement.setString(1, user.getId());
 			preparedStatement.executeUpdate();
 			getConexion().commit();
@@ -193,15 +193,15 @@ public final class DAOUsuarioInversor extends DAO<UsuarioInversor> {
 				FachadaAplicacion.muestraExcepcion(e);
 			}
 		}
-        }
-     
-          public void autorizarRegistro(UsuarioInversor user){
-                PreparedStatement preparedStatement = null;
-                try {
+	}
+
+	public void autorizarRegistro(UsuarioInversor user) {
+		PreparedStatement preparedStatement = null;
+		try {
 			getConexion().setAutoCommit(false);
-			preparedStatement = getConexion().prepareStatement(
-					"update usuario_mercado set estado=CAST(? AS enum_estado) where id=?");
-                        preparedStatement.setString(1, "DADO_DE_ALTA");
+			preparedStatement = getConexion()
+					.prepareStatement("update usuario_mercado set estado=CAST(? AS enum_estado) where id=?");
+			preparedStatement.setString(1, "DADO_DE_ALTA");
 			preparedStatement.setString(2, user.getId());
 			preparedStatement.executeUpdate();
 			getConexion().commit();
@@ -214,15 +214,15 @@ public final class DAOUsuarioInversor extends DAO<UsuarioInversor> {
 				FachadaAplicacion.muestraExcepcion(e);
 			}
 		}
-        }
-     
-     public void solicitarBaja(UsuarioInversor user){
-                PreparedStatement preparedStatement = null;
-                try {
+	}
+
+	public void solicitarBaja(UsuarioInversor user) {
+		PreparedStatement preparedStatement = null;
+		try {
 			getConexion().setAutoCommit(false);
-			preparedStatement = getConexion().prepareStatement(
-					"update usuario_mercado set estado=CAST(? AS enum_estado) where id=?");
-                        preparedStatement.setString(1, "SOLICITANDO_BAJA");
+			preparedStatement = getConexion()
+					.prepareStatement("update usuario_mercado set estado=CAST(? AS enum_estado) where id=?");
+			preparedStatement.setString(1, "SOLICITANDO_BAJA");
 			preparedStatement.setString(2, user.getId());
 			preparedStatement.executeUpdate();
 			getConexion().commit();
@@ -235,7 +235,6 @@ public final class DAOUsuarioInversor extends DAO<UsuarioInversor> {
 				FachadaAplicacion.muestraExcepcion(e);
 			}
 		}
-        }
-    
+	}
 
 }

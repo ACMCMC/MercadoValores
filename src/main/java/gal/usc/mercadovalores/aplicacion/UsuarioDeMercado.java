@@ -5,7 +5,9 @@
  */
 package gal.usc.mercadovalores.aplicacion;
 
-import java.util.Map;
+import java.util.Set;
+
+import gal.usc.mercadovalores.db.FachadaDB;
 
 /**
  *
@@ -18,7 +20,6 @@ public abstract class UsuarioDeMercado extends Usuario {
     private String direccion;
     private String telefono;
     private EstadoUsuario estado;
-    private Map<UsuarioEmpresa, Integer> tenerParticipaciones;
 
     public UsuarioDeMercado(String id, String clave, double saldo, String direccion, String telefono, EstadoUsuario estado) {
         super(id, clave, saldo);
@@ -51,8 +52,12 @@ public abstract class UsuarioDeMercado extends Usuario {
     /**
      * @return the tenerParticipaciones
      */
-    public Map<UsuarioEmpresa, Integer> getTenerParticipaciones() {
-        return tenerParticipaciones;
+    public Set<Participacion> getParticipaciones() {
+        return FachadaDB.getFachada().getParticipacionesUsuarioDeMercado(this);
+    }
+
+    public Integer getParticipacionesEmpresa(UsuarioEmpresa u) {
+        return getParticipaciones().stream().filter(p -> p.getEmpresa().equals(u)).findFirst().map(p -> p.getNumero()).orElse(0);
     }
 
     /**
@@ -74,12 +79,5 @@ public abstract class UsuarioDeMercado extends Usuario {
      */
     public void setTelefono(String telefono) {
         this.telefono = telefono;
-    }
-
-    /**
-     * @param tenerParticipaciones the tenerParticipaciones to set
-     */
-    public void setTenerParticipaciones(Map<UsuarioEmpresa, Integer> tenerParticipaciones) {
-        this.tenerParticipaciones = tenerParticipaciones;
     }
 }

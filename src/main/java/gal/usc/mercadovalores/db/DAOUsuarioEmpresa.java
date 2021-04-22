@@ -15,19 +15,20 @@ import gal.usc.mercadovalores.aplicacion.UsuarioEmpresa;
 
 public final class DAOUsuarioEmpresa extends DAO<UsuarioEmpresa> {
 
-
 	public DAOUsuarioEmpresa(Connection con) {
 		super(con);
 	}
 
 	public Set<UsuarioEmpresa> getAll() {
+		Connection c = startTransaction();
 		Set<UsuarioEmpresa> setFinal = new HashSet<>();
 
 		PreparedStatement preparedStatement = null;
 		ResultSet resultSet;
 
 		try {
-			preparedStatement = getConexion().prepareStatement("select * from usuario_empresa inner join usuario_mercado using(id)");
+			preparedStatement = getConexion()
+					.prepareStatement("select * from usuario_empresa inner join usuario_mercado using(id)");
 			resultSet = preparedStatement.executeQuery();
 			while (resultSet.next()) {
 				UsuarioEmpresa usuario;
@@ -63,6 +64,7 @@ public final class DAOUsuarioEmpresa extends DAO<UsuarioEmpresa> {
 	}
 
 	public UsuarioEmpresa getById(String idToGet) {
+		Connection c = startTransaction();
 		UsuarioEmpresa usuario = null;
 
 		PreparedStatement preparedStatement = null;
@@ -104,10 +106,9 @@ public final class DAOUsuarioEmpresa extends DAO<UsuarioEmpresa> {
 
 		return usuario;
 	}
-        
-        
-        
+
 	public void update(UsuarioEmpresa u) {
+		Connection c = startTransaction();
 		PreparedStatement preparedStatement = null;
 
 		try {
@@ -141,7 +142,8 @@ public final class DAOUsuarioEmpresa extends DAO<UsuarioEmpresa> {
 		}
 	}
 
-	public void add(UsuarioEmpresa u) {
+	public void add(UsuarioEmpresa u) throws SQLException {
+		Connection c = startTransaction();
 		PreparedStatement preparedStatement = null;
 
 		try {
@@ -165,6 +167,30 @@ public final class DAOUsuarioEmpresa extends DAO<UsuarioEmpresa> {
 			preparedStatement.executeUpdate();
 			getConexion().commit();
 		} catch (SQLException e) {
+			throw e;
+		} finally {
+			try {
+				preparedStatement.close();
+			} catch (SQLException e) {
+				FachadaAplicacion.muestraExcepcion(e);
+			}
+		}
+	}
+
+	public void delete(UsuarioEmpresa user) {
+		Connection c = startTransaction();
+		PreparedStatement preparedStatement = null;
+		try {
+			getConexion().setAutoCommit(false);
+			preparedStatement = getConexion().prepareStatement("delete from usuario_empresa where id=?");
+			preparedStatement.setString(1, user.getId());
+			preparedStatement.executeUpdate();
+			preparedStatement.close();
+			preparedStatement = getConexion().prepareStatement("delete from usuario_mercado where id=?");
+			preparedStatement.setString(1, user.getId());
+			preparedStatement.executeUpdate();
+			getConexion().commit();
+		} catch (SQLException e) {
 			FachadaAplicacion.muestraExcepcion(e);
 		} finally {
 			try {
@@ -174,39 +200,14 @@ public final class DAOUsuarioEmpresa extends DAO<UsuarioEmpresa> {
 			}
 		}
 	}
-        
-        public void delete(UsuarioEmpresa user){
-                PreparedStatement preparedStatement = null;
-                try {
+
+	public void autorizarRegistro(UsuarioEmpresa user) {
+		PreparedStatement preparedStatement = null;
+		try {
 			getConexion().setAutoCommit(false);
-			preparedStatement = getConexion().prepareStatement(
-					"delete from usuario_empresa where id=?");
-			preparedStatement.setString(1, user.getId());
-			preparedStatement.executeUpdate();
-			preparedStatement.close();
-			preparedStatement = getConexion().prepareStatement(
-					"delete from usuario_mercado where id=?");
-			preparedStatement.setString(1, user.getId());
-			preparedStatement.executeUpdate();
-			getConexion().commit();
-		} catch (SQLException e) {
-			FachadaAplicacion.muestraExcepcion(e);
-		} finally {
-			try {
-				preparedStatement.close();
-			} catch (SQLException e) {
-				FachadaAplicacion.muestraExcepcion(e);
-			}
-		}
-        }
-        
-                 public void autorizarRegistro(UsuarioEmpresa user){
-                PreparedStatement preparedStatement = null;
-                try {
-			getConexion().setAutoCommit(false);
-			preparedStatement = getConexion().prepareStatement(
-					"update usuario_mercado set estado=CAST(? AS enum_estado) where id=?");
-                        preparedStatement.setString(1, "DADO_DE_ALTA");
+			preparedStatement = getConexion()
+					.prepareStatement("update usuario_mercado set estado=CAST(? AS enum_estado) where id=?");
+			preparedStatement.setString(1, EstadoUsuario.DADO_DE_ALTA.toString());
 			preparedStatement.setString(2, user.getId());
 			preparedStatement.executeUpdate();
 			getConexion().commit();
@@ -219,15 +220,15 @@ public final class DAOUsuarioEmpresa extends DAO<UsuarioEmpresa> {
 				FachadaAplicacion.muestraExcepcion(e);
 			}
 		}
-        }
-        
-        public void solicitarBaja(UsuarioEmpresa user){
-                PreparedStatement preparedStatement = null;
-                try {
+	}
+
+	public void solicitarBaja(UsuarioEmpresa user) {
+		PreparedStatement preparedStatement = null;
+		try {
 			getConexion().setAutoCommit(false);
-			preparedStatement = getConexion().prepareStatement(
-					"update usuario_mercado set estado=CAST(? AS enum_estado) where id=?");
-                        preparedStatement.setString(1, "SOLICITANDO_BAJA");
+			preparedStatement = getConexion()
+					.prepareStatement("update usuario_mercado set estado=CAST(? AS enum_estado) where id=?");
+			preparedStatement.setString(1, "SOLICITANDO_BAJA");
 			preparedStatement.setString(2, user.getId());
 			preparedStatement.executeUpdate();
 			getConexion().commit();
@@ -240,5 +241,5 @@ public final class DAOUsuarioEmpresa extends DAO<UsuarioEmpresa> {
 				FachadaAplicacion.muestraExcepcion(e);
 			}
 		}
-        }
+	}
 }
