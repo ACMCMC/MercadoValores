@@ -75,7 +75,8 @@ public class VPrincipalEmpresa extends javax.swing.JFrame {
                 {"Nombre Comercial", null},
                 {"Importe Bloqueado", null},
                 {"Participaciones ", null},
-                {"Participaciones creadas", null}
+                {"Participaciones creadas", null},
+                {"Clave", null}
             },
             new String [] {
                 "", ""
@@ -201,10 +202,10 @@ public class VPrincipalEmpresa extends javax.swing.JFrame {
                 .addGap(24, 24, 24)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(botonActualizar)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(SalirBoton)
                     .addComponent(BotonCerrarSesion))
@@ -233,33 +234,44 @@ public class VPrincipalEmpresa extends javax.swing.JFrame {
 
     private void botonActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonActualizarActionPerformed
         // TODO add your handling code here:
-        String idActual = this.usr.getId();
-        this.usr.setId((String) this.TablaDatos.getValueAt(0, 1));
-        //this.usr.setSaldo((double) this.TablaDatos.getValueAt(1, 1));
-        this.usr.setDireccion((String) this.TablaDatos.getValueAt(2, 1));
-        this.usr.setTelefono((String) this.TablaDatos.getValueAt(3, 1));
-        this.usr.setCif((String) this.TablaDatos.getValueAt(4, 1));
-        this.usr.setNombreComercial((String) this.TablaDatos.getValueAt(5,1));
         
-        Usuario res;
-        res = FachadaDB.getFachada().getUsuarioById(this.usr.getId());
-        
-        if(res != null && res.getId().equals(idActual)){
-            FachadaDB.getFachada().actualizarUser(this.usr);
-        }else if(res != null ){
-            VAviso x = new VAviso(this,true,"Nombre de usuario ya en uso, por favor elige otro.");
-            x.setVisible(true);
-            this.usr.setId(idActual);
-        }else{
-            try{
-                FachadaDB.getFachada().add(this.usr);
-            }catch(Exception e){
-                VAviso x = new VAviso(this,true,e.getMessage());
+        //comprobar que ni el nombre ni la contraseña esten vacios
+        String idCheck = (String) this.TablaDatos.getValueAt(0, 1);
+        String passCheck = (String) this.TablaDatos.getValueAt(9, 1);
+        if(!idCheck.isEmpty() && !passCheck.isEmpty()){
+            
+            String idActual = this.usr.getId();
+            this.usr.setId((String) this.TablaDatos.getValueAt(0, 1));
+            this.usr.setDireccion((String) this.TablaDatos.getValueAt(2, 1));
+            this.usr.setTelefono((String) this.TablaDatos.getValueAt(3, 1));
+            this.usr.setCif((String) this.TablaDatos.getValueAt(4, 1));
+            this.usr.setNombreComercial((String) this.TablaDatos.getValueAt(5,1));
+
+            Usuario res;
+            res = FachadaDB.getFachada().getUsuarioById(this.usr.getId());
+
+            if(res != null && res.getId().equals(idActual)){
+                FachadaDB.getFachada().actualizarUser(this.usr);
+            }else if(res != null ){
+                VAviso x = new VAviso(this,true,"Nombre de usuario ya en uso, por favor elige otro.");
                 x.setVisible(true);
+                this.usr.setId(idActual);
+            }else{
+                try{
+                    FachadaDB.getFachada().add(this.usr);
+                }catch(Exception e){
+                    VAviso x = new VAviso(this,true,e.getMessage());
+                    x.setVisible(true);
+                }
             }
+
+
+        }else{
+            VAviso x = new VAviso(this,true,"Los campos deben estar completos");
+            x.setVisible(true);
         }
-        
         this.ActualizarTablaDatos();
+
         
     }//GEN-LAST:event_botonActualizarActionPerformed
 
@@ -278,6 +290,7 @@ public class VPrincipalEmpresa extends javax.swing.JFrame {
         this.TablaDatos.setValueAt(usr.getCif(), 4, 1);
         this.TablaDatos.setValueAt(usr.getNombreComercial(), 5, 1);
         this.TablaDatos.setValueAt(usr.getImporteBloqueado(), 6, 1);
+        this.TablaDatos.setValueAt(usr.getClave(), 9, 1);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

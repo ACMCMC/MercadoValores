@@ -72,7 +72,8 @@ public class VPrincipalInversor extends javax.swing.JFrame {
                 {"Direccion", null},
                 {"Telefono", null},
                 {"DNI", null},
-                {"Nombre Comercial", null}
+                {"Nombre Comercial", null},
+                {"Clave", null}
             },
             new String [] {
                 "", ""
@@ -186,8 +187,8 @@ public class VPrincipalInversor extends javax.swing.JFrame {
                 .addGap(24, 24, 24)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(28, 28, 28)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -221,32 +222,41 @@ public class VPrincipalInversor extends javax.swing.JFrame {
     }//GEN-LAST:event_ModificarMenuItemActionPerformed
 
     private void botonUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonUpdateActionPerformed
-        //actualizamos el usuario local
-        String idActual = this.usr.getId();
-        this.usr.setId((String) this.TablaDatos.getValueAt(0, 1));
-        //this.usr.setSaldo((double) this.TablaDatos.getValueAt(1, 1));
-        this.usr.setDireccion((String) this.TablaDatos.getValueAt(2, 1));
-        this.usr.setTelefono((String) this.TablaDatos.getValueAt(3, 1));
-        this.usr.setDni((String) this.TablaDatos.getValueAt(4, 1));
-        this.usr.setNombreCompleto((String) this.TablaDatos.getValueAt(5,1));
         
+        String idCheck = (String) this.TablaDatos.getValueAt(0, 1);
+        String passCheck = (String) this.TablaDatos.getValueAt(6, 1);
+        if(!idCheck.isEmpty() && !passCheck.isEmpty()){
+            //actualizamos el usuario local
+            String idActual = this.usr.getId();
+            this.usr.setId((String) this.TablaDatos.getValueAt(0, 1));
+            //this.usr.setSaldo((double) this.TablaDatos.getValueAt(1, 1));
+            this.usr.setDireccion((String) this.TablaDatos.getValueAt(2, 1));
+            this.usr.setTelefono((String) this.TablaDatos.getValueAt(3, 1));
+            this.usr.setDni((String) this.TablaDatos.getValueAt(4, 1));
+            this.usr.setNombreCompleto((String) this.TablaDatos.getValueAt(5,1));
+            this.usr.setClave((String) this.TablaDatos.getValueAt(6,1));
 
-        Usuario res;
-        res = FachadaDB.getFachada().getUsuarioById(this.usr.getId());
-        
-        if(res != null && res.getId().equals(idActual)){
-            FachadaDB.getFachada().actualizarUser(this.usr);
-        }else if(res != null ){
-            VAviso x = new VAviso(this,true,"Nombre de usuario ya en uso, por favor elige otro.");
-            x.setVisible(true);
-            this.usr.setId(idActual);
-        }else{
-            try{
-                FachadaDB.getFachada().add(this.usr);
-            }catch(Exception e){
-                VAviso x = new VAviso(this,true,e.getMessage());
+
+            Usuario res;
+            res = FachadaDB.getFachada().getUsuarioById(this.usr.getId());
+
+            if(res != null && res.getId().equals(idActual)){
+                FachadaDB.getFachada().actualizarUser(this.usr);
+            }else if(res != null ){
+                VAviso x = new VAviso(this,true,"Nombre de usuario ya en uso, por favor elige otro.");
                 x.setVisible(true);
+                this.usr.setId(idActual);
+            }else{
+                try{
+                    FachadaDB.getFachada().add(this.usr);
+                }catch(Exception e){
+                    VAviso x = new VAviso(this,true,e.getMessage());
+                    x.setVisible(true);
+                }
             }
+        }else{
+            VAviso x = new VAviso(this,true,"Los campos no pueden estar vacíos.");
+            x.setVisible(true);
         }
         
         this.ActualizarTablaDatos();
@@ -260,6 +270,8 @@ public class VPrincipalInversor extends javax.swing.JFrame {
         this.TablaDatos.setValueAt(usr.getTelefono(), 3, 1);
         this.TablaDatos.setValueAt(usr.getDni(), 4, 1);
         this.TablaDatos.setValueAt(usr.getNombreCompleto(), 5, 1);
+        this.TablaDatos.setValueAt(usr.getClave(), 6, 1);
+
 
 
     }
