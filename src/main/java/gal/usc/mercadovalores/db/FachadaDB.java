@@ -126,7 +126,12 @@ public class FachadaDB {
         }
     }
     
-    public void addParticipaciones(UsuarioEmpresa usr, int p) throws SQLException{
+    public void addParticipacion(UsuarioEmpresa usr, int p) throws SQLException{
         daoUsuarioEmpresa.addParticipacion(usr,p);
     }
+
+    public void removeParticipacion(UsuarioEmpresa usr, int p) throws SQLException{
+        daoUsuarioEmpresa.removeParticipacion(usr, p);
+    }
+    
 }

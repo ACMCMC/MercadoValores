@@ -44,8 +44,7 @@ public class VPrincipalEmpresa extends javax.swing.JFrame {
         ModificarMenuItem = new javax.swing.JMenuItem();
         BajaMenuItem = new javax.swing.JMenuItem();
         ParticipacionesMenu = new javax.swing.JMenu();
-        AltaParticipacionMenuItem = new javax.swing.JMenuItem();
-        BajaParticipacionMenuItem = new javax.swing.JMenuItem();
+        GestionParticipacionMenuItem = new javax.swing.JMenuItem();
         VenderMenuItem = new javax.swing.JMenuItem();
         ComprarMenuItem = new javax.swing.JMenuItem();
         BajaVentaMenuItem = new javax.swing.JMenuItem();
@@ -115,16 +114,13 @@ public class VPrincipalEmpresa extends javax.swing.JFrame {
 
         ParticipacionesMenu.setText("Participaciones");
 
-        AltaParticipacionMenuItem.setText("Dar de alta");
-        AltaParticipacionMenuItem.addActionListener(new java.awt.event.ActionListener() {
+        GestionParticipacionMenuItem.setText("Dar de alta / baja");
+        GestionParticipacionMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                AltaParticipacionMenuItemActionPerformed(evt);
+                GestionParticipacionMenuItemActionPerformed(evt);
             }
         });
-        ParticipacionesMenu.add(AltaParticipacionMenuItem);
-
-        BajaParticipacionMenuItem.setText("Dar de baja");
-        ParticipacionesMenu.add(BajaParticipacionMenuItem);
+        ParticipacionesMenu.add(GestionParticipacionMenuItem);
 
         VenderMenuItem.setText("Vender");
         VenderMenuItem.setToolTipText("");
@@ -187,11 +183,11 @@ public class VPrincipalEmpresa extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void AltaParticipacionMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AltaParticipacionMenuItemActionPerformed
+    private void GestionParticipacionMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GestionParticipacionMenuItemActionPerformed
         // TODO add your handling code here:
         VGestionParticipacion vp = new VGestionParticipacion(usr);
         vp.setVisible(true);
-    }//GEN-LAST:event_AltaParticipacionMenuItemActionPerformed
+    }//GEN-LAST:event_GestionParticipacionMenuItemActionPerformed
 
     //salimos de la aplicacion
     private void SalirBotonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SalirBotonActionPerformed
@@ -214,15 +210,14 @@ public class VPrincipalEmpresa extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem AltaPagoMenuItem;
-    private javax.swing.JMenuItem AltaParticipacionMenuItem;
     private javax.swing.JMenuItem BajaMenuItem;
     private javax.swing.JMenuItem BajaPagoMenuItem;
-    private javax.swing.JMenuItem BajaParticipacionMenuItem;
     private javax.swing.JMenuItem BajaVentaMenuItem;
     private javax.swing.JMenu BeneficiosMenu;
     private javax.swing.JButton BotonCerrarSesion;
     private javax.swing.JMenuItem ComprarMenuItem;
     private javax.swing.JMenu CuentaMenu;
+    private javax.swing.JMenuItem GestionParticipacionMenuItem;
     private javax.swing.JMenuBar Menu;
     private javax.swing.JMenuItem ModificarMenuItem;
     private javax.swing.JMenuItem PagarMenuItem;

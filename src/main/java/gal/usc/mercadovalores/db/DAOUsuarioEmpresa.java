@@ -224,4 +224,29 @@ public final class DAOUsuarioEmpresa extends DAO<UsuarioEmpresa> {
                 }
             }
         }
+        
+        public void removeParticipacion(UsuarioEmpresa usr, int p) throws SQLException{
+            Connection c = startTransaction();
+            PreparedStatement preparedStatement = null;
+            
+            try{
+                getConexion().setAutoCommit(false);
+                preparedStatement = getConexion().prepareStatement(
+                        "update tener_participaciones set num_participaciones = ? where id1 = ? and id2 = ?"
+                );
+                preparedStatement.setInt(1, p);
+                preparedStatement.setString(2, usr.getId());
+                preparedStatement.setString(3, usr.getId());
+                preparedStatement.executeUpdate();
+                getConexion().commit();
+            } catch (SQLException e){
+                throw e;
+            } finally {
+                try{
+                    preparedStatement.close();
+                } catch(SQLException e){
+                    FachadaAplicacion.muestraExcepcion(e);
+                }
+            }
+        }
 }

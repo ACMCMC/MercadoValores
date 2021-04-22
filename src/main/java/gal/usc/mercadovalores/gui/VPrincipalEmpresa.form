@@ -26,18 +26,13 @@
             <Property name="text" type="java.lang.String" value="Participaciones"/>
           </Properties>
           <SubComponents>
-            <MenuItem class="javax.swing.JMenuItem" name="AltaParticipacionMenuItem">
+            <MenuItem class="javax.swing.JMenuItem" name="GestionParticipacionMenuItem">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Dar de alta"/>
+                <Property name="text" type="java.lang.String" value="Dar de alta / baja"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="AltaParticipacionMenuItemActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="GestionParticipacionMenuItemActionPerformed"/>
               </Events>
-            </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="BajaParticipacionMenuItem">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Dar de baja"/>
-              </Properties>
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="VenderMenuItem">
               <Properties>

@@ -39,6 +39,7 @@ public class VGestionParticipacion extends javax.swing.JFrame {
         DarAltaBoton = new javax.swing.JButton();
         CancelarBoton = new javax.swing.JButton();
         NumeroParticipacionesSpinner = new javax.swing.JSpinner();
+        DarBajaBoton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -58,6 +59,13 @@ public class VGestionParticipacion extends javax.swing.JFrame {
             }
         });
 
+        DarBajaBoton.setText("Dar de baja");
+        DarBajaBoton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                DarBajaBotonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -65,15 +73,19 @@ public class VGestionParticipacion extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(NumeroParticipacionesSpinner)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(TextoParticipaciones)
-                        .addGap(0, 0, Short.MAX_VALUE))
+                        .addComponent(NumeroParticipacionesSpinner)
+                        .addContainerGap())
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(DarAltaBoton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(CancelarBoton)))
-                .addContainerGap())
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(TextoParticipaciones)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(DarAltaBoton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(DarBajaBoton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(CancelarBoton)))
+                        .addGap(0, 12, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -85,7 +97,8 @@ public class VGestionParticipacion extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(DarAltaBoton)
-                    .addComponent(CancelarBoton))
+                    .addComponent(CancelarBoton)
+                    .addComponent(DarBajaBoton))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -100,17 +113,28 @@ public class VGestionParticipacion extends javax.swing.JFrame {
     private void DarAltaBotonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DarAltaBotonActionPerformed
         // TODO add your handling code here:
         try{
-            FachadaDB.getFachada().addParticipaciones(usr,(int)NumeroParticipacionesSpinner.getValue());
+            FachadaDB.getFachada().addParticipacion(usr,(int)NumeroParticipacionesSpinner.getValue());
         }
         catch(SQLException e){
             FachadaAplicacion.muestraExcepcion(e);
         }    
     }//GEN-LAST:event_DarAltaBotonActionPerformed
 
+    private void DarBajaBotonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DarBajaBotonActionPerformed
+        // TODO add your handling code here:
+        try{
+            FachadaDB.getFachada().removeParticipacion(usr,(int)NumeroParticipacionesSpinner.getValue());
+        }
+        catch(SQLException e){
+            FachadaAplicacion.muestraExcepcion(e);
+        }    
+    }//GEN-LAST:event_DarBajaBotonActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton CancelarBoton;
     private javax.swing.JButton DarAltaBoton;
+    private javax.swing.JButton DarBajaBoton;
     private javax.swing.JSpinner NumeroParticipacionesSpinner;
     private javax.swing.JLabel TextoParticipaciones;
     private javax.swing.JSpinner jSpinner1;
