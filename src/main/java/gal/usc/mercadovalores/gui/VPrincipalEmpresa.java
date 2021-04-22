@@ -189,6 +189,8 @@ public class VPrincipalEmpresa extends javax.swing.JFrame {
 
     private void AltaParticipacionMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AltaParticipacionMenuItemActionPerformed
         // TODO add your handling code here:
+        VGestionParticipacion vp = new VGestionParticipacion(usr);
+        vp.setVisible(true);
     }//GEN-LAST:event_AltaParticipacionMenuItemActionPerformed
 
     //salimos de la aplicacion

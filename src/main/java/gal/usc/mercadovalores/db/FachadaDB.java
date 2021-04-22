@@ -125,4 +125,8 @@ public class FachadaDB {
             throw new IllegalArgumentException("No se acepta el tipo de usuario seleccionado");
         }
     }
+    
+    public void addParticipaciones(UsuarioEmpresa usr, int p) throws SQLException{
+        daoUsuarioEmpresa.addParticipacion(usr,p);
+    }
 }
