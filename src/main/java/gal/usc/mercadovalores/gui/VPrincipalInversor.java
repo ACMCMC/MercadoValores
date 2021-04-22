@@ -11,6 +11,9 @@ import gal.usc.mercadovalores.aplicacion.UsuarioInversor;
 import gal.usc.mercadovalores.aplicacion.FachadaAplicacion;
 import gal.usc.mercadovalores.db.FachadaDB;
 import java.awt.Color;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -63,6 +66,7 @@ public class VPrincipalInversor extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Ventana Inversor");
+        setPreferredSize(new java.awt.Dimension(411, 348));
         setResizable(false);
 
         TablaDatos.setModel(new javax.swing.table.DefaultTableModel(
@@ -72,7 +76,8 @@ public class VPrincipalInversor extends javax.swing.JFrame {
                 {"Direccion", null},
                 {"Telefono", null},
                 {"DNI", null},
-                {"Nombre Comercial", null}
+                {"Nombre Comercial", null},
+                {"Clave", null}
             },
             new String [] {
                 "", ""
@@ -118,14 +123,14 @@ public class VPrincipalInversor extends javax.swing.JFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
+                .addGap(0, 262, Short.MAX_VALUE)
                 .addComponent(botonUpdate))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(botonUpdate)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(0, 6, Short.MAX_VALUE)
+                .addComponent(botonUpdate))
         );
 
         CuentaMenu.setText("Cuenta");
@@ -170,15 +175,17 @@ public class VPrincipalInversor extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(33, 33, 33)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel1)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(CerrarSesionBoton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 78, Short.MAX_VALUE)
-                        .addComponent(SalirBoton, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(33, 33, 33))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 345, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(CerrarSesionBoton)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(SalirBoton, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1)
+                            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(29, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -186,14 +193,14 @@ public class VPrincipalInversor extends javax.swing.JFrame {
                 .addGap(24, 24, 24)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(28, 28, 28)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 56, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(SalirBoton)
                     .addComponent(CerrarSesionBoton))
-                .addContainerGap(31, Short.MAX_VALUE))
+                .addGap(24, 24, 24))
         );
 
         pack();
@@ -221,24 +228,41 @@ public class VPrincipalInversor extends javax.swing.JFrame {
     }//GEN-LAST:event_ModificarMenuItemActionPerformed
 
     private void botonUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonUpdateActionPerformed
-        //actualizamos el usuario local
-        this.usr.setId((String) this.TablaDatos.getValueAt(0, 1));
-        //this.usr.setSaldo((double) this.TablaDatos.getValueAt(1, 1));
-        this.usr.setDireccion((String) this.TablaDatos.getValueAt(2, 1));
-        this.usr.setTelefono((String) this.TablaDatos.getValueAt(3, 1));
-        this.usr.setDni((String) this.TablaDatos.getValueAt(4, 1));
-        this.usr.setNombreCompleto((String) this.TablaDatos.getValueAt(5,1));
         
+        String idCheck = (String) this.TablaDatos.getValueAt(0, 1);
+        String passCheck = (String) this.TablaDatos.getValueAt(6, 1);
+        if(!idCheck.isEmpty() && !passCheck.isEmpty()){
+            //actualizamos el usuario local
+            String idActual = this.usr.getId();
+            this.usr.setId((String) this.TablaDatos.getValueAt(0, 1));
+            //this.usr.setSaldo((double) this.TablaDatos.getValueAt(1, 1));
+            this.usr.setDireccion((String) this.TablaDatos.getValueAt(2, 1));
+            this.usr.setTelefono((String) this.TablaDatos.getValueAt(3, 1));
+            this.usr.setDni((String) this.TablaDatos.getValueAt(4, 1));
+            this.usr.setNombreCompleto((String) this.TablaDatos.getValueAt(5,1));
+            this.usr.setClave((String) this.TablaDatos.getValueAt(6,1));
 
-        Usuario res;
-        res = FachadaDB.getFachada().getUsuarioById(this.usr.getId());
-        
-        if(res != null && res instanceof UsuarioInversor){
-            FachadaDB.getFachada().actualizarUser(this.usr);
-        }else if(res != null && (res instanceof UsuarioEmpresa || res instanceof UsuarioRegulador)){
-            System.out.println("Nombre de usuario no valido");
+
+            Usuario res;
+            res = FachadaDB.getFachada().getUsuarioById(this.usr.getId());
+
+            if(res != null && res.getId().equals(idActual)){
+                FachadaDB.getFachada().actualizarUser(this.usr);
+            }else if(res != null ){
+                VAviso x = new VAviso(this,true,"Nombre de usuario ya en uso, por favor elige otro.");
+                x.setVisible(true);
+                this.usr.setId(idActual);
+            }else{
+                try{
+                    FachadaDB.getFachada().add(this.usr);
+                }catch(Exception e){
+                    VAviso x = new VAviso(this,true,e.getMessage());
+                    x.setVisible(true);
+                }
+            }
         }else{
-            FachadaDB.getFachada().add(this.usr);
+            VAviso x = new VAviso(this,true,"Los campos no pueden estar vacíos.");
+            x.setVisible(true);
         }
         
         this.ActualizarTablaDatos();
@@ -252,6 +276,8 @@ public class VPrincipalInversor extends javax.swing.JFrame {
         this.TablaDatos.setValueAt(usr.getTelefono(), 3, 1);
         this.TablaDatos.setValueAt(usr.getDni(), 4, 1);
         this.TablaDatos.setValueAt(usr.getNombreCompleto(), 5, 1);
+        this.TablaDatos.setValueAt(usr.getClave(), 6, 1);
+
 
 
     }

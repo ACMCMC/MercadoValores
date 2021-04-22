@@ -207,7 +207,7 @@ public final class DAOUsuarioEmpresa extends DAO<UsuarioEmpresa> {
 			getConexion().setAutoCommit(false);
 			preparedStatement = getConexion()
 					.prepareStatement("update usuario_mercado set estado=CAST(? AS enum_estado) where id=?");
-			preparedStatement.setString(1, "DADO_DE_ALTA");
+			preparedStatement.setString(1, EstadoUsuario.DADO_DE_ALTA.toString());
 			preparedStatement.setString(2, user.getId());
 			preparedStatement.executeUpdate();
 			getConexion().commit();
@@ -242,4 +242,53 @@ public final class DAOUsuarioEmpresa extends DAO<UsuarioEmpresa> {
 			}
 		}
 	}
+        
+        public void addParticipacion(UsuarioEmpresa usr, int p) throws SQLException{
+            Connection c = startTransaction();
+            PreparedStatement preparedStatement = null;
+            
+            try{
+                getConexion().setAutoCommit(false);
+                preparedStatement = getConexion().prepareStatement(
+                        "insert into tener_participaciones(id1, id2, num_participaciones) values(?,?,?)");
+                preparedStatement.setString(1, usr.getId());
+                preparedStatement.setString(2, usr.getId());
+                preparedStatement.setInt(3, p);
+                preparedStatement.executeUpdate();
+                getConexion().commit();
+            } catch (SQLException e){
+                throw e;
+            } finally {
+                try{
+                    preparedStatement.close();
+                } catch(SQLException e){
+                    FachadaAplicacion.muestraExcepcion(e);
+                }
+            }
+        }
+        
+        public void removeParticipacion(UsuarioEmpresa usr, int p) throws SQLException{
+            Connection c = startTransaction();
+            PreparedStatement preparedStatement = null;
+            
+            try{
+                getConexion().setAutoCommit(false);
+                preparedStatement = getConexion().prepareStatement(
+                        "update tener_participaciones set num_participaciones = ? where id1 = ? and id2 = ?"
+                );
+                preparedStatement.setInt(1, p);
+                preparedStatement.setString(2, usr.getId());
+                preparedStatement.setString(3, usr.getId());
+                preparedStatement.executeUpdate();
+                getConexion().commit();
+            } catch (SQLException e){
+                throw e;
+            } finally {
+                try{
+                    preparedStatement.close();
+                } catch(SQLException e){
+                    FachadaAplicacion.muestraExcepcion(e);
+                }
+            }
+        }
 }

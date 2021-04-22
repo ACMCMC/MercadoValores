@@ -9,6 +9,7 @@ import gal.usc.mercadovalores.aplicacion.EstadoUsuario;
 import gal.usc.mercadovalores.aplicacion.UsuarioDeMercado;
 import gal.usc.mercadovalores.db.FachadaDB;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Set;
 
 /**
@@ -130,6 +131,8 @@ public class VSaldo extends javax.swing.JDialog {
         for(UsuarioDeMercado user: u){
             uM.add(user);
         }
+
+        uM.sort(Comparator.comparing(UsuarioDeMercado::getId));
         
         uT.setFilas(uM);
     }

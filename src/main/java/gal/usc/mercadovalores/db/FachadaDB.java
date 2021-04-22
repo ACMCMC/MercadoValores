@@ -30,6 +30,7 @@ public class FachadaDB {
     private DAOUsuarioEmpresa daoUsuarioEmpresa;
     private DAOUsuarioInversor daoUsuarioInversor;
     private DAOUsuarioRegulador daoUsuarioRegulador;
+    private DAOParticipaciones daoParticipaciones;
 
     public static FachadaDB getFachada() {
         return fachada;
@@ -66,6 +67,7 @@ public class FachadaDB {
         daoUsuarioRegulador = new DAOUsuarioRegulador(conexion);
         daoUsuarioEmpresa = new DAOUsuarioEmpresa(conexion);
         daoUsuarioInversor = new DAOUsuarioInversor(conexion);
+        daoParticipaciones = new DAOParticipaciones(conexion);
     }
 
     public Set<UsuarioEmpresa> getUsuariosEmpresa() {
@@ -128,50 +130,58 @@ public class FachadaDB {
     }
 
     public Set<Participacion> getParticipacionesUsuarioDeMercado(UsuarioDeMercado u) {
-        return null;
+        return daoParticipaciones.getParticipacionesUsuarioDeMercado(u);
     }
-}
-    
-    public void  autorizarRegistro(UsuarioDeMercado u){
-        if(u instanceof UsuarioEmpresa){
-            //autorizamos registro usuario empresa
+
+    public void autorizarRegistro(UsuarioDeMercado u) {
+        if (u instanceof UsuarioEmpresa) {
+            // autorizamos registro usuario empresa
             daoUsuarioEmpresa.autorizarRegistro((UsuarioEmpresa) u);
-        }else if(u instanceof UsuarioInversor){
-            //autorizamos registro de usuario inversor
+        } else if (u instanceof UsuarioInversor) {
+            // autorizamos registro de usuario inversor
             daoUsuarioInversor.autorizarRegistro((UsuarioInversor) u);
         }
     }
-    
-    public void  autorizarBaja(UsuarioDeMercado u){
-        if(u instanceof UsuarioEmpresa){
-            //autorizamos la baja usuario empresa
+
+    public void autorizarBaja(UsuarioDeMercado u) {
+        if (u instanceof UsuarioEmpresa) {
+            // autorizamos la baja usuario empresa
             daoUsuarioEmpresa.delete((UsuarioEmpresa) u);
-        }else if(u instanceof UsuarioInversor){
-            //autorizamos la baja de usuario inversor
+        } else if (u instanceof UsuarioInversor) {
+            // autorizamos la baja de usuario inversor
             daoUsuarioInversor.delete((UsuarioInversor) u);
 
         }
     }
-    
-    public void  solicitarBaja(UsuarioDeMercado u){
-        if(u instanceof UsuarioEmpresa){                        
-            //actualizamos el estado del usuario empresa
+
+    public void solicitarBaja(UsuarioDeMercado u) {
+        if (u instanceof UsuarioEmpresa) {
+            // actualizamos el estado del usuario empresa
             daoUsuarioEmpresa.solicitarBaja((UsuarioEmpresa) u);
-        }else if(u instanceof UsuarioInversor){
-            //actualizamos el estado del usuario inversor
+        } else if (u instanceof UsuarioInversor) {
+            // actualizamos el estado del usuario inversor
             daoUsuarioInversor.solicitarBaja((UsuarioInversor) u);
         }
     }
-    
-    public void actualizarUser(UsuarioDeMercado u){
-        if(u instanceof UsuarioEmpresa){
+
+    public void actualizarUser(UsuarioDeMercado u) {
+        if (u instanceof UsuarioEmpresa) {
             daoUsuarioEmpresa.update((UsuarioEmpresa) u);
-        }else if(u instanceof UsuarioInversor){
+        } else if (u instanceof UsuarioInversor) {
             daoUsuarioInversor.update((UsuarioInversor) u);
         }
     }
-    
-    public void actualizarComision(UsuarioRegulador u){
+
+    public void actualizarComision(UsuarioRegulador u) {
         daoUsuarioRegulador.update(u);
     }
+    
+    public void addParticipacion(UsuarioEmpresa usr, int p) throws SQLException{
+        daoUsuarioEmpresa.addParticipacion(usr,p);
+    }
+
+    public void removeParticipacion(UsuarioEmpresa usr, int p) throws SQLException{
+        daoUsuarioEmpresa.removeParticipacion(usr, p);
+    }
+    
 }

@@ -50,6 +50,7 @@ public class VPrincipalAdmin extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         tablaUsuarios = new javax.swing.JTable();
         botonAutorizar = new javax.swing.JButton();
+        botonCerrarSesion = new javax.swing.JButton();
         Menu = new javax.swing.JMenuBar();
         UsuarioMenu = new javax.swing.JMenu();
         SaldosMenuItem = new javax.swing.JMenuItem();
@@ -85,6 +86,13 @@ public class VPrincipalAdmin extends javax.swing.JFrame {
         botonAutorizar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 botonAutorizarActionPerformed(evt);
+            }
+        });
+
+        botonCerrarSesion.setText("Cerrar Sesion");
+        botonCerrarSesion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonCerrarSesionActionPerformed(evt);
             }
         });
 
@@ -124,9 +132,11 @@ public class VPrincipalAdmin extends javax.swing.JFrame {
                                 .addGap(0, 0, Short.MAX_VALUE))
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(0, 0, Short.MAX_VALUE)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(botonAutorizar)
-                                    .addComponent(SalirBoton, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addComponent(botonAutorizar))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(botonCerrarSesion)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(SalirBoton, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(33, 33, 33))))
         );
         layout.setVerticalGroup(
@@ -145,7 +155,9 @@ public class VPrincipalAdmin extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(botonAutorizar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 13, Short.MAX_VALUE)
-                .addComponent(SalirBoton)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(SalirBoton)
+                    .addComponent(botonCerrarSesion))
                 .addGap(24, 24, 24))
         );
 
@@ -184,6 +196,11 @@ public class VPrincipalAdmin extends javax.swing.JFrame {
             FachadaDB.getFachada().actualizarComision(this.usr);
         }
     }//GEN-LAST:event_NuevaComisionBotonActionPerformed
+
+    private void botonCerrarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonCerrarSesionActionPerformed
+        // TODO add your handling code here:
+        fa.cerrarSesion(this);
+    }//GEN-LAST:event_botonCerrarSesionActionPerformed
 
     
     //funcion que actualiza usuarios de la tabla que se muestra al regulador
@@ -224,6 +241,7 @@ public class VPrincipalAdmin extends javax.swing.JFrame {
     private javax.swing.JButton SalirBoton;
     private javax.swing.JMenu UsuarioMenu;
     private javax.swing.JButton botonAutorizar;
+    private javax.swing.JButton botonCerrarSesion;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tablaUsuarios;
     // End of variables declaration//GEN-END:variables
