@@ -207,7 +207,7 @@ public final class DAOUsuarioEmpresa extends DAO<UsuarioEmpresa> {
 			getConexion().setAutoCommit(false);
 			preparedStatement = getConexion()
 					.prepareStatement("update usuario_mercado set estado=CAST(? AS enum_estado) where id=?");
-			preparedStatement.setString(1, "DADO_DE_ALTA");
+			preparedStatement.setString(1, EstadoUsuario.DADO_DE_ALTA.toString());
 			preparedStatement.setString(2, user.getId());
 			preparedStatement.executeUpdate();
 			getConexion().commit();
