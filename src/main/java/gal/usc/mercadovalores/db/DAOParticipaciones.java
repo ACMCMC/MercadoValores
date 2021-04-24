@@ -56,6 +56,41 @@ public class DAOParticipaciones extends DAO<Participacion> {
 		}
     }
     
+    public void bajaParticipaciones(UsuarioEmpresa u,Integer x) throws SQLException{
+        Connection c = startTransaction();
+        PreparedStatement preparedStatement = null;
+        int participaciones=0;
+
+		try {
+			getConexion().setAutoCommit(false);
+                        participaciones=tenerParticipaciones(u,u);
+                        if(participaciones-x>0){
+                            preparedStatement = getConexion().prepareStatement(
+                       			"update tener_participaciones set num_participaciones=? where id1=? and id2=?");
+                            preparedStatement.setInt(1, participaciones-x);
+                            preparedStatement.setString(2, u.getId());
+                            preparedStatement.setString(3, u.getId());
+                        }else{
+                            preparedStatement = getConexion().prepareStatement(
+                       			"delete from tener_participaciones where id1=? and id2=?");
+                            preparedStatement.setString(1, u.getId());
+                            preparedStatement.setString(2, u.getId());
+                            
+                        }
+                        preparedStatement.executeUpdate();
+                            getConexion().commit();
+                        
+		} catch (SQLException e) {
+			throw e;
+		} finally {
+			try {
+				preparedStatement.close();
+			} catch (SQLException e) {
+				FachadaAplicacion.muestraExcepcion(e);
+			}
+		}
+    }
+    
     public Integer tenerParticipaciones(UsuarioDeMercado u1,UsuarioEmpresa u2) throws SQLException{
         
         Connection c = startTransaction();
