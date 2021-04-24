@@ -89,4 +89,9 @@ public class FachadaGUI {
         VVenta vV = new VVenta(usr);
         vV.setVisible(true);
     }
+    
+    public void ventanaAnuncios(UsuarioDeMercado usr){
+        VAnunciosUsuario vAU = new VAnunciosUsuario(usr);
+        vAU.setVisible(true);
+    }
 }

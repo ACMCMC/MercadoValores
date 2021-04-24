@@ -193,4 +193,12 @@ public class FachadaDB {
     public int getParticipacionesDeEmpresaALaVentaPorUsuario(UsuarioDeMercado u1, UsuarioEmpresa u2){
         return daoVentas.getParticipacionesDeEmpresaALaVentaPorUsuario(u1.getId(), u2.getId());
     }
+    
+    public Set<AnuncioVenta> getAnunciosUsuario(UsuarioDeMercado usr){
+        return daoVentas.getAnuncioUsuario(usr);
+    }
+    
+    public void bajaAnuncioVenta(AnuncioVenta av) throws SQLException{
+        daoVentas.retirarVenta(av.getVendedor().getId(), av.getEmpresa().getId(), av.getFecha());
+    }
 }

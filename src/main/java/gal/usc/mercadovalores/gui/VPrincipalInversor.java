@@ -172,6 +172,11 @@ public class VPrincipalInversor extends javax.swing.JFrame {
         ParticipacionesMenu.add(ComprarMenuItem);
 
         BajaVentaMenuItem.setText("Dar de baja venta");
+        BajaVentaMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BajaVentaMenuItemActionPerformed(evt);
+            }
+        });
         ParticipacionesMenu.add(BajaVentaMenuItem);
 
         Menu.add(ParticipacionesMenu);
@@ -284,6 +289,11 @@ public class VPrincipalInversor extends javax.swing.JFrame {
     private void VenderMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_VenderMenuItemActionPerformed
         this.fa.ventanaVender(this.usr);
     }//GEN-LAST:event_VenderMenuItemActionPerformed
+
+    private void BajaVentaMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BajaVentaMenuItemActionPerformed
+        // TODO add your handling code here:
+        this.fa.ventanaAnuncios(this.usr);
+    }//GEN-LAST:event_BajaVentaMenuItemActionPerformed
 
     private void ActualizarTablaDatos(){
         this.TablaDatos.setValueAt(usr.getId(), 0, 1);

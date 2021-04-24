@@ -168,7 +168,7 @@ public class VVenta extends javax.swing.JFrame {
             VAviso x = new VAviso(this,true,e.getMessage());
             x.setVisible(true);
         }
-        
+        this.updateTabla();
 
     }//GEN-LAST:event_botonVenderActionPerformed
 
@@ -190,6 +190,10 @@ public class VVenta extends javax.swing.JFrame {
         }
         
         tE.setFilas(pT);
+        
+        if(tE.getRowCount()>0){
+            this.tablaEmpresas.setRowSelectionInterval(0, 0);
+        }
     }
     
     private void textoComision(){

@@ -65,4 +65,8 @@ public class FachadaAplicacion {
         this.fgui.ventanaVender(usr);
     }
     
+    public void ventanaAnuncios(UsuarioDeMercado usr){
+        this.fgui.ventanaAnuncios(usr);
+    }
+    
 }
