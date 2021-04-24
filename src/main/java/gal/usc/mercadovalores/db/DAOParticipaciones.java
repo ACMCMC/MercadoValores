@@ -45,7 +45,7 @@ public class DAOParticipaciones extends DAO<Participacion> {
                         preparedStatement.executeUpdate();
                         preparedStatement.close();
                             preparedStatement = getConexion().prepareStatement(
-                       			"update usuario_empresa set importe_bloqueado=? where id1=?");
+                       			"update usuario_empresa set importe_bloqueado=? where id=?");
                             preparedStatement.setDouble(1, this.numeroParticipacionesTotales(u)*this.getImportePorParticipacion(u));
                             preparedStatement.setString(2, u.getId());
                             preparedStatement.executeUpdate();
@@ -148,6 +148,14 @@ public class DAOParticipaciones extends DAO<Participacion> {
                             
                         }
                         preparedStatement.executeUpdate();
+                        preparedStatement.close();
+                            preparedStatement = getConexion().prepareStatement(
+                       			"update usuario_empresa set importe_bloqueado=? where id=?");
+                            preparedStatement.setDouble(1, this.numeroParticipacionesTotales(u)*this.getImportePorParticipacion(u));
+                            preparedStatement.setString(2, u.getId());
+                            preparedStatement.executeUpdate();
+                        
+                            getConexion().commit();
                             getConexion().commit();
                         
 		} catch (SQLException e) {
