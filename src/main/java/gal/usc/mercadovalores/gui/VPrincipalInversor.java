@@ -11,6 +11,9 @@ import gal.usc.mercadovalores.aplicacion.UsuarioInversor;
 import gal.usc.mercadovalores.aplicacion.FachadaAplicacion;
 import gal.usc.mercadovalores.db.FachadaDB;
 import java.awt.Color;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *

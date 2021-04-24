@@ -1,6 +1,7 @@
 package gal.usc.mercadovalores.aplicacion;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 public final class UsuarioEmpresa extends UsuarioDeMercado {
@@ -54,6 +55,25 @@ public final class UsuarioEmpresa extends UsuarioDeMercado {
     public void setImporteBloqueado(double importeBloqueado) {
         this.importeBloqueado = importeBloqueado;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final UsuarioEmpresa other = (UsuarioEmpresa) obj;
+        if (!Objects.equals(this.cif, other.cif)) {
+            return false;
+        }
+        return true;
+    }
+    
     
     
 }
