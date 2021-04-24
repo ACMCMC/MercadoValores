@@ -130,7 +130,8 @@ public class FachadaDB {
     }
 
     public Set<Participacion> getParticipacionesUsuarioDeMercado(UsuarioDeMercado u) {
-        return daoParticipaciones.getParticipacionesUsuarioDeMercado(u);
+        
+        return daoParticipaciones.getAllUsuarioMercado(u);
     }
 
     public void autorizarRegistro(UsuarioDeMercado u) {
