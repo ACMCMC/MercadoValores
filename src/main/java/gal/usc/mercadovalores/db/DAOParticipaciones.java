@@ -18,14 +18,6 @@ public class DAOParticipaciones extends DAO<Participacion> {
 		super(con);
 	}
 
-    public Set<Participacion> getParticipacionesUsuarioDeMercado(UsuarioDeMercado u) {
-        FachadaDB f=FachadaDB.getFachada();
-        return null;
-    }
-    public Set<Participacion> getParticipacionesUsuarioEmpresa(UsuarioEmpresa u) {
-        FachadaDB f=FachadaDB.getFachada();
-        return null;
-    }
     
     public void crearParticipaciones(UsuarioEmpresa u,Integer x) throws SQLException{
         Connection c = startTransaction();
@@ -166,6 +158,7 @@ public class DAOParticipaciones extends DAO<Participacion> {
 		}
                 
     }
+
     
     public Set<Participacion> getAll() {
                 FachadaDB f=FachadaDB.getFachada();
@@ -244,4 +237,5 @@ public class DAOParticipaciones extends DAO<Participacion> {
 
 		return setFinal;
 	}
+
 }
