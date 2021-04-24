@@ -5,6 +5,7 @@
  */
 package gal.usc.mercadovalores.db;
 
+import gal.usc.mercadovalores.aplicacion.AnuncioVenta;
 import gal.usc.mercadovalores.aplicacion.EstadoUsuario;
 import gal.usc.mercadovalores.aplicacion.FachadaAplicacion;
 import java.sql.Connection;
@@ -86,6 +87,48 @@ public class DAOVentas extends DAO<Participacion> {
         
     
     }
+    
+     public Set<AnuncioVenta> getAll() {
+                FachadaDB f=FachadaDB.getFachada();
+		Connection c = startTransaction();
+		Set<AnuncioVenta> setFinal = new HashSet<>();
+
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet;
+
+		try {
+			preparedStatement = getConexion()
+					.prepareStatement("select * from anuncio_venta");
+			resultSet = preparedStatement.executeQuery();
+			while (resultSet.next()) {
+				AnuncioVenta a;
+				try {
+					String id = resultSet.getString("id1");
+                                        String id2 = resultSet.getString("id2");
+                                        Integer numero = resultSet.getInt("num_participaciones");
+                                        Timestamp tim=resultSet.getTimestamp("fecha_pago");
+                                        double precio=resultSet.getDouble("precio");
+                                        double comision=resultSet.getDouble("comision_en_fecha");
+
+					a = new AnuncioVenta((UsuarioDeMercado)f.getUsuarioById(id), (UsuarioEmpresa)f.getUsuarioById(id2), tim, precio, comision, numero);
+					setFinal.add(a);
+				} catch (EnumConstantNotPresentException e) {
+					FachadaAplicacion.muestraExcepcion(e);
+				}
+			}
+                         getConexion().commit();
+		} catch (SQLException e) {
+			FachadaAplicacion.muestraExcepcion(e);
+		} finally {
+			try {
+				preparedStatement.close();
+			} catch (SQLException e) {
+				FachadaAplicacion.muestraExcepcion(e);
+			}
+		}
+
+		return setFinal;
+	}
     
     
 }
