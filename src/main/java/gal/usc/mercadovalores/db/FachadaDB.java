@@ -52,7 +52,7 @@ public class FachadaDB {
 
             usuario.setProperty("user", configuracion.getProperty("usuario"));
             usuario.setProperty("password", configuracion.getProperty("clave"));
-            usuario.setProperty("ssl", "true");
+            //usuario.setProperty("ssl", "true");
             String url = "jdbc:" + gestor + "://" + configuracion.getProperty("servidor") + ":"
                     + configuracion.getProperty("puerto") + "/" + configuracion.getProperty("baseDatos");
             this.conexion = java.sql.DriverManager.getConnection(url, usuario);
@@ -130,7 +130,7 @@ public class FachadaDB {
     }
 
     public Set<Participacion> getParticipacionesUsuarioDeMercado(UsuarioDeMercado u) {
-        return daoParticipaciones.getParticipacionesUsuarioDeMercado(u);
+        return daoParticipaciones.getAllUsuarioMercado(u);
     }
 
     public void autorizarRegistro(UsuarioDeMercado u) {
@@ -183,5 +183,6 @@ public class FachadaDB {
     public void removeParticipacion(UsuarioEmpresa usr, int p) throws SQLException{
         daoUsuarioEmpresa.removeParticipacion(usr, p);
     }
+    
     
 }
