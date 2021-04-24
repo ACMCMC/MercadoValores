@@ -184,5 +184,4 @@ public class FachadaDB {
         daoUsuarioEmpresa.removeParticipacion(usr, p);
     }
     
-    
 }

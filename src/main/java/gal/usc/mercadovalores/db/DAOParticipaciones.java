@@ -17,7 +17,6 @@ public class DAOParticipaciones extends DAO<Participacion> {
     public DAOParticipaciones(Connection con) {
 		super(con);
 	}
-
     
     public void crearParticipaciones(UsuarioEmpresa u,Integer x) throws SQLException{
         Connection c = startTransaction();
@@ -239,3 +238,4 @@ public class DAOParticipaciones extends DAO<Participacion> {
 	}
 
 }
+
