@@ -197,6 +197,8 @@ public class VVenta extends javax.swing.JFrame {
     }
     
     private void textoComision(){
+        
+        //muestra la comision del regulador
         Double comision = FachadaDB.getFachada().getUsuarioRegulador().getComision_actual();
         String comisionText = comision.toString();
         this.precioComision.setText(comisionText);
