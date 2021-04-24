@@ -327,7 +327,7 @@ public class DAOParticipaciones extends DAO<Participacion> {
 		try {
 			preparedStatement = getConexion()
 					.prepareStatement("select * from tener_participaciones where id1=?");
-                        preparedStatement.setString(0, u.getId());
+                        preparedStatement.setString(1, u.getId());
 			resultSet = preparedStatement.executeQuery();
 			while (resultSet.next()) {
 				Participacion p;
@@ -354,5 +354,136 @@ public class DAOParticipaciones extends DAO<Participacion> {
 
 		return setFinal;
 	}
-
+    
+    public void altaBeneficios(UsuarioEmpresa u,double porcentaje,Timestamp fecha){
+        Connection c = startTransaction();
+        PreparedStatement preparedStatement = null;
+        try {
+			preparedStatement = getConexion()
+					.prepareStatement("insert into beneficios values(?,?,?)");
+                        preparedStatement.setString(1, u.getId());
+                        preparedStatement.setTimestamp(2, fecha);
+                        preparedStatement.setDouble(3, porcentaje);
+                        preparedStatement.executeUpdate();
+                         getConexion().commit();
+		} catch (SQLException e) {
+			FachadaAplicacion.muestraExcepcion(e);
+		} finally {
+			try {
+				preparedStatement.close();
+			} catch (SQLException e) {
+				FachadaAplicacion.muestraExcepcion(e);
+			}
+		}
+    }
+    
+    public void BajaBeneficios(UsuarioEmpresa u){
+        Connection c = startTransaction();
+        PreparedStatement preparedStatement = null;
+        
+        try {
+			preparedStatement = getConexion()
+					.prepareStatement("delete from beneficios where id=?");
+                        preparedStatement.setString(1, u.getId());
+                        preparedStatement.executeUpdate();
+                         getConexion().commit();
+		} catch (SQLException e) {
+			FachadaAplicacion.muestraExcepcion(e);
+		} finally {
+			try {
+				preparedStatement.close();
+			} catch (SQLException e) {
+				FachadaAplicacion.muestraExcepcion(e);
+			}
+		}
+    }
+    
+    public void pagoBeneficios(UsuarioEmpresa u){
+        Connection c = startTransaction();
+        PreparedStatement preparedStatement = null;
+        PreparedStatement preparedStatement2 = null;
+        PreparedStatement preparedStatement3 = null;
+        ResultSet resultSet;
+        try {
+                        
+			preparedStatement = getConexion()
+					.prepareStatement("select id1 from tener_participaciones where id2=?");
+                        preparedStatement.setString(1, u.getId());
+                        resultSet=preparedStatement.executeQuery();
+                        while(resultSet.next()){
+                            String id=resultSet.getString("id1");
+                            preparedStatement2 = getConexion()
+					.prepareStatement("update usuario_mercado set saldo=? where id=?");
+                            preparedStatement2.setDouble(1, calcularBeneficioUsuario(id,u));
+                            preparedStatement2.setString(2, id);
+                            preparedStatement2.executeUpdate();
+                            preparedStatement2.close();
+                            
+                            
+                        }
+                         getConexion().commit();
+		} catch (SQLException e) {
+			FachadaAplicacion.muestraExcepcion(e);
+		} finally {
+			try {
+				preparedStatement.close();
+			} catch (SQLException e) {
+				FachadaAplicacion.muestraExcepcion(e);
+			}
+		}
+    }
+    
+    public double calcularBeneficioUsuario(String u,UsuarioEmpresa u2){//FUNCION AUXILIAR PARA PGAO BENEFICIOS
+        double ret=0.0;
+        Connection c = startTransaction();
+        PreparedStatement preparedStatement = null;
+        PreparedStatement preparedStatement2 = null;
+        PreparedStatement preparedStatement3 = null;
+        ResultSet resultSet;
+        ResultSet resultSet2;
+        ResultSet resultSet3;
+        try {
+                        
+			preparedStatement = getConexion()
+					.prepareStatement("select num_participaciones from tener_participaciones where id1=? and id2=?");
+                        preparedStatement.setString(1, u);
+                        preparedStatement.setString(2, u2.getId());
+                        resultSet=preparedStatement.executeQuery();
+                        while(resultSet.next()){
+                            Integer num=resultSet.getInt("num_participaciones");
+                            preparedStatement2 = getConexion()
+					.prepareStatement("select importe_por_participacion from beneficios where id=?");
+                            
+                            preparedStatement2.setString(1, u2.getId());
+                            resultSet2=preparedStatement2.executeQuery();
+                            while(resultSet2.next()){
+                                double aux=resultSet2.getDouble("importe_por_participacion");
+                                ret=aux*num;
+                            }
+                            preparedStatement2.close();
+                            preparedStatement3 = getConexion()
+					.prepareStatement("select saldo from usuario_mercado where id=?");
+                            
+                            preparedStatement3.setString(1, u);
+                            resultSet3=preparedStatement3.executeQuery();
+                             while(resultSet3.next()){
+                                double aux=resultSet3.getDouble("saldo");
+                                ret+=aux;
+                            }
+                            
+                        }
+                         getConexion().commit();
+		} catch (SQLException e) {
+			FachadaAplicacion.muestraExcepcion(e);
+		} finally {
+			try {
+				preparedStatement.close();
+			} catch (SQLException e) {
+				FachadaAplicacion.muestraExcepcion(e);
+			}
+		}
+        return ret;
+    }
+    
+    
 }
