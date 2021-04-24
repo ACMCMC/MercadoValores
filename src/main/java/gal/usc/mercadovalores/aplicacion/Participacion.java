@@ -7,7 +7,7 @@ public class Participacion {
     private UsuarioEmpresa empresa;
     private Integer numero;
 
-    Participacion(UsuarioDeMercado usuarioMercado, UsuarioEmpresa empresa, Integer num) {
+    public Participacion(UsuarioDeMercado usuarioMercado, UsuarioEmpresa empresa, Integer num) {
         this.usuarioMercado = usuarioMercado;
         this.empresa = empresa;
         this.numero = num;
