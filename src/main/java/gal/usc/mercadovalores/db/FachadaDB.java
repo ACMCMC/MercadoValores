@@ -31,6 +31,7 @@ public class FachadaDB {
     private DAOUsuarioInversor daoUsuarioInversor;
     private DAOUsuarioRegulador daoUsuarioRegulador;
     private DAOParticipaciones daoParticipaciones;
+    private DAOVentas daoVentas;
 
     public static FachadaDB getFachada() {
         return fachada;
@@ -68,6 +69,7 @@ public class FachadaDB {
         daoUsuarioEmpresa = new DAOUsuarioEmpresa(conexion);
         daoUsuarioInversor = new DAOUsuarioInversor(conexion);
         daoParticipaciones = new DAOParticipaciones(conexion);
+        daoVentas = new DAOVentas(conexion);
     }
 
     public Set<UsuarioEmpresa> getUsuariosEmpresa() {
@@ -184,4 +186,11 @@ public class FachadaDB {
         daoUsuarioEmpresa.removeParticipacion(usr, p);
     }
     
+    public void venderParticipacion(UsuarioDeMercado u1, UsuarioEmpresa u2, Integer cant, double precio, double comision) throws SQLException{
+        daoVentas.publicarVenta(u1, u2, cant, precio, comision);
+    }
+    
+    public int getParticipacionesDeEmpresaALaVentaPorUsuario(UsuarioDeMercado u1, UsuarioEmpresa u2){
+        return daoVentas.getParticipacionesDeEmpresaALaVentaPorUsuario(u1.getId(), u2.getId());
+    }
 }

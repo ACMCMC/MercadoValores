@@ -73,9 +73,14 @@ public class VVenta extends javax.swing.JFrame {
             }
         });
 
-        jLabel4.setText("Comision actual: ");
+        jLabel4.setText("Comisión actual: ");
 
         botonSalir.setText("Salir");
+        botonSalir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonSalirActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -91,14 +96,14 @@ public class VVenta extends javax.swing.JFrame {
                         .addComponent(botonVender))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel2)
-                            .addComponent(campoCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel3)
                             .addComponent(campoPrecio, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel4)
-                            .addComponent(precioComision))))
+                            .addComponent(precioComision)
+                            .addComponent(campoCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addGap(33, 33, 33))
         );
         jPanel1Layout.setVerticalGroup(
@@ -150,23 +155,37 @@ public class VVenta extends javax.swing.JFrame {
         //obtenemos todo lo necesario:
         TablaEmpresasUsuario tE = (TablaEmpresasUsuario) this.tablaEmpresas.getModel();
         Participacion pE = tE.obtenerParticipacion(this.tablaEmpresas.getSelectedRow());
-        if(!this.campoCantidad.getText().isEmpty() && !this.campoPrecio.getText().isEmpty()){
-            Integer cantidad = Integer.parseInt(this.campoCantidad.getText());
-            if(pE.getNumero() >= cantidad){
-                //FachadaDB.getFachada().
+        try{
+            if(!this.campoCantidad.getText().isEmpty() && !this.campoPrecio.getText().isEmpty()){
+                Integer cantidad = Integer.parseInt(this.campoCantidad.getText());
+                Double precio = Double.parseDouble(this.campoPrecio.getText());
+                Double comision = Double.parseDouble(this.precioComision.getText());
+                if(pE.getNumero() >= cantidad){
+                    FachadaDB.getFachada().venderParticipacion(this.usr,pE.getEmpresa(),cantidad,precio,comision);
+                }
             }
-            //realizamos la llamada a la función para insertar el anuncio de venta
-            
+        }catch(Exception e){
+            VAviso x = new VAviso(this,true,e.getMessage());
+            x.setVisible(true);
         }
+        
 
     }//GEN-LAST:event_botonVenderActionPerformed
+
+    private void botonSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonSalirActionPerformed
+        this.dispose();
+    }//GEN-LAST:event_botonSalirActionPerformed
 
     private void updateTabla(){
         TablaEmpresasUsuario tE = (TablaEmpresasUsuario) this.tablaEmpresas.getModel();
         Set<Participacion> p = this.usr.getParticipaciones();
         ArrayList<Participacion> pT = new ArrayList<>();
         
+        
         for(Participacion pa : p){
+            //modificamos el numero de participaciones para enseñar las disponibles
+            int partEnVenta = FachadaDB.getFachada().getParticipacionesDeEmpresaALaVentaPorUsuario(this.usr,pa.getEmpresa());
+            pa.setNumero(pa.getNumero()-partEnVenta);
             pT.add(pa);
         }
         

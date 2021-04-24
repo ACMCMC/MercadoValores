@@ -152,6 +152,11 @@ public class VPrincipalEmpresa extends javax.swing.JFrame {
 
         VenderMenuItem.setText("Vender");
         VenderMenuItem.setToolTipText("");
+        VenderMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                VenderMenuItemActionPerformed(evt);
+            }
+        });
         ParticipacionesMenu.add(VenderMenuItem);
 
         ComprarMenuItem.setText("Comprar");
@@ -282,6 +287,10 @@ public class VPrincipalEmpresa extends javax.swing.JFrame {
         this.botonActualizar.setEnabled(this.modificando);
 
     }//GEN-LAST:event_ModificarMenuItemActionPerformed
+
+    private void VenderMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_VenderMenuItemActionPerformed
+        this.fa.ventanaVender(this.usr);
+    }//GEN-LAST:event_VenderMenuItemActionPerformed
 
     private void ActualizarTablaDatos(){
         this.TablaDatos.setValueAt(usr.getId(), 0, 1);
