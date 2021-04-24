@@ -11,6 +11,7 @@ import gal.usc.mercadovalores.aplicacion.UsuarioEmpresa;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.HashSet;
 
 public class DAOParticipaciones extends DAO<Participacion> {
@@ -89,11 +90,11 @@ public class DAOParticipaciones extends DAO<Participacion> {
         return ret;
     }
     
-    public void venderParticipaciones(Participacion p,UsuarioDeMercado u,Integer x) throws SQLException{//El que vende, elque compra , cuanto se vende
+    public void venderParticipaciones(Participacion p,UsuarioDeMercado u,Integer x,Timestamp fechapublicacion) throws SQLException{//El que vende, elque compra , cuanto se vende
         Connection c = startTransaction();
         PreparedStatement preparedStatement = null;
+        FachadaDB f=FachadaDB.getFachada();
         int participaciones=0;
-        int participaciones2=0;
 
 		try {
 			getConexion().setAutoCommit(false);
@@ -113,6 +114,7 @@ public class DAOParticipaciones extends DAO<Participacion> {
                                 preparedStatement.setString(2, p.getUsuarioMercado().getId());
                                 preparedStatement.setString(3, p.getEmpresa().getId());
                                 preparedStatement.executeUpdate();
+                                
                             }else{
                                 preparedStatement = getConexion().prepareStatement(//Le restamos al numero al que vende
                                         	"delete from tener_participaciones where id1=? and id2=?");
@@ -144,6 +146,8 @@ public class DAOParticipaciones extends DAO<Participacion> {
                             }
                             
                         }
+                        
+                        f.confirmarVenta(p.getUsuarioMercado().getId(), p.getEmpresa().getId(), fechapublicacion);
                         
                             getConexion().commit();
                         

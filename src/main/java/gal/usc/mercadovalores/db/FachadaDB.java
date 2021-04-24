@@ -13,6 +13,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
@@ -31,6 +32,7 @@ public class FachadaDB {
     private DAOUsuarioInversor daoUsuarioInversor;
     private DAOUsuarioRegulador daoUsuarioRegulador;
     private DAOParticipaciones daoParticipaciones;
+    private DAOVentas daoVentas;
 
     public static FachadaDB getFachada() {
         return fachada;
@@ -68,6 +70,7 @@ public class FachadaDB {
         daoUsuarioEmpresa = new DAOUsuarioEmpresa(conexion);
         daoUsuarioInversor = new DAOUsuarioInversor(conexion);
         daoParticipaciones = new DAOParticipaciones(conexion);
+        daoVentas = new DAOVentas(conexion);
     }
 
     public Set<UsuarioEmpresa> getUsuariosEmpresa() {
@@ -175,5 +178,10 @@ public class FachadaDB {
 
     public void actualizarComision(UsuarioRegulador u) {
         daoUsuarioRegulador.update(u);
+    }
+    
+    public void confirmarVenta(String id1,String id2,Timestamp fecha) throws SQLException{
+        daoVentas.confirmarVenta(id1, id2, fecha);
+        
     }
 }
