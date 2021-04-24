@@ -43,6 +43,13 @@ public class DAOParticipaciones extends DAO<Participacion> {
                             
                         }
                         preparedStatement.executeUpdate();
+                        preparedStatement.close();
+                            preparedStatement = getConexion().prepareStatement(
+                       			"update usuario_empresa set importe_bloqueado=? where id1=?");
+                            preparedStatement.setDouble(1, this.numeroParticipacionesTotales(u)*this.getImportePorParticipacion(u));
+                            preparedStatement.setString(2, u.getId());
+                            preparedStatement.executeUpdate();
+                        
                             getConexion().commit();
                         
 		} catch (SQLException e) {
@@ -54,6 +61,69 @@ public class DAOParticipaciones extends DAO<Participacion> {
 				FachadaAplicacion.muestraExcepcion(e);
 			}
 		}
+    }
+    
+    public double getImportePorParticipacion(UsuarioEmpresa u) throws SQLException{
+        double ret=0;
+        Connection c = startTransaction();
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet;
+        try {
+			getConexion().setAutoCommit(false);
+                            preparedStatement = getConexion().prepareStatement(
+                       			"select importe_por_participacion from beneficios where id=?");
+                            preparedStatement.setString(1, u.getId());
+                        resultSet=preparedStatement.executeQuery();
+                        while (resultSet.next()) {//Si la consulta devuelve 0 tuplas no entra aqui y se devuelve 0
+				try {
+                                        ret=resultSet.getDouble("importe_por_participacion");
+				} catch (EnumConstantNotPresentException e) {
+					FachadaAplicacion.muestraExcepcion(e);
+				}
+			}
+			getConexion().commit();
+		} catch (SQLException e) {
+			throw e;
+		} finally {
+			try {
+				preparedStatement.close();
+			} catch (SQLException e) {
+				FachadaAplicacion.muestraExcepcion(e);
+			}
+		}
+        return ret;
+    
+    }
+    
+    public int numeroParticipacionesTotales(UsuarioEmpresa u) throws SQLException{
+        int ret=0;
+        Connection c = startTransaction();
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet;
+        try {
+			getConexion().setAutoCommit(false);
+                            preparedStatement = getConexion().prepareStatement(
+                       			"select sum(num_participaciones)from tener_participaciones where id2=?");
+                            preparedStatement.setString(1, u.getId());
+                        resultSet=preparedStatement.executeQuery();
+                        while (resultSet.next()) {//Si la consulta devuelve 0 tuplas no entra aqui y se devuelve 0
+				try {
+                                        ret=resultSet.getInt("num_participaciones");
+				} catch (EnumConstantNotPresentException e) {
+					FachadaAplicacion.muestraExcepcion(e);
+				}
+			}
+			getConexion().commit();
+		} catch (SQLException e) {
+			throw e;
+		} finally {
+			try {
+				preparedStatement.close();
+			} catch (SQLException e) {
+				FachadaAplicacion.muestraExcepcion(e);
+			}
+		}
+        return ret;
     }
     
     public void bajaParticipaciones(UsuarioEmpresa u,Integer x) throws SQLException{

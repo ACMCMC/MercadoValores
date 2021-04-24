@@ -242,4 +242,7 @@ public final class DAOUsuarioEmpresa extends DAO<UsuarioEmpresa> {
 			}
 		}
 	}
+        
+        public void pagoBeneficios(){
+        }
 }
