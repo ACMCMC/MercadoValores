@@ -159,7 +159,6 @@ CREATE TABLE parte_compra(
 	id_parte serial UNIQUE,
 	id_compra integer,
 	vendedor varchar(30),
-	fecha timestamp,
 	precio double precision,
 	cantidad integer,
 	primary key(id_compra,id_parte,vendedor),
