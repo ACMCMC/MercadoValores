@@ -144,6 +144,10 @@ public class FachadaDB {
         return daoParticipaciones.getAllUsuarioMercado(u);
     }
 
+    public Set<Participacion> getParticipacionesEmpresa(UsuarioEmpresa u) {
+        return daoParticipaciones.getAllEmpresa(u);
+    }
+
     public void autorizarRegistro(UsuarioDeMercado u) {
         if (u instanceof UsuarioEmpresa) {
             // autorizamos registro usuario empresa
