@@ -140,6 +140,34 @@ $comprueba_pago_beneficios$ LANGUAGE plpgsql;
 CREATE TRIGGER comprueba_pago_beneficios BEFORE INSERT OR UPDATE ON tener_participaciones
 FOR EACH ROW EXECUTE PROCEDURE comprueba_pago_beneficios();
 
+CREATE OR REPLACE FUNCTION procesa_bloqueo_importe_pago_beneficios() RETURNS trigger AS $procesa_bloqueo_importe_pago_beneficios$
+    DECLARE
+		diferencia_beneficios_a_pagar double precision;
+		max double precision;
+    BEGIN
+		SELECT (new.importe_por_participacion - COALESCE(old.importe_por_participacion,0))*(COALESCE(SUM(tener_participaciones.num_participaciones),0)) into diferencia_beneficios_a_pagar --el importe que vamos a pagar ahora - el que pagaríamos antes
+		FROM tener_participaciones
+		WHERE id2=new.id;
+		
+		SELECT saldo into max
+		FROM usuario_mercado
+		WHERE id=new.id;
+		  
+		IF diferencia_beneficios_a_pagar > max THEN
+            		RAISE EXCEPTION 'Los beneficios no podrían pagarse';
+		END IF;
+
+		UPDATE usuario_empresa(importe_bloqueado) SET importe_bloqueado=importe_bloqueado+diferencia_beneficios_a_pagar WHERE id=new.id;
+		UPDATE usuario_mercado(saldo) SET saldo=saldo-diferencia_beneficios_a_pagar WHERE id=new.id;
+
+		RETURN NEW;
+		 
+    END;
+$procesa_bloqueo_importe_pago_beneficios$ LANGUAGE plpgsql;
+
+CREATE TRIGGER procesa_bloqueo_importe_pago_beneficios BEFORE INSERT OR UPDATE OR DELETE ON beneficios
+FOR EACH ROW EXECUTE PROCEDURE procesa_bloqueo_importe_pago_beneficios();
+
 --Funcionalidades extra
 
 CREATE TABLE compra(
