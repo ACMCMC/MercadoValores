@@ -140,7 +140,8 @@ $comprueba_pago_beneficios$ LANGUAGE plpgsql;
 CREATE TRIGGER comprueba_pago_beneficios BEFORE INSERT OR UPDATE ON tener_participaciones
 FOR EACH ROW EXECUTE PROCEDURE comprueba_pago_beneficios();
 
---Tablas para Funcionalidades Extra
+--Funcionalidades extra
+
 CREATE TABLE compra(
     id_compra serial UNIQUE,
 	empresa varchar(30),
@@ -155,7 +156,7 @@ CREATE TABLE compra(
         	on delete restrict
 );
 CREATE TABLE parte_compra(
-	id_parte serial,
+	id_parte serial UNIQUE,
 	id_compra integer,
 	vendedor varchar(30),
 	fecha timestamp,
