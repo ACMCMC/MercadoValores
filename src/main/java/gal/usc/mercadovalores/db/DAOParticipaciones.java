@@ -43,7 +43,6 @@ public class DAOParticipaciones extends DAO<Participacion> {
                             
                         }
                         preparedStatement.executeUpdate();
-                        preparedStatement.close();
                             preparedStatement = getConexion().prepareStatement(
                        			"update usuario_empresa set importe_bloqueado=? where id=?");
                             preparedStatement.setDouble(1, this.numeroParticipacionesTotales(u)*this.getImportePorParticipacion(u));
@@ -108,7 +107,7 @@ public class DAOParticipaciones extends DAO<Participacion> {
                         resultSet=preparedStatement.executeQuery();
                         while (resultSet.next()) {//Si la consulta devuelve 0 tuplas no entra aqui y se devuelve 0
 				try {
-                                        ret=resultSet.getInt("num_participaciones");
+                                        ret=resultSet.getInt(1);
 				} catch (EnumConstantNotPresentException e) {
 					FachadaAplicacion.muestraExcepcion(e);
 				}
@@ -148,14 +147,12 @@ public class DAOParticipaciones extends DAO<Participacion> {
                             
                         }
                         preparedStatement.executeUpdate();
-                        preparedStatement.close();
                             preparedStatement = getConexion().prepareStatement(
                        			"update usuario_empresa set importe_bloqueado=? where id=?");
                             preparedStatement.setDouble(1, this.numeroParticipacionesTotales(u)*this.getImportePorParticipacion(u));
                             preparedStatement.setString(2, u.getId());
                             preparedStatement.executeUpdate();
                         
-                            getConexion().commit();
                             getConexion().commit();
                         
 		} catch (SQLException e) {
@@ -417,7 +414,6 @@ public class DAOParticipaciones extends DAO<Participacion> {
                             preparedStatement2.setDouble(1, calcularBeneficioUsuario(id,u));
                             preparedStatement2.setString(2, id);
                             preparedStatement2.executeUpdate();
-                            preparedStatement2.close();
                             
                             
                         }
@@ -427,6 +423,7 @@ public class DAOParticipaciones extends DAO<Participacion> {
 		} finally {
 			try {
 				preparedStatement.close();
+                                preparedStatement2.close();
 			} catch (SQLException e) {
 				FachadaAplicacion.muestraExcepcion(e);
 			}
@@ -460,7 +457,6 @@ public class DAOParticipaciones extends DAO<Participacion> {
                                 double aux=resultSet2.getDouble("importe_por_participacion");
                                 ret=aux*num;
                             }
-                            preparedStatement2.close();
                             preparedStatement3 = getConexion()
 					.prepareStatement("select saldo from usuario_mercado where id=?");
                             
@@ -478,6 +474,8 @@ public class DAOParticipaciones extends DAO<Participacion> {
 		} finally {
 			try {
 				preparedStatement.close();
+                                preparedStatement2.close();
+                                preparedStatement3.close();
 			} catch (SQLException e) {
 				FachadaAplicacion.muestraExcepcion(e);
 			}

@@ -75,7 +75,6 @@ public final class DAOUsuarioInversor extends DAO<UsuarioInversor> {
 			preparedStatement.setString(5, user.getEstado().toString());
 			preparedStatement.setString(6, user.getId());
 			preparedStatement.executeUpdate();
-			preparedStatement.close();
 
 			preparedStatement = c
 					.prepareStatement("insert into usuario_inversor(dni, nombre_completo, id) values (?,?,?)");
@@ -107,7 +106,7 @@ public final class DAOUsuarioInversor extends DAO<UsuarioInversor> {
 			preparedStatement.setString(2, user.getNombreCompleto());
 			preparedStatement.setString(3, user.getId());
 			preparedStatement.executeUpdate();
-			preparedStatement.close();
+                        
 			preparedStatement = getConexion().prepareStatement(
 					"update usuario_mercado set clave=?, saldo=?, direccion=?, telefono=?, estado=CAST(? AS enum_estado) where id=?");
 			preparedStatement.setString(1, user.getClave());
@@ -179,7 +178,7 @@ public final class DAOUsuarioInversor extends DAO<UsuarioInversor> {
 			preparedStatement = getConexion().prepareStatement("delete from usuario_inversor where id=?");
 			preparedStatement.setString(1, user.getId());
 			preparedStatement.executeUpdate();
-			preparedStatement.close();
+                        
 			preparedStatement = getConexion().prepareStatement("delete from usuario_mercado where id=?");
 			preparedStatement.setString(1, user.getId());
 			preparedStatement.executeUpdate();

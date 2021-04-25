@@ -120,7 +120,7 @@ public final class DAOUsuarioEmpresa extends DAO<UsuarioEmpresa> {
 			preparedStatement.setDouble(3, u.getImporteBloqueado());
 			preparedStatement.setString(4, u.getId());
 			preparedStatement.executeUpdate();
-			preparedStatement.close();
+                        
 			preparedStatement = getConexion().prepareStatement(
 					"update usuario_mercado set clave=?, saldo=?, direccion=?, telefono=?, estado=CAST(? AS enum_estado) where id=?");
 			preparedStatement.setString(1, u.getClave());
@@ -157,7 +157,7 @@ public final class DAOUsuarioEmpresa extends DAO<UsuarioEmpresa> {
 			preparedStatement.setString(5, u.getEstado().toString());
 			preparedStatement.setString(6, u.getId());
 			preparedStatement.executeUpdate();
-			preparedStatement.close();
+                        
 			preparedStatement = getConexion().prepareStatement(
 					"insert into usuario_empresa(cif, nombre_comercial, importe_bloqueado, id) values (?,?,?,?)");
 			preparedStatement.setString(1, u.getCif());
@@ -185,7 +185,7 @@ public final class DAOUsuarioEmpresa extends DAO<UsuarioEmpresa> {
 			preparedStatement = getConexion().prepareStatement("delete from usuario_empresa where id=?");
 			preparedStatement.setString(1, user.getId());
 			preparedStatement.executeUpdate();
-			preparedStatement.close();
+                        
 			preparedStatement = getConexion().prepareStatement("delete from usuario_mercado where id=?");
 			preparedStatement.setString(1, user.getId());
 			preparedStatement.executeUpdate();
