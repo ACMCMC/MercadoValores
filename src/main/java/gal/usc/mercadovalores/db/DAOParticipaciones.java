@@ -61,38 +61,6 @@ public class DAOParticipaciones extends DAO<Participacion> {
         }
     }
 
-    public double getImportePorParticipacion(UsuarioEmpresa u) throws SQLException {
-        double ret = 0;
-        Connection c = startTransaction();
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet;
-        try {
-            getConexion().setAutoCommit(false);
-            preparedStatement = getConexion()
-                    .prepareStatement("select importe_por_participacion from beneficios where id=?");
-            preparedStatement.setString(1, u.getId());
-            resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {// Si la consulta devuelve 0 tuplas no entra aqui y se devuelve 0
-                try {
-                    ret = resultSet.getDouble("importe_por_participacion");
-                } catch (EnumConstantNotPresentException e) {
-                    FachadaAplicacion.muestraExcepcion(e);
-                }
-            }
-            getConexion().commit();
-        } catch (SQLException e) {
-            throw e;
-        } finally {
-            try {
-                preparedStatement.close();
-            } catch (SQLException e) {
-                FachadaAplicacion.muestraExcepcion(e);
-            }
-        }
-        return ret;
-
-    }
-
     public int numeroParticipacionesTotales(UsuarioEmpresa u) throws SQLException {
         int ret = 0;
         // Connection c = startTransaction();
@@ -274,6 +242,40 @@ public class DAOParticipaciones extends DAO<Participacion> {
             }
         }
 
+        try {
+            getConexion().setAutoCommit(false);
+            participaciones = tenerParticipaciones(u, u);
+            if (participaciones != 0) {
+                preparedStatement = getConexion().prepareStatement(
+                        "update tener_participaciones set num_participaciones=? where id1=? and id2=?");
+                preparedStatement.setInt(1, x + participaciones);
+                preparedStatement.setString(2, u.getId());
+                preparedStatement.setString(3, u.getId());
+            } else {
+                preparedStatement = getConexion().prepareStatement("insert into tener_participaciones values(?,?,?)");
+                preparedStatement.setString(1, u.getId());
+                preparedStatement.setString(2, u.getId());
+                preparedStatement.setInt(3, x);
+
+            }
+            preparedStatement.executeUpdate();
+            preparedStatement = getConexion()
+                    .prepareStatement("update usuario_empresa set importe_bloqueado=? where id=?");
+            preparedStatement.setDouble(1, this.numeroParticipacionesTotales(u) * this.getImportePorParticipacion(u));
+            preparedStatement.setString(2, u.getId());
+            preparedStatement.executeUpdate();
+
+            getConexion().commit();
+
+        } catch (SQLException e) {
+            throw e;
+        } finally {
+            try {
+                preparedStatement.close();
+            } catch (SQLException e) {
+                FachadaAplicacion.muestraExcepcion(e);
+            }
+        }
     }
 
     public Set<Participacion> getAll() {
@@ -313,6 +315,38 @@ public class DAOParticipaciones extends DAO<Participacion> {
         }
 
         return setFinal;
+    }
+
+    public double getImportePorParticipacion(UsuarioEmpresa u) throws SQLException {
+        double ret = 0;
+        Connection c = startTransaction();
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet;
+        try {
+            getConexion().setAutoCommit(false);
+            preparedStatement = getConexion()
+                    .prepareStatement("select importe_por_participacion from beneficios where id=?");
+            preparedStatement.setString(1, u.getId());
+            resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {// Si la consulta devuelve 0 tuplas no entra aqui y se devuelve 0
+                try {
+                    ret = resultSet.getDouble("importe_por_participacion");
+                } catch (EnumConstantNotPresentException e) {
+                    FachadaAplicacion.muestraExcepcion(e);
+                }
+            }
+            getConexion().commit();
+        } catch (SQLException e) {
+            throw e;
+        } finally {
+            try {
+                preparedStatement.close();
+            } catch (SQLException e) {
+                FachadaAplicacion.muestraExcepcion(e);
+            }
+        }
+        return ret;
+
     }
 
     public Set<Participacion> getAllUsuarioMercado(UsuarioDeMercado u) {
@@ -425,57 +459,4 @@ public class DAOParticipaciones extends DAO<Participacion> {
             }
         }
     }
-
-    public double calcularBeneficioUsuario(String u, UsuarioEmpresa u2) {// FUNCION AUXILIAR PARA PGAO BENEFICIOS
-        double ret = 0.0;
-        Connection c = startTransaction();
-        PreparedStatement preparedStatement = null;
-        PreparedStatement preparedStatement2 = null;
-        PreparedStatement preparedStatement3 = null;
-        ResultSet resultSet;
-        ResultSet resultSet2;
-        ResultSet resultSet3;
-        try {
-
-            preparedStatement = getConexion()
-                    .prepareStatement("select num_participaciones from tener_participaciones where id1=? and id2=?");
-            preparedStatement.setString(1, u);
-            preparedStatement.setString(2, u2.getId());
-            resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                Integer num = resultSet.getInt("num_participaciones");
-                preparedStatement2 = getConexion()
-                        .prepareStatement("select importe_por_participacion from beneficios where id=?");
-
-                preparedStatement2.setString(1, u2.getId());
-                resultSet2 = preparedStatement2.executeQuery();
-                while (resultSet2.next()) {
-                    double aux = resultSet2.getDouble("importe_por_participacion");
-                    ret = aux * num;
-                }
-                preparedStatement3 = getConexion().prepareStatement("select saldo from usuario_mercado where id=?");
-
-                preparedStatement3.setString(1, u);
-                resultSet3 = preparedStatement3.executeQuery();
-                while (resultSet3.next()) {
-                    double aux = resultSet3.getDouble("saldo");
-                    ret += aux;
-                }
-
-            }
-            getConexion().commit();
-        } catch (SQLException e) {
-            FachadaAplicacion.muestraExcepcion(e);
-        } finally {
-            try {
-                preparedStatement.close();
-                preparedStatement2.close();
-                preparedStatement3.close();
-            } catch (SQLException e) {
-                FachadaAplicacion.muestraExcepcion(e);
-            }
-        }
-        return ret;
-    }
-
 }
