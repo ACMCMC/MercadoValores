@@ -9,10 +9,10 @@ Values ('Tim','red',1000.73,'Gotham','+1578543221','DADO_DE_ALTA'),
 ('SI','1234',110000000.23,'Barcelona','+34951123456','SOLICITANDO_ALTA'),
 ('WW','Luc',150000000.23,'Madrid','+34902432876','SOLICITANDO_ALTA');
 
-Insert into usuario_empresa (id,cif,nombre_comercial,importe_bloqueado)
-VALUES ('Opti','B22222222','Optitrón',2000.00),
-('WW','W27272727','Wayne Enterprise',1000000.00),
-('SI','S11111111','Stark Industries',500000.00);
+Insert into usuario_empresa (id,cif,nombre_comercial)
+VALUES ('Opti','B22222222','Optitrón'),
+('WW','W27272727','Wayne Enterprise'),
+('SI','S11111111','Stark Industries');
 
 Insert into usuario_inversor (id,dni,nombre_completo)
 Values ('Tim','39759783E','Timothy Drake Wayne'),
