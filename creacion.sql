@@ -140,6 +140,7 @@ $comprueba_pago_beneficios$ LANGUAGE plpgsql;
 CREATE TRIGGER comprueba_pago_beneficios BEFORE INSERT OR UPDATE ON tener_participaciones
 FOR EACH ROW EXECUTE PROCEDURE comprueba_pago_beneficios();
 
+--Actualiza el saldo bloqueado al actualizar la tabla de beneficios en base a las participaciones ya existentes en el mercado
 CREATE OR REPLACE FUNCTION procesa_bloqueo_importe_pago_beneficios() RETURNS trigger AS $procesa_bloqueo_importe_pago_beneficios$
     DECLARE
 		diferencia_beneficios_a_pagar double precision;
@@ -169,6 +170,7 @@ $procesa_bloqueo_importe_pago_beneficios$ LANGUAGE plpgsql;
 CREATE TRIGGER procesa_bloqueo_importe_pago_beneficios BEFORE INSERT OR UPDATE OR DELETE ON beneficios
 FOR EACH ROW EXECUTE PROCEDURE procesa_bloqueo_importe_pago_beneficios();
 
+--Actualiza el saldo bloqueado al actualizar la tabla de tener_participaciones en base a los anuncios de beneficios existentes
 CREATE OR REPLACE FUNCTION procesa_saldo_bloqueado_al_modificar_tabla_participaciones() RETURNS trigger AS $procesa_saldo_bloqueado_al_modificar_tabla_participaciones$
     DECLARE
 		diferencia_beneficios_a_pagar double precision;
@@ -197,6 +199,37 @@ $procesa_saldo_bloqueado_al_modificar_tabla_participaciones$ LANGUAGE plpgsql;
 
 CREATE TRIGGER procesa_saldo_bloqueado_al_modificar_tabla_participaciones BEFORE INSERT OR UPDATE OR DELETE ON tener_participaciones
 FOR EACH ROW EXECUTE PROCEDURE procesa_saldo_bloqueado_al_modificar_tabla_participaciones();
+
+--Comprueba que no se repite el ID entre usuarios_empresa, inversores y el regulador
+CREATE OR REPLACE FUNCTION comprueba_tipo_unico_usuario() RETURNS trigger AS $comprueba_tipo_unico_usuario$
+    DECLARE
+		num_ids_duplicados integer;
+    BEGIN
+		SELECT count(*) into num_ids_duplicados FROM (SELECT todos_los_ids.id FROM (SELECT id FROM usuario_regulador
+UNION ALL
+SELECT id FROM usuario_empresa
+UNION ALL
+SELECT id FROM usuario_inversor
+UNION ALL
+SELECT new.id) as todos_los_ids GROUP BY id HAVING COUNT(id) > 1) as ids_duplicados;
+		  
+		IF num_ids_duplicados<>0 THEN
+            		RAISE EXCEPTION 'Ya existe un usuario con ese ID';
+		END IF;
+
+		RETURN NEW;
+		 
+    END;
+$comprueba_tipo_unico_usuario$ LANGUAGE plpgsql;
+
+CREATE TRIGGER comprueba_tipo_unico_usuario BEFORE INSERT ON usuario_regulador
+FOR EACH ROW EXECUTE PROCEDURE comprueba_tipo_unico_usuario();
+CREATE TRIGGER comprueba_tipo_unico_usuario BEFORE INSERT ON usuario_mercado
+FOR EACH ROW EXECUTE PROCEDURE comprueba_tipo_unico_usuario();
+CREATE TRIGGER comprueba_tipo_unico_usuario BEFORE INSERT ON usuario_inversor
+FOR EACH ROW EXECUTE PROCEDURE comprueba_tipo_unico_usuario();
+CREATE TRIGGER comprueba_tipo_unico_usuario BEFORE INSERT ON usuario_empresa
+FOR EACH ROW EXECUTE PROCEDURE comprueba_tipo_unico_usuario();
 
 --Funcionalidades extra
 
