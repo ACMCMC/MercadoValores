@@ -157,6 +157,7 @@ CREATE OR REPLACE FUNCTION procesa_bloqueo_importe_pago_beneficios() RETURNS tri
             		RAISE EXCEPTION 'Los beneficios no podrían pagarse';
 		END IF;
 
+		--sumamos al saldo bloqueado, y restamos al saldo disponible
 		UPDATE usuario_empresa(importe_bloqueado) SET importe_bloqueado=importe_bloqueado+diferencia_beneficios_a_pagar WHERE id=new.id;
 		UPDATE usuario_mercado(saldo) SET saldo=saldo-diferencia_beneficios_a_pagar WHERE id=new.id;
 
@@ -167,6 +168,35 @@ $procesa_bloqueo_importe_pago_beneficios$ LANGUAGE plpgsql;
 
 CREATE TRIGGER procesa_bloqueo_importe_pago_beneficios BEFORE INSERT OR UPDATE OR DELETE ON beneficios
 FOR EACH ROW EXECUTE PROCEDURE procesa_bloqueo_importe_pago_beneficios();
+
+CREATE OR REPLACE FUNCTION procesa_bloqueo_importe_pago_beneficios_al_modificar_tabla_participaciones() RETURNS trigger AS $procesa_bloqueo_importe_pago_beneficios_al_modificar_tabla_participaciones$
+    DECLARE
+		diferencia_beneficios_a_pagar double precision;
+		max double precision;
+    BEGIN
+		SELECT (COALESCE(SUM((new.num_participaciones - COALESCE(old.num_participaciones,0)) * (beneficios.importe_por_participacion)),0)) into diferencia_beneficios_a_pagar --cogemos la fila anterior de tener_participaciones, y la nueva, y multiplicamos su diferencia por cada uno de los importes por participacion anunciados. Sumamos todo, y esa es la diferencia total que tendremos que reservar.
+		FROM beneficios
+		WHERE id=new.id2;
+		
+		SELECT saldo into max
+		FROM usuario_mercado
+		WHERE id=new.id2;
+		  
+		IF diferencia_beneficios_a_pagar > max THEN
+            		RAISE EXCEPTION 'Los beneficios no podrían pagarse';
+		END IF;
+		
+		--sumamos al saldo bloqueado, y restamos al saldo disponible
+		UPDATE usuario_empresa(importe_bloqueado) SET importe_bloqueado=importe_bloqueado+diferencia_beneficios_a_pagar WHERE id=new.id2;
+		UPDATE usuario_mercado(saldo) SET saldo=saldo-diferencia_beneficios_a_pagar WHERE id=new.id2;
+
+		RETURN NEW;
+		 
+    END;
+$procesa_bloqueo_importe_pago_beneficios_al_modificar_tabla_participaciones$ LANGUAGE plpgsql;
+
+CREATE TRIGGER procesa_bloqueo_importe_pago_beneficios_al_modificar_tabla_participaciones BEFORE INSERT OR UPDATE OR DELETE ON tener_participaciones
+FOR EACH ROW EXECUTE PROCEDURE procesa_bloqueo_importe_pago_beneficios_al_modificar_tabla_participaciones();
 
 --Funcionalidades extra
 
