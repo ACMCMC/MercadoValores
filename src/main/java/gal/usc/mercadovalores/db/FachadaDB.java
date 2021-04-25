@@ -1,8 +1,8 @@
-/**
- *
- * @author acmc
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
  */
-
 package gal.usc.mercadovalores.db;
 
 import gal.usc.mercadovalores.aplicacion.*;
@@ -13,12 +13,17 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
+/**
+ *
+ * @author acmc
+ */
 public class FachadaDB {
 
     private static FachadaDB fachada = new FachadaDB();
@@ -27,6 +32,7 @@ public class FachadaDB {
     private DAOUsuarioInversor daoUsuarioInversor;
     private DAOUsuarioRegulador daoUsuarioRegulador;
     private DAOParticipaciones daoParticipaciones;
+    private DAOVentas daoVentas;
 
     public static FachadaDB getFachada() {
         return fachada;
@@ -64,6 +70,7 @@ public class FachadaDB {
         daoUsuarioEmpresa = new DAOUsuarioEmpresa(conexion);
         daoUsuarioInversor = new DAOUsuarioInversor(conexion);
         daoParticipaciones = new DAOParticipaciones(conexion);
+        daoVentas = new DAOVentas(conexion);
     }
 
     public Set<UsuarioEmpresa> getUsuariosEmpresa() {
@@ -124,6 +131,14 @@ public class FachadaDB {
             throw new IllegalArgumentException("No se acepta el tipo de usuario seleccionado");
         }
     }
+    
+    public void crearParticipacion(UsuarioEmpresa usr, int p) throws SQLException{
+        daoParticipaciones.crearParticipaciones(usr,p);
+    }
+
+    public void bajaParticipacion(UsuarioEmpresa usr, int p) throws SQLException{
+        daoParticipaciones.bajaParticipaciones(usr, p);
+    }
 
     public Set<Participacion> getParticipacionesUsuarioDeMercado(UsuarioDeMercado u) {
         
@@ -173,11 +188,8 @@ public class FachadaDB {
         daoUsuarioRegulador.update(u);
     }
     
-    public void addParticipacion(UsuarioEmpresa usr, int p) throws SQLException{
-        daoUsuarioEmpresa.addParticipacion(usr,p);
-    }
-
-    public void removeParticipacion(UsuarioEmpresa usr, int p) throws SQLException{
-        daoUsuarioEmpresa.removeParticipacion(usr, p);
+    public void confirmarVenta(String id1,String id2,Timestamp fecha) throws SQLException{
+        daoVentas.confirmarVenta(id1, id2, fecha);
+        
     }
 }

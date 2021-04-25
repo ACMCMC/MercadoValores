@@ -52,7 +52,7 @@ public final class DAOUsuarioRegulador extends DAO<UsuarioRegulador> {
 			preparedStatement.setDouble(3, user.getComision_actual());
 			preparedStatement.setString(4, user.getId());
 			preparedStatement.executeUpdate();
-			preparedStatement.close();
+                        
 			getConexion().commit();
 		} catch (SQLException e) {
 			FachadaAplicacion.muestraExcepcion(e);
