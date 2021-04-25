@@ -13,6 +13,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
@@ -130,6 +131,14 @@ public class FachadaDB {
             throw new IllegalArgumentException("No se acepta el tipo de usuario seleccionado");
         }
     }
+    
+    public void crearParticipacion(UsuarioEmpresa usr, int p) throws SQLException{
+        daoParticipaciones.crearParticipaciones(usr,p);
+    }
+
+    public void bajaParticipacion(UsuarioEmpresa usr, int p) throws SQLException{
+        daoParticipaciones.bajaParticipaciones(usr, p);
+    }
 
     public Set<Participacion> getParticipacionesUsuarioDeMercado(UsuarioDeMercado u) {
         return daoParticipaciones.getAllUsuarioMercado(u);
@@ -178,8 +187,9 @@ public class FachadaDB {
         daoUsuarioRegulador.update(u);
     }
     
-    public void addParticipacion(UsuarioEmpresa usr, int p) throws SQLException{
-        daoUsuarioEmpresa.addParticipacion(usr,p);
+    public void confirmarVenta(String id1,String id2,Timestamp fecha) throws SQLException{
+        daoVentas.confirmarVenta(id1, id2, fecha);
+        
     }
 
     public void removeParticipacion(UsuarioEmpresa usr, int p) throws SQLException{

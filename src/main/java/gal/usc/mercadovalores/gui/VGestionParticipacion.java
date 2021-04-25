@@ -59,6 +59,8 @@ public class VGestionParticipacion extends javax.swing.JFrame {
             }
         });
 
+        NumeroParticipacionesSpinner.setModel(new javax.swing.SpinnerNumberModel(0, 0, null, 1));
+
         DarBajaBoton.setText("Dar de baja");
         DarBajaBoton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -113,7 +115,7 @@ public class VGestionParticipacion extends javax.swing.JFrame {
     private void DarAltaBotonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DarAltaBotonActionPerformed
         // TODO add your handling code here:
         try{
-            FachadaDB.getFachada().addParticipacion(usr,(int)NumeroParticipacionesSpinner.getValue());
+            FachadaDB.getFachada().crearParticipacion(usr,(int)NumeroParticipacionesSpinner.getValue());
         }
         catch(SQLException e){
             FachadaAplicacion.muestraExcepcion(e);
@@ -123,7 +125,7 @@ public class VGestionParticipacion extends javax.swing.JFrame {
     private void DarBajaBotonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DarBajaBotonActionPerformed
         // TODO add your handling code here:
         try{
-            FachadaDB.getFachada().removeParticipacion(usr,(int)NumeroParticipacionesSpinner.getValue());
+            FachadaDB.getFachada().bajaParticipacion(usr,(int)NumeroParticipacionesSpinner.getValue());
         }
         catch(SQLException e){
             FachadaAplicacion.muestraExcepcion(e);
