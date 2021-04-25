@@ -31,6 +31,7 @@ public class FachadaDB {
     private DAOUsuarioInversor daoUsuarioInversor;
     private DAOUsuarioRegulador daoUsuarioRegulador;
     private DAOParticipaciones daoParticipaciones;
+    private DAOVentas daoVentas;
 
     public static FachadaDB getFachada() {
         return fachada;
@@ -52,7 +53,7 @@ public class FachadaDB {
 
             usuario.setProperty("user", configuracion.getProperty("usuario"));
             usuario.setProperty("password", configuracion.getProperty("clave"));
-            usuario.setProperty("ssl", "true");
+            //usuario.setProperty("ssl", "true");
             String url = "jdbc:" + gestor + "://" + configuracion.getProperty("servidor") + ":"
                     + configuracion.getProperty("puerto") + "/" + configuracion.getProperty("baseDatos");
             this.conexion = java.sql.DriverManager.getConnection(url, usuario);
@@ -68,6 +69,7 @@ public class FachadaDB {
         daoUsuarioEmpresa = new DAOUsuarioEmpresa(conexion);
         daoUsuarioInversor = new DAOUsuarioInversor(conexion);
         daoParticipaciones = new DAOParticipaciones(conexion);
+        daoVentas = new DAOVentas(conexion);
     }
 
     public Set<UsuarioEmpresa> getUsuariosEmpresa() {
@@ -130,7 +132,7 @@ public class FachadaDB {
     }
 
     public Set<Participacion> getParticipacionesUsuarioDeMercado(UsuarioDeMercado u) {
-        return daoParticipaciones.getParticipacionesUsuarioDeMercado(u);
+        return daoParticipaciones.getAllUsuarioMercado(u);
     }
 
     public void autorizarRegistro(UsuarioDeMercado u) {
@@ -184,4 +186,19 @@ public class FachadaDB {
         daoUsuarioEmpresa.removeParticipacion(usr, p);
     }
     
+    public void venderParticipacion(UsuarioDeMercado u1, UsuarioEmpresa u2, Integer cant, double precio, double comision) throws SQLException{
+        daoVentas.publicarVenta(u1, u2, cant, precio, comision);
+    }
+    
+    public int getParticipacionesDeEmpresaALaVentaPorUsuario(UsuarioDeMercado u1, UsuarioEmpresa u2){
+        return daoVentas.getParticipacionesDeEmpresaALaVentaPorUsuario(u1.getId(), u2.getId());
+    }
+    
+    public Set<AnuncioVenta> getAnunciosUsuario(UsuarioDeMercado usr){
+        return daoVentas.getAnuncioUsuario(usr);
+    }
+    
+    public void bajaAnuncioVenta(AnuncioVenta av) throws SQLException{
+        daoVentas.retirarVenta(av.getVendedor().getId(), av.getEmpresa().getId(), av.getFecha());
+    }
 }
