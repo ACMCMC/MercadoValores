@@ -206,12 +206,14 @@ CREATE OR REPLACE FUNCTION comprueba_tipo_unico_usuario() RETURNS trigger AS $co
 		num_ids_duplicados integer;
     BEGIN
 		SELECT count(*) into num_ids_duplicados FROM (SELECT todos_los_ids.id FROM (SELECT id FROM usuario_regulador
-UNION
+UNION ALL
 SELECT id FROM usuario_empresa
-UNION
-SELECT id FROM usuario_inversor) as todos_los_ids GROUP BY id HAVING COUNT(id) > 1) as ids_duplicados;
+UNION ALL
+SELECT id FROM usuario_inversor
+UNION ALL
+SELECT new.id) as todos_los_ids GROUP BY id HAVING COUNT(id) > 1) as ids_duplicados;
 		  
-		IF not num_ids_duplicados=0 THEN
+		IF num_ids_duplicados<>0 THEN
             		RAISE EXCEPTION 'Ya existe un usuario con ese ID';
 		END IF;
 
@@ -220,13 +222,13 @@ SELECT id FROM usuario_inversor) as todos_los_ids GROUP BY id HAVING COUNT(id) >
     END;
 $comprueba_tipo_unico_usuario$ LANGUAGE plpgsql;
 
-CREATE TRIGGER comprueba_tipo_unico_usuario BEFORE INSERT OR UPDATE ON usuario_regulador
+CREATE TRIGGER comprueba_tipo_unico_usuario BEFORE INSERT ON usuario_regulador
 FOR EACH ROW EXECUTE PROCEDURE comprueba_tipo_unico_usuario();
-CREATE TRIGGER comprueba_tipo_unico_usuario BEFORE INSERT OR UPDATE ON usuario_mercado
+CREATE TRIGGER comprueba_tipo_unico_usuario BEFORE INSERT ON usuario_mercado
 FOR EACH ROW EXECUTE PROCEDURE comprueba_tipo_unico_usuario();
-CREATE TRIGGER comprueba_tipo_unico_usuario BEFORE INSERT OR UPDATE ON usuario_inversor
+CREATE TRIGGER comprueba_tipo_unico_usuario BEFORE INSERT ON usuario_inversor
 FOR EACH ROW EXECUTE PROCEDURE comprueba_tipo_unico_usuario();
-CREATE TRIGGER comprueba_tipo_unico_usuario BEFORE INSERT OR UPDATE ON usuario_empresa
+CREATE TRIGGER comprueba_tipo_unico_usuario BEFORE INSERT ON usuario_empresa
 FOR EACH ROW EXECUTE PROCEDURE comprueba_tipo_unico_usuario();
 
 --Funcionalidades extra
