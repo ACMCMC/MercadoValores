@@ -96,7 +96,7 @@ public class DAOParticipaciones extends DAO<Participacion> {
     
     public int numeroParticipacionesTotales(UsuarioEmpresa u) throws SQLException{
         int ret=0;
-        Connection c = startTransaction();
+        //Connection c = startTransaction();
         PreparedStatement preparedStatement = null;
         ResultSet resultSet;
         try {
@@ -200,7 +200,9 @@ public class DAOParticipaciones extends DAO<Participacion> {
         return ret;
     }
     
-    public void venderParticipaciones(Participacion p,UsuarioDeMercado u,Integer x,Timestamp fechapublicacion) throws SQLException{//El que vende, elque compra , cuanto se vende
+    
+    //REVISAR
+    /*public void venderParticipaciones(Participacion p,UsuarioDeMercado u,Integer x,Timestamp fechapublicacion) throws SQLException{//El que vende, elque compra , cuanto se vende
         Connection c = startTransaction();
         PreparedStatement preparedStatement = null;
         FachadaDB f=FachadaDB.getFachada();
@@ -259,7 +261,7 @@ public class DAOParticipaciones extends DAO<Participacion> {
                         
                         f.confirmarVenta(p.getUsuarioMercado().getId(), p.getEmpresa().getId(), fechapublicacion);
                         
-                            getConexion().commit();
+                        getConexion().commit();
                         
 		} catch (SQLException e) {
 			throw e;
@@ -271,7 +273,7 @@ public class DAOParticipaciones extends DAO<Participacion> {
 			}
 		}
                 
-    }
+    }*/
 
     
     public Set<Participacion> getAll() {
