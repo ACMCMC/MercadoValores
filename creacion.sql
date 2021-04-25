@@ -35,7 +35,7 @@ CREATE TABLE usuario_empresa(
   id varchar(30),
   cif char(9),
   nombre_comercial text,
-  importe_bloqueado double precision,
+  importe_bloqueado double precision DEFAULT 0.0,
   primary key (id),
     foreign key (id) references usuario_mercado
    		 on update cascade
@@ -158,8 +158,8 @@ CREATE OR REPLACE FUNCTION procesa_bloqueo_importe_pago_beneficios() RETURNS tri
 		END IF;
 
 		--sumamos al saldo bloqueado, y restamos al saldo disponible
-		UPDATE usuario_empresa(importe_bloqueado) SET importe_bloqueado=importe_bloqueado+diferencia_beneficios_a_pagar WHERE id=new.id;
-		UPDATE usuario_mercado(saldo) SET saldo=saldo-diferencia_beneficios_a_pagar WHERE id=new.id;
+		UPDATE usuario_empresa SET importe_bloqueado=importe_bloqueado+diferencia_beneficios_a_pagar WHERE id=new.id;
+		UPDATE usuario_mercado SET saldo=saldo-diferencia_beneficios_a_pagar WHERE id=new.id;
 
 		RETURN NEW;
 		 
@@ -169,7 +169,7 @@ $procesa_bloqueo_importe_pago_beneficios$ LANGUAGE plpgsql;
 CREATE TRIGGER procesa_bloqueo_importe_pago_beneficios BEFORE INSERT OR UPDATE OR DELETE ON beneficios
 FOR EACH ROW EXECUTE PROCEDURE procesa_bloqueo_importe_pago_beneficios();
 
-CREATE OR REPLACE FUNCTION procesa_bloqueo_importe_pago_beneficios_al_modificar_tabla_participaciones() RETURNS trigger AS $procesa_bloqueo_importe_pago_beneficios_al_modificar_tabla_participaciones$
+CREATE OR REPLACE FUNCTION procesa_saldo_bloqueado_al_modificar_tabla_participaciones() RETURNS trigger AS $procesa_saldo_bloqueado_al_modificar_tabla_participaciones$
     DECLARE
 		diferencia_beneficios_a_pagar double precision;
 		max double precision;
@@ -185,18 +185,18 @@ CREATE OR REPLACE FUNCTION procesa_bloqueo_importe_pago_beneficios_al_modificar_
 		IF diferencia_beneficios_a_pagar > max THEN
             		RAISE EXCEPTION 'Los beneficios no podrían pagarse';
 		END IF;
-		
+
 		--sumamos al saldo bloqueado, y restamos al saldo disponible
-		UPDATE usuario_empresa(importe_bloqueado) SET importe_bloqueado=importe_bloqueado+diferencia_beneficios_a_pagar WHERE id=new.id2;
-		UPDATE usuario_mercado(saldo) SET saldo=saldo-diferencia_beneficios_a_pagar WHERE id=new.id2;
+		UPDATE usuario_empresa SET importe_bloqueado=importe_bloqueado+diferencia_beneficios_a_pagar WHERE id=new.id2;
+		UPDATE usuario_mercado SET saldo=saldo-diferencia_beneficios_a_pagar WHERE id=new.id2;
 
 		RETURN NEW;
 		 
     END;
-$procesa_bloqueo_importe_pago_beneficios_al_modificar_tabla_participaciones$ LANGUAGE plpgsql;
+$procesa_saldo_bloqueado_al_modificar_tabla_participaciones$ LANGUAGE plpgsql;
 
-CREATE TRIGGER procesa_bloqueo_importe_pago_beneficios_al_modificar_tabla_participaciones BEFORE INSERT OR UPDATE OR DELETE ON tener_participaciones
-FOR EACH ROW EXECUTE PROCEDURE procesa_bloqueo_importe_pago_beneficios_al_modificar_tabla_participaciones();
+CREATE TRIGGER procesa_saldo_bloqueado_al_modificar_tabla_participaciones BEFORE INSERT OR UPDATE OR DELETE ON tener_participaciones
+FOR EACH ROW EXECUTE PROCEDURE procesa_saldo_bloqueado_al_modificar_tabla_participaciones();
 
 --Funcionalidades extra
 
