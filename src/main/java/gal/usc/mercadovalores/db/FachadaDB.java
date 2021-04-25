@@ -1,8 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/**
+ *
+ * @author acmc
  */
+
 package gal.usc.mercadovalores.db;
 
 import gal.usc.mercadovalores.aplicacion.*;
@@ -19,10 +19,6 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
-/**
- *
- * @author acmc
- */
 public class FachadaDB {
 
     private static FachadaDB fachada = new FachadaDB();
@@ -130,7 +126,8 @@ public class FachadaDB {
     }
 
     public Set<Participacion> getParticipacionesUsuarioDeMercado(UsuarioDeMercado u) {
-        return daoParticipaciones.getParticipacionesUsuarioDeMercado(u);
+        
+        return daoParticipaciones.getAllUsuarioMercado(u);
     }
 
     public void autorizarRegistro(UsuarioDeMercado u) {
@@ -183,5 +180,4 @@ public class FachadaDB {
     public void removeParticipacion(UsuarioEmpresa usr, int p) throws SQLException{
         daoUsuarioEmpresa.removeParticipacion(usr, p);
     }
-    
 }
