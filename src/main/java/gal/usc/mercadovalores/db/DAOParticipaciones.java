@@ -22,33 +22,33 @@ public class DAOParticipaciones extends DAO<Participacion> {
     public void crearParticipaciones(UsuarioEmpresa u, Integer x) throws SQLException {
         Connection c = startTransaction();
         PreparedStatement preparedStatement = null;
-        int participaciones = 0;
+        Participacion participaciones;
 
         try {
-            getConexion().setAutoCommit(false);
             participaciones = tenerParticipaciones(u, u);
-            if (participaciones != 0) {
-                preparedStatement = getConexion().prepareStatement(
+            if (participaciones != null) {
+                preparedStatement = c.prepareStatement(
                         "update tener_participaciones set num_participaciones=? where id1=? and id2=?");
-                preparedStatement.setInt(1, x + participaciones);
+                preparedStatement.setInt(1, x + participaciones.getNumero());
                 preparedStatement.setString(2, u.getId());
                 preparedStatement.setString(3, u.getId());
                 preparedStatement.executeUpdate();
             } else {
-                preparedStatement = getConexion().prepareStatement("insert into tener_participaciones values(?,?,?)");
+                preparedStatement = c.prepareStatement("insert into tener_participaciones values(?,?,?)");
                 preparedStatement.setString(1, u.getId());
                 preparedStatement.setString(2, u.getId());
                 preparedStatement.setInt(3, x);
                 preparedStatement.executeUpdate();
             }
 
-            preparedStatement = getConexion()
-                    .prepareStatement("update usuario_empresa set importe_bloqueado=? where id=?");
-            preparedStatement.setDouble(1, this.numeroParticipacionesTotales(u) * this.getImportePorParticipacion(u));
+            preparedStatement.close();
+            preparedStatement = c.prepareStatement("update usuario_empresa set importe_bloqueado=? where id=?");
+            preparedStatement.setDouble(1,
+                    FachadaDB.getFachada().getParticipacionesEmpresa(u) * this.getImportePorParticipacion(u));
             preparedStatement.setString(2, u.getId());
             preparedStatement.executeUpdate();
 
-            getConexion().commit();
+            c.commit();
 
         } catch (SQLException e) {
             throw e;
@@ -59,68 +59,35 @@ public class DAOParticipaciones extends DAO<Participacion> {
                 FachadaAplicacion.muestraExcepcion(e);
             }
         }
-    }
-
-    public int numeroParticipacionesTotales(UsuarioEmpresa u) throws SQLException {
-        int ret = 0;
-        // Connection c = startTransaction();
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet;
-        try {
-            getConexion().setAutoCommit(false);
-            preparedStatement = getConexion()
-                    .prepareStatement("select sum(num_participaciones)from tener_participaciones where id2=?");
-            preparedStatement.setString(1, u.getId());
-            resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {// Si la consulta devuelve 0 tuplas no entra aqui y se devuelve 0
-                try {
-                    ret = resultSet.getInt(1);
-                } catch (EnumConstantNotPresentException e) {
-                    FachadaAplicacion.muestraExcepcion(e);
-                }
-            }
-            getConexion().commit();
-        } catch (SQLException e) {
-            throw e;
-        } finally {
-            try {
-                preparedStatement.close();
-            } catch (SQLException e) {
-                FachadaAplicacion.muestraExcepcion(e);
-            }
-        }
-        return ret;
     }
 
     public void bajaParticipaciones(UsuarioEmpresa u, Integer x) throws SQLException {
         Connection c = startTransaction();
         PreparedStatement preparedStatement = null;
-        int participaciones = 0;
+        Participacion participaciones;
 
         try {
-            getConexion().setAutoCommit(false);
+            c.setAutoCommit(false);
             participaciones = tenerParticipaciones(u, u);
-            if (participaciones - x > 0) {
-                preparedStatement = getConexion().prepareStatement(
+            if (participaciones != null) {
+                preparedStatement = c.prepareStatement(
                         "update tener_participaciones set num_participaciones=? where id1=? and id2=?");
-                preparedStatement.setInt(1, participaciones - x);
+                preparedStatement.setInt(1, participaciones.getNumero() - x);
                 preparedStatement.setString(2, u.getId());
                 preparedStatement.setString(3, u.getId());
             } else {
-                preparedStatement = getConexion()
-                        .prepareStatement("delete from tener_participaciones where id1=? and id2=?");
+                preparedStatement = c.prepareStatement("delete from tener_participaciones where id1=? and id2=?");
                 preparedStatement.setString(1, u.getId());
                 preparedStatement.setString(2, u.getId());
 
             }
             preparedStatement.executeUpdate();
-            preparedStatement = getConexion()
-                    .prepareStatement("update usuario_empresa set importe_bloqueado=? where id=?");
+            preparedStatement.close();
+            preparedStatement = c.prepareStatement("update usuario_empresa set importe_bloqueado=? where id=?");
             preparedStatement.setDouble(1, this.numeroParticipacionesTotales(u) * this.getImportePorParticipacion(u));
             preparedStatement.setString(2, u.getId());
             preparedStatement.executeUpdate();
-
-            getConexion().commit();
+            c.commit();
 
         } catch (SQLException e) {
             throw e;
@@ -133,28 +100,38 @@ public class DAOParticipaciones extends DAO<Participacion> {
         }
     }
 
-    public Integer tenerParticipaciones(UsuarioDeMercado u1, UsuarioEmpresa u2) throws SQLException {
-
+    /**
+     * Devuelve un objeto Participacion entre u1 y u2. Si el numero de
+     * participaciones es 0 o no hay una entrada en la BD, se devuelve null.
+     * 
+     * @param u1
+     * @param u2
+     * @return
+     * @throws SQLException
+     */
+    public Participacion tenerParticipaciones(UsuarioDeMercado u1, UsuarioEmpresa u2) throws SQLException {
         Connection c = startTransaction();
         PreparedStatement preparedStatement = null;
         ResultSet resultSet;
-        Integer ret = 0;
+        Participacion result = null;
         try {
-            getConexion().setAutoCommit(false);
-            preparedStatement = getConexion()
+            c.setAutoCommit(false);
+            preparedStatement = c
                     .prepareStatement("select num_participaciones from tener_participaciones where id1=? and id2=?");
             preparedStatement.setString(1, u1.getId());
             preparedStatement.setString(2, u2.getId());
             resultSet = preparedStatement.executeQuery();
 
-            while (resultSet.next()) {// Si la consulta devuelve 0 tuplas no entra aqui y se devuelve 0
-                try {
-                    ret = resultSet.getInt("num_participaciones");
-                } catch (EnumConstantNotPresentException e) {
-                    FachadaAplicacion.muestraExcepcion(e);
+            if (resultSet.next()) {// Si la consulta devuelve 0 tuplas no entra aqui y se devuelve 0
+                if (resultSet.getInt("num_participaciones") > 0) {
+                    try {
+                        result = new Participacion(u1, u2, resultSet.getInt("num_participaciones"));
+                    } catch (EnumConstantNotPresentException e) {
+                        FachadaAplicacion.muestraExcepcion(e);
+                    }
                 }
             }
-            getConexion().commit();
+            c.commit();
         } catch (SQLException e) {
             throw e;
         } finally {
@@ -164,108 +141,58 @@ public class DAOParticipaciones extends DAO<Participacion> {
                 FachadaAplicacion.muestraExcepcion(e);
             }
         }
-        return ret;
+        return result;
     }
 
-    public void venderParticipaciones(Participacion p, UsuarioDeMercado u, Integer x, Timestamp fechapublicacion)
+    public void venderParticipaciones(Participacion p, UsuarioDeMercado u, Integer numAVender, Timestamp fechapublicacion)
             throws SQLException {// El que vende, elque compra , cuanto se vende
         Connection c = startTransaction();
         PreparedStatement preparedStatement = null;
         FachadaDB f = FachadaDB.getFachada();
-        int participaciones = 0;
+        Participacion participaciones;
 
         try {
-            getConexion().setAutoCommit(false);
+            c.setAutoCommit(false);
             participaciones = tenerParticipaciones(u, p.getEmpresa());// Nº Participaciones que tiene el usuario que
                                                                       // compra
-            if (participaciones != 0) {
-                preparedStatement = getConexion().prepareStatement(// Le sumamos al numero al que compra
+            if (participaciones != null) {
+                preparedStatement = c.prepareStatement(// Le sumamos al numero al que compra
                         "update tener_participaciones set num_participaciones=? where id1=? and id2=?");
-                preparedStatement.setInt(1, x + participaciones);
+                preparedStatement.setInt(1, numAVender + participaciones.getNumero());
                 preparedStatement.setString(2, u.getId());
                 preparedStatement.setString(3, p.getEmpresa().getId());
                 preparedStatement.executeUpdate();
-
-                if (p.getNumero() - x != 0) {// Si no es cero esta resta se actualiza el valor si no se elimina de la
-                                             // tabla
-                    preparedStatement = getConexion().prepareStatement(// Le restamos al numero al que vende
-                            "update tener_participaciones set num_participaciones=? where id1=? and id2=?");
-                    preparedStatement.setInt(1, p.getNumero() - x);
-                    preparedStatement.setString(2, p.getUsuarioMercado().getId());
-                    preparedStatement.setString(3, p.getEmpresa().getId());
-                    preparedStatement.executeUpdate();
-
-                } else {
-                    preparedStatement = getConexion().prepareStatement(// Le restamos al numero al que vende
-                            "delete from tener_participaciones where id1=? and id2=?");
-                    preparedStatement.setString(1, p.getUsuarioMercado().getId());
-                    preparedStatement.setString(2, p.getEmpresa().getId());
-                    preparedStatement.executeUpdate();
-                }
+                preparedStatement.close();
             } else {
-                preparedStatement = getConexion().prepareStatement(// Añadimos la tupla a la tabla
+                preparedStatement = c.prepareStatement(// Añadimos la tupla a la tabla
                         "insert into tener_participaciones values (?,?,?)");
                 preparedStatement.setString(1, u.getId());
                 preparedStatement.setString(2, p.getEmpresa().getId());
-                preparedStatement.setInt(3, x);
+                preparedStatement.setInt(3, numAVender);
                 preparedStatement.executeUpdate();
-
-                if (p.getNumero() - x != 0) {// Si no es cero esta resta se actualiza el valor si no se elimina de la
-                                             // tabla
-                    preparedStatement = getConexion().prepareStatement(// Le restamos al numero al que vende
-                            "update tener_participaciones set num_participaciones=? where id1=? and id2=?");
-                    preparedStatement.setInt(1, p.getNumero() - x);
-                    preparedStatement.setString(2, p.getUsuarioMercado().getId());
-                    preparedStatement.setString(3, p.getEmpresa().getId());
-                    preparedStatement.executeUpdate();
-                } else {
-                    preparedStatement = getConexion().prepareStatement(// Le restamos al numero al que vende
-                            "delete from tener_participaciones where id1=? and id2=?");
-                    preparedStatement.setString(1, p.getUsuarioMercado().getId());
-                    preparedStatement.setString(2, p.getEmpresa().getId());
-                    preparedStatement.executeUpdate();
-                }
-
+                preparedStatement.close();
             }
+
+            if (p.getNumero() - numAVender == 0) {// Si no es cero esta resta se actualiza el valor si no se elimina de la
+                                         // tabla
+                preparedStatement = c.prepareStatement(// Le restamos al numero al que vende
+                        "delete from tener_participaciones where id1=? and id2=?");
+                preparedStatement.setString(1, p.getUsuarioMercado().getId());
+                preparedStatement.setString(2, p.getEmpresa().getId());
+                preparedStatement.executeUpdate();
+            } else {
+                preparedStatement = c.prepareStatement(// Le restamos al numero al que vende
+                        "update tener_participaciones set num_participaciones=? where id1=? and id2=?");
+                preparedStatement.setInt(1, p.getNumero() - numAVender);
+                preparedStatement.setString(2, p.getUsuarioMercado().getId());
+                preparedStatement.setString(3, p.getEmpresa().getId());
+                preparedStatement.executeUpdate();
+            }
+            preparedStatement.close();
 
             f.confirmarVenta(p.getUsuarioMercado().getId(), p.getEmpresa().getId(), fechapublicacion);
 
-            getConexion().commit();
-
-        } catch (SQLException e) {
-            throw e;
-        } finally {
-            try {
-                preparedStatement.close();
-            } catch (SQLException e) {
-                FachadaAplicacion.muestraExcepcion(e);
-            }
-        }
-
-        try {
-            getConexion().setAutoCommit(false);
-            participaciones = tenerParticipaciones(u, u);
-            if (participaciones != 0) {
-                preparedStatement = getConexion().prepareStatement(
-                        "update tener_participaciones set num_participaciones=? where id1=? and id2=?");
-                preparedStatement.setInt(1, x + participaciones);
-                preparedStatement.setString(2, u.getId());
-                preparedStatement.setString(3, u.getId());
-            } else {
-                preparedStatement = getConexion().prepareStatement("insert into tener_participaciones values(?,?,?)");
-                preparedStatement.setString(1, u.getId());
-                preparedStatement.setString(2, u.getId());
-                preparedStatement.setInt(3, x);
-
-            }
-            preparedStatement.executeUpdate();
-            preparedStatement = getConexion()
-                    .prepareStatement("update usuario_empresa set importe_bloqueado=? where id=?");
-            preparedStatement.setDouble(1, this.numeroParticipacionesTotales(u) * this.getImportePorParticipacion(u));
-            preparedStatement.setString(2, u.getId());
-            preparedStatement.executeUpdate();
-
-            getConexion().commit();
+            c.commit();
 
         } catch (SQLException e) {
             throw e;
@@ -287,7 +214,7 @@ public class DAOParticipaciones extends DAO<Participacion> {
         ResultSet resultSet;
 
         try {
-            preparedStatement = getConexion().prepareStatement("select * from tener_participaciones");
+            preparedStatement = c.prepareStatement("select * from tener_participaciones");
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 Participacion p;
@@ -303,7 +230,7 @@ public class DAOParticipaciones extends DAO<Participacion> {
                     FachadaAplicacion.muestraExcepcion(e);
                 }
             }
-            getConexion().commit();
+            c.commit();
         } catch (SQLException e) {
             FachadaAplicacion.muestraExcepcion(e);
         } finally {
@@ -323,9 +250,8 @@ public class DAOParticipaciones extends DAO<Participacion> {
         PreparedStatement preparedStatement = null;
         ResultSet resultSet;
         try {
-            getConexion().setAutoCommit(false);
-            preparedStatement = getConexion()
-                    .prepareStatement("select importe_por_participacion from beneficios where id=?");
+            c.setAutoCommit(false);
+            preparedStatement = c.prepareStatement("select importe_por_participacion from beneficios where id=?");
             preparedStatement.setString(1, u.getId());
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {// Si la consulta devuelve 0 tuplas no entra aqui y se devuelve 0
@@ -335,7 +261,7 @@ public class DAOParticipaciones extends DAO<Participacion> {
                     FachadaAplicacion.muestraExcepcion(e);
                 }
             }
-            getConexion().commit();
+            c.commit();
         } catch (SQLException e) {
             throw e;
         } finally {
@@ -358,7 +284,7 @@ public class DAOParticipaciones extends DAO<Participacion> {
         ResultSet resultSet;
 
         try {
-            preparedStatement = getConexion().prepareStatement("select * from tener_participaciones where id1=?");
+            preparedStatement = c.prepareStatement("select * from tener_participaciones where id1=?");
             preparedStatement.setString(1, u.getId());
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
@@ -373,7 +299,7 @@ public class DAOParticipaciones extends DAO<Participacion> {
                     FachadaAplicacion.muestraExcepcion(e);
                 }
             }
-            getConexion().commit();
+            c.commit();
         } catch (SQLException e) {
             FachadaAplicacion.muestraExcepcion(e);
         } finally {
@@ -383,7 +309,43 @@ public class DAOParticipaciones extends DAO<Participacion> {
                 FachadaAplicacion.muestraExcepcion(e);
             }
         }
+        return setFinal;
+    }
 
+    public Set<Participacion> getAllEmpresa(UsuarioEmpresa u) {
+        FachadaDB f = FachadaDB.getFachada();
+        Connection c = startTransaction();
+        Set<Participacion> setFinal = new HashSet<>();
+
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet;
+
+        try {
+            preparedStatement = c.prepareStatement("select * from tener_participaciones where id2=?");
+            preparedStatement.setString(1, u.getId());
+            resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                Participacion p;
+                try {
+                    String id1 = resultSet.getString("id1");
+                    Integer numero = resultSet.getInt("num_participaciones");
+
+                    p = new Participacion((UsuarioDeMercado) f.getUsuarioById(id1), u, numero);
+                    setFinal.add(p);
+                } catch (EnumConstantNotPresentException e) {
+                    FachadaAplicacion.muestraExcepcion(e);
+                }
+            }
+            c.commit();
+        } catch (SQLException e) {
+            FachadaAplicacion.muestraExcepcion(e);
+        } finally {
+            try {
+                preparedStatement.close();
+            } catch (SQLException e) {
+                FachadaAplicacion.muestraExcepcion(e);
+            }
+        }
         return setFinal;
     }
 
@@ -391,12 +353,12 @@ public class DAOParticipaciones extends DAO<Participacion> {
         Connection c = startTransaction();
         PreparedStatement preparedStatement = null;
         try {
-            preparedStatement = getConexion().prepareStatement("insert into beneficios values(?,?,?)");
+            preparedStatement = c.prepareStatement("insert into beneficios values(?,?,?)");
             preparedStatement.setString(1, u.getId());
             preparedStatement.setTimestamp(2, fecha);
             preparedStatement.setDouble(3, porcentaje);
             preparedStatement.executeUpdate();
-            getConexion().commit();
+            c.commit();
         } catch (SQLException e) {
             FachadaAplicacion.muestraExcepcion(e);
         } finally {
@@ -413,10 +375,10 @@ public class DAOParticipaciones extends DAO<Participacion> {
         PreparedStatement preparedStatement = null;
 
         try {
-            preparedStatement = getConexion().prepareStatement("delete from beneficios where id=?");
+            preparedStatement = c.prepareStatement("delete from beneficios where id=?");
             preparedStatement.setString(1, u.getId());
             preparedStatement.executeUpdate();
-            getConexion().commit();
+            c.commit();
         } catch (SQLException e) {
             FachadaAplicacion.muestraExcepcion(e);
         } finally {
@@ -436,18 +398,18 @@ public class DAOParticipaciones extends DAO<Participacion> {
         ResultSet resultSet;
         try {
 
-            preparedStatement = getConexion().prepareStatement("select id1 from tener_participaciones where id2=?");
+            preparedStatement = c.prepareStatement("select id1 from tener_participaciones where id2=?");
             preparedStatement.setString(1, u.getId());
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 String id = resultSet.getString("id1");
-                preparedStatement2 = getConexion().prepareStatement("update usuario_mercado set saldo=? where id=?");
+                preparedStatement2 = c.prepareStatement("update usuario_mercado set saldo=? where id=?");
                 preparedStatement2.setDouble(1, calcularBeneficioUsuario(id, u));
                 preparedStatement2.setString(2, id);
                 preparedStatement2.executeUpdate();
 
             }
-            getConexion().commit();
+            c.commit();
         } catch (SQLException e) {
             FachadaAplicacion.muestraExcepcion(e);
         } finally {
