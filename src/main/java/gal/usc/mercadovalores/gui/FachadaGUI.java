@@ -5,6 +5,7 @@
  */
 package gal.usc.mercadovalores.gui;
 import gal.usc.mercadovalores.aplicacion.FachadaAplicacion;
+import gal.usc.mercadovalores.aplicacion.UsuarioDeMercado;
 import gal.usc.mercadovalores.aplicacion.UsuarioEmpresa;
 import gal.usc.mercadovalores.aplicacion.UsuarioInversor;
 import gal.usc.mercadovalores.aplicacion.UsuarioRegulador;
@@ -83,4 +84,16 @@ public class FachadaGUI {
         VSaldo vS = new VSaldo(this.vadmin,true);
         vS.setVisible(true);
     }
+    
+    public void ventanaVender(UsuarioDeMercado usr){
+        VVenta vV = new VVenta(usr);
+        vV.setVisible(true);
+    }
+    
+    public void ventanaAnuncios(UsuarioDeMercado usr){
+        VAnunciosUsuario vAU = new VAnunciosUsuario(usr);
+        vAU.setVisible(true);
+    }
+
+  
 }
