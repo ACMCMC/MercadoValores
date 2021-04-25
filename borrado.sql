@@ -4,7 +4,7 @@ DROP TABLE usuario_mercado CASCADE;
 DROP TABLE usuario_empresa CASCADE;
 DROP TABLE usuario_inversor;
 DROP TABLE usuario_regulador;
-DROP TABLE anuncio_venta;
+--DROP TABLE anuncio_venta;
 DROP TABLE parte_compra;
 DROP TABLE compra;
 DROP TYPE enum_estado;
