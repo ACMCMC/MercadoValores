@@ -198,6 +198,28 @@ $procesa_saldo_bloqueado_al_modificar_tabla_participaciones$ LANGUAGE plpgsql;
 CREATE TRIGGER procesa_saldo_bloqueado_al_modificar_tabla_participaciones BEFORE INSERT OR UPDATE OR DELETE ON tener_participaciones
 FOR EACH ROW EXECUTE PROCEDURE procesa_saldo_bloqueado_al_modificar_tabla_participaciones();
 
+CREATE OR REPLACE FUNCTION comprueba_tipo_unico_usuario() RETURNS trigger AS $comprueba_tipo_unico_usuario$
+    DECLARE
+		num_ids_duplicados integer;
+    BEGIN
+		SELECT count(*) into num_ids_duplicados FROM (SELECT todos_los_ids.id FROM (SELECT id FROM usuario_regulador
+UNION
+SELECT id FROM usuario_empresa
+UNION
+SELECT id FROM usuario_inversor) as todos_los_ids GROUP BY id HAVING COUNT(id) > 1) as ids_duplicados;
+		  
+		IF not num_ids_duplicados=0 THEN
+            		RAISE EXCEPTION 'Ya existe un usuario con ese ID';
+		END IF;
+
+		RETURN NEW;
+		 
+    END;
+$comprueba_tipo_unico_usuario$ LANGUAGE plpgsql;
+
+CREATE TRIGGER comprueba_tipo_unico_usuario BEFORE INSERT OR UPDATE ON tener_participaciones
+FOR EACH ROW EXECUTE PROCEDURE comprueba_tipo_unico_usuario();
+
 --Funcionalidades extra
 
 CREATE TABLE compra(
