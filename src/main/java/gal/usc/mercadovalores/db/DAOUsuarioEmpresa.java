@@ -149,7 +149,7 @@ public final class DAOUsuarioEmpresa extends DAO<UsuarioEmpresa> {
 		try {
 			getConexion().setAutoCommit(false);
 			preparedStatement = getConexion().prepareStatement(
-					"insert into usuario_mercado(clave, saldo, direccion, telefono, estado, id) values (?,?,?,?,CAST (? AS enum_estado),?)");
+					"insert into usuario_mercado(clave, saldo, direccion, telefono, estado, id) values (crypt(?,gen_salt('bf')),?,?,?,CAST (? AS enum_estado),?)");
 			preparedStatement.setString(1, u.getClave());
 			preparedStatement.setDouble(2, u.getSaldo());
 			preparedStatement.setString(3, u.getDireccion());

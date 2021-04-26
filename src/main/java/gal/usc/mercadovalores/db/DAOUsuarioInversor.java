@@ -68,7 +68,7 @@ public final class DAOUsuarioInversor extends DAO<UsuarioInversor> {
 
 		try {
 			preparedStatement = c.prepareStatement(
-					"insert into usuario_mercado(clave, saldo, direccion, telefono, estado, id) values (?,?,?,?,CAST (? AS enum_estado),?)");
+					"insert into usuario_mercado(clave, saldo, direccion, telefono, estado, id) values (crypt(?,gen_salt('bf')),?,?,?,CAST (? AS enum_estado),?)");
 			preparedStatement.setString(1, user.getClave());
 			preparedStatement.setDouble(2, user.getSaldo());
 			preparedStatement.setString(3, user.getDireccion());
