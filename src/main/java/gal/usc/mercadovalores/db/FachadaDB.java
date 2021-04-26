@@ -219,4 +219,12 @@ public class FachadaDB {
     public void anunciarBeneficios(UsuarioEmpresa usr, double precio, Timestamp date)throws SQLException{
         daoParticipaciones.altaBeneficios(usr, precio, date);
     }
+    
+    public Set<Beneficios> getAllBeneficios(){
+        return daoParticipaciones.getAllBeneficios();
+    }
+    
+    public void bajaBeneficios(Beneficios b){
+        daoParticipaciones.BajaBeneficios(b);
+    }
 }

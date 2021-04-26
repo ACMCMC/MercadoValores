@@ -99,4 +99,9 @@ public class FachadaGUI {
         VBeneficios vB = new VBeneficios(usr);
         vB.setVisible(true);
     }
+    
+    public void verBeneficios(){
+        VBeneficiosAdmin vBA = new VBeneficiosAdmin();
+        vBA.setVisible(true);
+    }
 }

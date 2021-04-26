@@ -58,6 +58,9 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="Dar de baja anuncio"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="BajaVentaMenuItemActionPerformed"/>
+              </Events>
             </MenuItem>
           </SubComponents>
         </Menu>
@@ -74,11 +77,6 @@
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="AltaPagoMenuItemActionPerformed"/>
               </Events>
-            </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="BajaPagoMenuItem">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Baja de pago"/>
-              </Properties>
             </MenuItem>
           </SubComponents>
         </Menu>

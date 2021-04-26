@@ -73,4 +73,7 @@ public class FachadaAplicacion {
         this.fgui.ventanaBeneficios(usr);
     }
     
+    public void verBeneficios(){
+        this.fgui.verBeneficios();
+    }
 }

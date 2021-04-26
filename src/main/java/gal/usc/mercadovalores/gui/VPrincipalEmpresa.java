@@ -60,7 +60,6 @@ public class VPrincipalEmpresa extends javax.swing.JFrame {
         BajaVentaMenuItem = new javax.swing.JMenuItem();
         BeneficiosMenu = new javax.swing.JMenu();
         AltaPagoMenuItem = new javax.swing.JMenuItem();
-        BajaPagoMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Ventana  Empresa");
@@ -162,6 +161,11 @@ public class VPrincipalEmpresa extends javax.swing.JFrame {
         ParticipacionesMenu.add(ComprarMenuItem);
 
         BajaVentaMenuItem.setText("Dar de baja anuncio");
+        BajaVentaMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BajaVentaMenuItemActionPerformed(evt);
+            }
+        });
         ParticipacionesMenu.add(BajaVentaMenuItem);
 
         Menu.add(ParticipacionesMenu);
@@ -176,9 +180,6 @@ public class VPrincipalEmpresa extends javax.swing.JFrame {
             }
         });
         BeneficiosMenu.add(AltaPagoMenuItem);
-
-        BajaPagoMenuItem.setText("Baja de pago");
-        BeneficiosMenu.add(BajaPagoMenuItem);
 
         Menu.add(BeneficiosMenu);
 
@@ -299,6 +300,10 @@ public class VPrincipalEmpresa extends javax.swing.JFrame {
         
     }//GEN-LAST:event_AltaPagoMenuItemActionPerformed
 
+    private void BajaVentaMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BajaVentaMenuItemActionPerformed
+        this.fa.ventanaAnuncios(this.usr);
+    }//GEN-LAST:event_BajaVentaMenuItemActionPerformed
+
     private void ActualizarTablaDatos(){
         this.TablaDatos.setValueAt(usr.getId(), 0, 1);
         this.TablaDatos.setValueAt(usr.getSaldo(), 1, 1);
@@ -313,7 +318,6 @@ public class VPrincipalEmpresa extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem AltaPagoMenuItem;
     private javax.swing.JMenuItem BajaMenuItem;
-    private javax.swing.JMenuItem BajaPagoMenuItem;
     private javax.swing.JMenuItem BajaVentaMenuItem;
     private javax.swing.JMenu BeneficiosMenu;
     private javax.swing.JButton BotonCerrarSesion;

@@ -11,6 +11,14 @@ public class Beneficios{
     private Timestamp fecha;
     private double importeParticipacion;
 
+    public Beneficios(UsuarioEmpresa empresa, Timestamp fecha, double importeParticipacion) {
+        this.empresa = empresa;
+        this.fecha = fecha;
+        this.importeParticipacion = importeParticipacion;
+    }
+
+    
+    
     /**
      * @return the empresa
      */
