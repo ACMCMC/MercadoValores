@@ -33,6 +33,7 @@ public class FachadaDB {
     private DAOUsuarioRegulador daoUsuarioRegulador;
     private DAOParticipaciones daoParticipaciones;
     private DAOVentas daoVentas;
+    private DAOUsuario daoUsuario;
 
     public static FachadaDB getFachada() {
         return fachada;
@@ -71,6 +72,11 @@ public class FachadaDB {
         daoUsuarioInversor = new DAOUsuarioInversor(conexion);
         daoParticipaciones = new DAOParticipaciones(conexion);
         daoVentas = new DAOVentas(conexion);
+        daoUsuario = new DAOUsuario(conexion);
+    }
+
+    public boolean comprobarContrasena(String contrasenaTextoPlano, String contrasenaEncriptada) {
+        return daoUsuario.comprobarContrasena(contrasenaTextoPlano, contrasenaEncriptada);
     }
 
     public Set<UsuarioEmpresa> getUsuariosEmpresa() {

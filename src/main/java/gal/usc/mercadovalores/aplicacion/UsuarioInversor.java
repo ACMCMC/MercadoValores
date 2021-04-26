@@ -4,6 +4,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
+import gal.usc.mercadovalores.db.FachadaDB;
+
 /**
  * @author
  */
@@ -15,6 +17,13 @@ public final class UsuarioInversor extends UsuarioDeMercado {
         super(id, clave, saldo, direccion, telefono, estado);
         this.dni = dni;
         this.nombre_completo = nombre_completo;
+    }
+
+    /**
+     * @return the usuariosConParticipaciones
+     */
+    public Set<Participacion> getParticipaciones() {
+        return FachadaDB.getFachada().getParticipacionesUsuarioDeMercado(this);
     }
 
     public String getDni(){
