@@ -19,6 +19,7 @@ public class DAOParticipaciones extends DAO<Participacion> {
         super(con);
     }
 
+    
     public void crearParticipaciones(UsuarioEmpresa u, Integer x) throws SQLException {
         Connection c = startTransaction();
         PreparedStatement preparedStatement = null;
@@ -42,11 +43,6 @@ public class DAOParticipaciones extends DAO<Participacion> {
             }
 
             preparedStatement.close();
-            preparedStatement = c.prepareStatement("update usuario_empresa set importe_bloqueado=? where id=?");
-            preparedStatement.setDouble(1,
-                    FachadaDB.getFachada().getParticipacionesEmpresa(u) * this.getImportePorParticipacion(u));
-            preparedStatement.setString(2, u.getId());
-            preparedStatement.executeUpdate();
 
             c.commit();
 
@@ -83,10 +79,6 @@ public class DAOParticipaciones extends DAO<Participacion> {
             }
             preparedStatement.executeUpdate();
             preparedStatement.close();
-            preparedStatement = c.prepareStatement("update usuario_empresa set importe_bloqueado=? where id=?");
-            preparedStatement.setDouble(1, this.numeroParticipacionesTotales(u) * this.getImportePorParticipacion(u));
-            preparedStatement.setString(2, u.getId());
-            preparedStatement.executeUpdate();
             c.commit();
 
         } catch (SQLException e) {
@@ -351,7 +343,11 @@ public class DAOParticipaciones extends DAO<Participacion> {
 
     public void altaBeneficios(UsuarioEmpresa u, double porcentaje, Timestamp fecha) {
         Connection c = startTransaction();
+        Set<Participacion> setFinal = new HashSet<>();
+
         PreparedStatement preparedStatement = null;
+        ResultSet resultSet;
+
         try {
             preparedStatement = c.prepareStatement("insert into beneficios values(?,?,?)");
             preparedStatement.setString(1, u.getId());
@@ -391,6 +387,39 @@ public class DAOParticipaciones extends DAO<Participacion> {
     }
 
     public void pagoBeneficios(UsuarioEmpresa u) {
+        Connection c = startTransaction();
+        PreparedStatement preparedStatement = null;
+        PreparedStatement preparedStatement2 = null;
+        ResultSet resultSet;
+
+        try {
+
+            preparedStatement = c.prepareStatement("select id1 from tener_participaciones where id2=?");
+            preparedStatement.setString(1, u.getId());
+            resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                String id = resultSet.getString("id1");
+                preparedStatement2 = c.prepareStatement("update usuario_mercado set saldo=? where id=?");
+                preparedStatement2.setDouble(1, calcularBeneficioUsuario(id, u));
+                preparedStatement2.setString(2, id);
+                preparedStatement2.executeUpdate();
+
+            }
+            c.commit();
+        } catch (SQLException e) {
+            FachadaAplicacion.muestraExcepcion(e);
+        } finally {
+            try {
+                preparedStatement.close();
+                preparedStatement2.close();
+            } catch (SQLException e) {
+                FachadaAplicacion.muestraExcepcion(e);
+            }
+        }
+    }
+    
+    private double calcularBeneficioUsuario(String u,UsuarioEmpresa u2){//FUNCION AUXILIAR PARA PGAO BENEFICIOS
+        double ret=0.0;
         Connection c = startTransaction();
         PreparedStatement preparedStatement = null;
         PreparedStatement preparedStatement2 = null;

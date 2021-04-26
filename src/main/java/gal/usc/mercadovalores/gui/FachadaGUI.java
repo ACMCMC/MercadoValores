@@ -94,4 +94,5 @@ public class FachadaGUI {
         VAnunciosUsuario vAU = new VAnunciosUsuario(usr);
         vAU.setVisible(true);
     }
+
 }

@@ -197,7 +197,7 @@ public class FachadaDB {
     }
 
     public void removeParticipacion(UsuarioEmpresa usr, int p) throws SQLException{
-        daoUsuarioEmpresa.removeParticipacion(usr, p);
+        daoParticipaciones.bajaParticipaciones(usr, p);
     }
     
     public void venderParticipacion(UsuarioDeMercado u1, UsuarioEmpresa u2, Integer cant, double precio, double comision) throws SQLException{

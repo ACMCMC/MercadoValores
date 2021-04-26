@@ -20,7 +20,7 @@ Values ('Tim','39759783E','Timothy Drake Wayne'),
 ('Bruce','24327634B','Bruce Wayne');
 
 Insert into beneficios (id,fecha_pago,importe_por_participacion)
-Values ('Opti','20021/12/31 17:00:00.00', 4.00),
+Values ('Opti','2021/12/31 17:00:00.00', 4.00),
 ('WW','2022/04/26 14:00:00.00',100),
 ('SI','2021/5/9 00:00:00.00',50);
 
