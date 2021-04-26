@@ -80,6 +80,11 @@ public class FachadaGUI {
         vi.setVisible(true);
     }
     
+    public void ventanaParticipaciones(UsuarioEmpresa usr){
+        VGestionParticipacion vp = new VGestionParticipacion(usr);
+        vp.setVisible(true);
+    }
+    
     public void ventanaSaldos(){
         VSaldo vS = new VSaldo(this.vadmin,true);
         vS.setVisible(true);

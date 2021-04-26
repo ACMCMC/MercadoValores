@@ -9,6 +9,7 @@ import gal.usc.mercadovalores.aplicacion.UsuarioEmpresa;
 import gal.usc.mercadovalores.aplicacion.UsuarioRegulador;
 import gal.usc.mercadovalores.aplicacion.UsuarioInversor;
 import gal.usc.mercadovalores.aplicacion.FachadaAplicacion;
+import gal.usc.mercadovalores.aplicacion.Participacion;
 import gal.usc.mercadovalores.db.FachadaDB;
 import java.awt.Color;
 import java.sql.SQLException;
@@ -67,6 +68,11 @@ public class VPrincipalInversor extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Ventana Inversor");
         setResizable(false);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowActivated(java.awt.event.WindowEvent evt) {
+                formWindowActivated(evt);
+            }
+        });
 
         TablaDatos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -76,7 +82,8 @@ public class VPrincipalInversor extends javax.swing.JFrame {
                 {"Telefono", null},
                 {"DNI", null},
                 {"Nombre Comercial", null},
-                {"Clave", null}
+                {"Clave", null},
+                {"Participaciones", null}
             },
             new String [] {
                 "", ""
@@ -207,10 +214,10 @@ public class VPrincipalInversor extends javax.swing.JFrame {
                 .addGap(24, 24, 24)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 56, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 44, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(SalirBoton)
                     .addComponent(CerrarSesionBoton))
@@ -295,7 +302,17 @@ public class VPrincipalInversor extends javax.swing.JFrame {
         this.fa.ventanaAnuncios(this.usr);
     }//GEN-LAST:event_BajaVentaMenuItemActionPerformed
 
+    private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
+        // TODO add your handling code here:
+        ActualizarTablaDatos();
+    }//GEN-LAST:event_formWindowActivated
+
     private void ActualizarTablaDatos(){
+        int n_part = 0;
+        
+        for(Participacion part: FachadaDB.getFachada().getParticipacionesUsuarioDeMercado(usr)){
+            n_part += part.getNumero();
+        }
         this.TablaDatos.setValueAt(usr.getId(), 0, 1);
         this.TablaDatos.setValueAt(usr.getSaldo(), 1, 1);
         this.TablaDatos.setValueAt(usr.getDireccion(), 2, 1);
@@ -303,9 +320,7 @@ public class VPrincipalInversor extends javax.swing.JFrame {
         this.TablaDatos.setValueAt(usr.getDni(), 4, 1);
         this.TablaDatos.setValueAt(usr.getNombreCompleto(), 5, 1);
         this.TablaDatos.setValueAt(usr.getClave(), 6, 1);
-
-
-
+        this.TablaDatos.setValueAt(n_part, 7, 1);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
