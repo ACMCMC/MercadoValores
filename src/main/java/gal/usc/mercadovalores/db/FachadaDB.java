@@ -5,20 +5,25 @@
  */
 package gal.usc.mercadovalores.db;
 
-import gal.usc.mercadovalores.aplicacion.*;
-import gal.usc.mercadovalores.gui.*;
-
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.Collection;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+
+import gal.usc.mercadovalores.aplicacion.AnuncioVenta;
+import gal.usc.mercadovalores.aplicacion.Beneficios;
+import gal.usc.mercadovalores.aplicacion.FachadaAplicacion;
+import gal.usc.mercadovalores.aplicacion.Participacion;
+import gal.usc.mercadovalores.aplicacion.Usuario;
+import gal.usc.mercadovalores.aplicacion.UsuarioDeMercado;
+import gal.usc.mercadovalores.aplicacion.UsuarioEmpresa;
+import gal.usc.mercadovalores.aplicacion.UsuarioInversor;
+import gal.usc.mercadovalores.aplicacion.UsuarioRegulador;
 
 /**
  *

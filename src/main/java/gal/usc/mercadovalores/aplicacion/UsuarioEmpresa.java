@@ -1,6 +1,5 @@
 package gal.usc.mercadovalores.aplicacion;
 
-import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
