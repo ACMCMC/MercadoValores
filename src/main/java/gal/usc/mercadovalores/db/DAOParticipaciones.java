@@ -420,7 +420,7 @@ public class DAOParticipaciones extends DAO<Participacion> {
     
     private double calcularBeneficioUsuario(String u,UsuarioEmpresa u2){//FUNCION AUXILIAR PARA PGAO BENEFICIOS
         double ret=0.0;
-        Connection c = startTransaction();
+        /*Connection c = startTransaction();
         PreparedStatement preparedStatement = null;
         PreparedStatement preparedStatement2 = null;
         PreparedStatement preparedStatement3 = null;
@@ -448,6 +448,7 @@ public class DAOParticipaciones extends DAO<Participacion> {
             } catch (SQLException e) {
                 FachadaAplicacion.muestraExcepcion(e);
             }
-        }
+        }*/
+        return ret;
     }
 }

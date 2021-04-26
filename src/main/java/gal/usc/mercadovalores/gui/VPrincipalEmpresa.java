@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package gal.usc.mercadovalores.gui;
+import gal.usc.mercadovalores.aplicacion.Participacion;
 import gal.usc.mercadovalores.aplicacion.UsuarioEmpresa;
 import gal.usc.mercadovalores.aplicacion.FachadaAplicacion;
 import gal.usc.mercadovalores.aplicacion.Usuario;
@@ -66,6 +67,11 @@ public class VPrincipalEmpresa extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Ventana  Empresa");
         setResizable(false);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowActivated(java.awt.event.WindowEvent evt) {
+                formWindowActivated(evt);
+            }
+        });
 
         TablaDatos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -163,6 +169,11 @@ public class VPrincipalEmpresa extends javax.swing.JFrame {
         ParticipacionesMenu.add(ComprarMenuItem);
 
         BajaVentaMenuItem.setText("Dar de baja anuncio");
+        BajaVentaMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BajaVentaMenuItemActionPerformed(evt);
+            }
+        });
         ParticipacionesMenu.add(BajaVentaMenuItem);
 
         Menu.add(ParticipacionesMenu);
@@ -221,8 +232,8 @@ public class VPrincipalEmpresa extends javax.swing.JFrame {
 
     private void GestionParticipacionMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GestionParticipacionMenuItemActionPerformed
         // TODO add your handling code here:
-        VGestionParticipacion vp = new VGestionParticipacion(usr);
-        vp.setVisible(true);
+        this.fa.ventanaParticipaciones(this.usr);
+        
     }//GEN-LAST:event_GestionParticipacionMenuItemActionPerformed
 
     //salimos de la aplicacion
@@ -292,7 +303,27 @@ public class VPrincipalEmpresa extends javax.swing.JFrame {
         this.fa.ventanaVender(this.usr);
     }//GEN-LAST:event_VenderMenuItemActionPerformed
 
+    private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
+        // TODO add your handling code here:
+        ActualizarTablaDatos();
+    }//GEN-LAST:event_formWindowActivated
+
+    private void BajaVentaMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BajaVentaMenuItemActionPerformed
+        // TODO add your handling code here:
+        this.fa.ventanaAnuncios(this.usr);
+    }//GEN-LAST:event_BajaVentaMenuItemActionPerformed
+
     private void ActualizarTablaDatos(){
+        int n_part = 0, n_crea = 0;
+        
+        for(Participacion part: FachadaDB.getFachada().getParticipacionesUsuarioDeMercado(usr)){
+            n_part += part.getNumero();
+        }
+        
+        for(Participacion part: FachadaDB.getFachada().getParticipacionesEmpresa(usr)){
+            n_crea += part.getNumero();
+        }
+        
         this.TablaDatos.setValueAt(usr.getId(), 0, 1);
         this.TablaDatos.setValueAt(usr.getSaldo(), 1, 1);
         this.TablaDatos.setValueAt(usr.getDireccion(), 2, 1);
@@ -300,6 +331,8 @@ public class VPrincipalEmpresa extends javax.swing.JFrame {
         this.TablaDatos.setValueAt(usr.getCif(), 4, 1);
         this.TablaDatos.setValueAt(usr.getNombreComercial(), 5, 1);
         this.TablaDatos.setValueAt(usr.getImporteBloqueado(), 6, 1);
+        this.TablaDatos.setValueAt(n_part,7, 1);
+        this.TablaDatos.setValueAt(n_crea, 8, 1);
         this.TablaDatos.setValueAt(usr.getClave(), 9, 1);
     }
 
