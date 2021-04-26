@@ -54,7 +54,7 @@ public class FachadaDB {
 
             usuario.setProperty("user", configuracion.getProperty("usuario"));
             usuario.setProperty("password", configuracion.getProperty("clave"));
-            usuario.setProperty("ssl", "true");
+            //usuario.setProperty("ssl", "false");
             String url = "jdbc:" + gestor + "://" + configuracion.getProperty("servidor") + ":"
                     + configuracion.getProperty("puerto") + "/" + configuracion.getProperty("baseDatos");
             this.conexion = java.sql.DriverManager.getConnection(url, usuario);
@@ -197,7 +197,7 @@ public class FachadaDB {
     }
 
     public void removeParticipacion(UsuarioEmpresa usr, int p) throws SQLException{
-        daoParticipaciones.bajaParticipaciones(usr, p);
+        //daoUsuarioEmpresa.removeParticipacion(usr, p);
     }
     
     public void venderParticipacion(UsuarioDeMercado u1, UsuarioEmpresa u2, Integer cant, double precio, double comision) throws SQLException{
@@ -214,5 +214,17 @@ public class FachadaDB {
     
     public void bajaAnuncioVenta(AnuncioVenta av) throws SQLException{
         daoVentas.retirarVenta(av.getVendedor().getId(), av.getEmpresa().getId(), av.getFecha());
+    }
+    
+    public void anunciarBeneficios(UsuarioEmpresa usr, double precio, Timestamp date)throws SQLException{
+        daoParticipaciones.altaBeneficios(usr, precio, date);
+    }
+    
+    public Set<Beneficios> getAllBeneficios(){
+        return daoParticipaciones.getAllBeneficios();
+    }
+    
+    public void bajaBeneficios(Beneficios b){
+        daoParticipaciones.BajaBeneficios(b);
     }
 }

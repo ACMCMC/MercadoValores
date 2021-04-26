@@ -68,7 +68,8 @@ public class DAOVentas extends DAO<Participacion> {
         try {
 			getConexion().setAutoCommit(false);
 			preparedStatement = getConexion().prepareStatement(
-					"delete from anuncio_venta where id1=? and id2=? and fecha_pago=?" );
+					"delete from anuncio_venta " +
+                                        "where id1=? and id2=? and fecha_pago=?" );
                         preparedStatement.setString(1, id1);
                         preparedStatement.setString(2, id2);
                         preparedStatement.setTimestamp(3, fecha);
@@ -95,7 +96,8 @@ public class DAOVentas extends DAO<Participacion> {
         try {
 			getConexion().setAutoCommit(false);
 			preparedStatement = getConexion().prepareStatement(
-					"delete from anuncio_venta where id1=? and id2=? and fecha_pago=?" );
+					"delete from anuncio_venta " +
+                                        "where id1=? and id2=? and fecha_pago=?" );
                         preparedStatement.setString(1, id1);
                         preparedStatement.setString(2, id2);
                         preparedStatement.setTimestamp(3, fecha);
