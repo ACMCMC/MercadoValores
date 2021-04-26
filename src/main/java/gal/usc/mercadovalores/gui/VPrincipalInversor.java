@@ -66,7 +66,6 @@ public class VPrincipalInversor extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Ventana Inversor");
-        setPreferredSize(new java.awt.Dimension(411, 348));
         setResizable(false);
 
         TablaDatos.setModel(new javax.swing.table.DefaultTableModel(
@@ -157,12 +156,27 @@ public class VPrincipalInversor extends javax.swing.JFrame {
 
         VenderMenuItem.setText("Vender");
         VenderMenuItem.setToolTipText("");
+        VenderMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                VenderMenuItemActionPerformed(evt);
+            }
+        });
         ParticipacionesMenu.add(VenderMenuItem);
 
         ComprarMenuItem.setText("Comprar");
+        ComprarMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ComprarMenuItemActionPerformed(evt);
+            }
+        });
         ParticipacionesMenu.add(ComprarMenuItem);
 
         BajaVentaMenuItem.setText("Dar de baja venta");
+        BajaVentaMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BajaVentaMenuItemActionPerformed(evt);
+            }
+        });
         ParticipacionesMenu.add(BajaVentaMenuItem);
 
         Menu.add(ParticipacionesMenu);
@@ -268,6 +282,18 @@ public class VPrincipalInversor extends javax.swing.JFrame {
         this.ActualizarTablaDatos();
 
     }//GEN-LAST:event_botonUpdateActionPerformed
+
+    private void ComprarMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ComprarMenuItemActionPerformed
+    }//GEN-LAST:event_ComprarMenuItemActionPerformed
+
+    private void VenderMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_VenderMenuItemActionPerformed
+        this.fa.ventanaVender(this.usr);
+    }//GEN-LAST:event_VenderMenuItemActionPerformed
+
+    private void BajaVentaMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BajaVentaMenuItemActionPerformed
+        // TODO add your handling code here:
+        this.fa.ventanaAnuncios(this.usr);
+    }//GEN-LAST:event_BajaVentaMenuItemActionPerformed
 
     private void ActualizarTablaDatos(){
         this.TablaDatos.setValueAt(usr.getId(), 0, 1);

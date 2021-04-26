@@ -54,7 +54,7 @@ public class FachadaDB {
 
             usuario.setProperty("user", configuracion.getProperty("usuario"));
             usuario.setProperty("password", configuracion.getProperty("clave"));
-            usuario.setProperty("ssl", "true");
+            //usuario.setProperty("ssl", "true");
             String url = "jdbc:" + gestor + "://" + configuracion.getProperty("servidor") + ":"
                     + configuracion.getProperty("puerto") + "/" + configuracion.getProperty("baseDatos");
             this.conexion = java.sql.DriverManager.getConnection(url, usuario);
@@ -141,8 +141,11 @@ public class FachadaDB {
     }
 
     public Set<Participacion> getParticipacionesUsuarioDeMercado(UsuarioDeMercado u) {
-        
         return daoParticipaciones.getAllUsuarioMercado(u);
+    }
+
+    public Set<Participacion> getParticipacionesEmpresa(UsuarioEmpresa u) {
+        return daoParticipaciones.getAllEmpresa(u);
     }
 
     public void autorizarRegistro(UsuarioDeMercado u) {
@@ -191,5 +194,25 @@ public class FachadaDB {
     public void confirmarVenta(String id1,String id2,Timestamp fecha) throws SQLException{
         daoVentas.confirmarVenta(id1, id2, fecha);
         
+    }
+
+    public void removeParticipacion(UsuarioEmpresa usr, int p) throws SQLException{
+        daoParticipaciones.bajaParticipaciones(usr, p);
+    }
+    
+    public void venderParticipacion(UsuarioDeMercado u1, UsuarioEmpresa u2, Integer cant, double precio, double comision) throws SQLException{
+        daoVentas.publicarVenta(u1, u2, cant, precio, comision);
+    }
+    
+    public int getParticipacionesDeEmpresaALaVentaPorUsuario(UsuarioDeMercado u1, UsuarioEmpresa u2){
+        return daoVentas.getParticipacionesDeEmpresaALaVentaPorUsuario(u1.getId(), u2.getId());
+    }
+    
+    public Set<AnuncioVenta> getAnunciosUsuario(UsuarioDeMercado usr){
+        return daoVentas.getAnuncioUsuario(usr);
+    }
+    
+    public void bajaAnuncioVenta(AnuncioVenta av) throws SQLException{
+        daoVentas.retirarVenta(av.getVendedor().getId(), av.getEmpresa().getId(), av.getFecha());
     }
 }

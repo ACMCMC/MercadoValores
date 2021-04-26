@@ -11,7 +11,6 @@ public class AnuncioVenta{
     private int numero_participaciones;
 
     //Constructor
-
     public AnuncioVenta( UsuarioDeMercado vendedor,UsuarioEmpresa empresa, Timestamp fecha, double precio, double comision_en_fecha, int numero_participaciones) {
         this.empresa = empresa;
         this.vendedor = vendedor;
@@ -20,8 +19,6 @@ public class AnuncioVenta{
         this.comision_en_fecha = comision_en_fecha;
         this.numero_participaciones = numero_participaciones;
     }
-
-
 
     //Setters y Getters
 
