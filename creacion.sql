@@ -289,11 +289,11 @@ FOR EACH ROW EXECUTE PROCEDURE comprueba_tipo_unico_usuario();
 --Funcionalidades extra
 
 CREATE TABLE compra(
-    id_compra serial UNIQUE,
+    id_compra serial,
 	empresa varchar(30),
 	comprador varchar(30),
 	fecha timestamp,
-	primary key(id_compra,empresa,comprador),
+	primary key(id_compra),
 	foreign key (comprador) references usuario_mercado(id)
         	on update cascade
         	on delete restrict, 
@@ -302,12 +302,12 @@ CREATE TABLE compra(
         	on delete restrict
 );
 CREATE TABLE parte_compra(
-	id_parte serial UNIQUE,
+	id_parte serial,
 	id_compra integer,
 	vendedor varchar(30),
 	precio double precision,
 	cantidad integer,
-	primary key(id_compra,id_parte,vendedor),
+	primary key(id_compra,id_parte),
 	foreign key (vendedor) references usuario_mercado(id)
         	on update cascade
         	on delete restrict, 
