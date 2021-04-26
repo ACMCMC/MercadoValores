@@ -43,8 +43,8 @@ public class DAOParticipaciones extends DAO<Participacion> {
 
             preparedStatement.close();
             preparedStatement = c.prepareStatement("update usuario_empresa set importe_bloqueado=? where id=?");
-            preparedStatement.setDouble(1,
-                    FachadaDB.getFachada().getParticipacionesEmpresa(u) * this.getImportePorParticipacion(u));
+            //preparedStatement.setDouble(1,
+            //FachadaDB.getFachada().getParticipacionesEmpresa(u) * this.getImportePorParticipacion(u));
             preparedStatement.setString(2, u.getId());
             preparedStatement.executeUpdate();
 
@@ -84,7 +84,7 @@ public class DAOParticipaciones extends DAO<Participacion> {
             preparedStatement.executeUpdate();
             preparedStatement.close();
             preparedStatement = c.prepareStatement("update usuario_empresa set importe_bloqueado=? where id=?");
-            preparedStatement.setDouble(1, this.numeroParticipacionesTotales(u) * this.getImportePorParticipacion(u));
+            //preparedStatement.setDouble(1, this.numeroParticipacionesTotales(u) * this.getImportePorParticipacion(u));
             preparedStatement.setString(2, u.getId());
             preparedStatement.executeUpdate();
             c.commit();
@@ -404,7 +404,7 @@ public class DAOParticipaciones extends DAO<Participacion> {
             while (resultSet.next()) {
                 String id = resultSet.getString("id1");
                 preparedStatement2 = c.prepareStatement("update usuario_mercado set saldo=? where id=?");
-                preparedStatement2.setDouble(1, calcularBeneficioUsuario(id, u));
+                //preparedStatement2.setDouble(1, calcularBeneficioUsuario(id, u));
                 preparedStatement2.setString(2, id);
                 preparedStatement2.executeUpdate();
 

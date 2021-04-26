@@ -61,7 +61,6 @@ public class VPrincipalEmpresa extends javax.swing.JFrame {
         BeneficiosMenu = new javax.swing.JMenu();
         AltaPagoMenuItem = new javax.swing.JMenuItem();
         BajaPagoMenuItem = new javax.swing.JMenuItem();
-        PagarMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Ventana  Empresa");
@@ -169,15 +168,17 @@ public class VPrincipalEmpresa extends javax.swing.JFrame {
 
         BeneficiosMenu.setText("Beneficios");
 
-        AltaPagoMenuItem.setText("Alta de pago");
+        AltaPagoMenuItem.setText("Altas y pagos");
         AltaPagoMenuItem.setToolTipText("");
+        AltaPagoMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                AltaPagoMenuItemActionPerformed(evt);
+            }
+        });
         BeneficiosMenu.add(AltaPagoMenuItem);
 
         BajaPagoMenuItem.setText("Baja de pago");
         BeneficiosMenu.add(BajaPagoMenuItem);
-
-        PagarMenuItem.setText("Pagar");
-        BeneficiosMenu.add(PagarMenuItem);
 
         Menu.add(BeneficiosMenu);
 
@@ -292,6 +293,12 @@ public class VPrincipalEmpresa extends javax.swing.JFrame {
         this.fa.ventanaVender(this.usr);
     }//GEN-LAST:event_VenderMenuItemActionPerformed
 
+    private void AltaPagoMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AltaPagoMenuItemActionPerformed
+
+        this.fa.ventanaBeneficios(this.usr);
+        
+    }//GEN-LAST:event_AltaPagoMenuItemActionPerformed
+
     private void ActualizarTablaDatos(){
         this.TablaDatos.setValueAt(usr.getId(), 0, 1);
         this.TablaDatos.setValueAt(usr.getSaldo(), 1, 1);
@@ -315,7 +322,6 @@ public class VPrincipalEmpresa extends javax.swing.JFrame {
     private javax.swing.JMenuItem GestionParticipacionMenuItem;
     private javax.swing.JMenuBar Menu;
     private javax.swing.JMenuItem ModificarMenuItem;
-    private javax.swing.JMenuItem PagarMenuItem;
     private javax.swing.JMenu ParticipacionesMenu;
     private javax.swing.JButton SalirBoton;
     private javax.swing.JTable TablaDatos;

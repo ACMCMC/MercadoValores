@@ -94,4 +94,9 @@ public class FachadaGUI {
         VAnunciosUsuario vAU = new VAnunciosUsuario(usr);
         vAU.setVisible(true);
     }
+    
+    public void ventanaBeneficios(UsuarioEmpresa usr){
+        VBeneficios vB = new VBeneficios(usr);
+        vB.setVisible(true);
+    }
 }
