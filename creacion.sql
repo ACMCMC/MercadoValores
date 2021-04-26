@@ -167,8 +167,33 @@ CREATE OR REPLACE FUNCTION procesa_bloqueo_importe_pago_beneficios() RETURNS tri
     END;
 $procesa_bloqueo_importe_pago_beneficios$ LANGUAGE plpgsql;
 
-CREATE TRIGGER procesa_bloqueo_importe_pago_beneficios BEFORE INSERT OR UPDATE OR DELETE ON beneficios
+CREATE TRIGGER procesa_bloqueo_importe_pago_beneficios BEFORE INSERT OR UPDATE ON beneficios
 FOR EACH ROW EXECUTE PROCEDURE procesa_bloqueo_importe_pago_beneficios();
+
+CREATE OR REPLACE FUNCTION procesa_bloqueo_importe_pago_beneficios_al_borrar() RETURNS trigger AS $procesa_bloqueo_importe_pago_beneficios_al_borrar$
+    DECLARE
+		diferencia_beneficios_a_pagar double precision;
+		max double precision;
+    BEGIN
+		SELECT (-COALESCE(old.importe_por_participacion,0))*(COALESCE(SUM(tener_participaciones.num_participaciones),0)) into diferencia_beneficios_a_pagar --el importe que vamos a pagar ahora - el que pagaríamos antes
+		FROM tener_participaciones
+		WHERE id2=old.id;
+		
+		SELECT saldo into max
+		FROM usuario_mercado
+		WHERE id=old.id;
+
+		--sumamos al saldo bloqueado, y restamos al saldo disponible
+		UPDATE usuario_empresa SET importe_bloqueado=importe_bloqueado+diferencia_beneficios_a_pagar WHERE id=old.id;
+		UPDATE usuario_mercado SET saldo=saldo-diferencia_beneficios_a_pagar WHERE id=old.id;
+
+		RETURN OLD;
+		 
+    END;
+$procesa_bloqueo_importe_pago_beneficios_al_borrar$ LANGUAGE plpgsql;
+
+CREATE TRIGGER procesa_bloqueo_importe_pago_beneficios_al_borrar BEFORE DELETE ON beneficios
+FOR EACH ROW EXECUTE PROCEDURE procesa_bloqueo_importe_pago_beneficios_al_borrar();
 
 --Actualiza el saldo bloqueado al actualizar la tabla de tener_participaciones en base a los anuncios de beneficios existentes
 CREATE OR REPLACE FUNCTION procesa_saldo_bloqueado_al_modificar_tabla_participaciones() RETURNS trigger AS $procesa_saldo_bloqueado_al_modificar_tabla_participaciones$
@@ -197,8 +222,38 @@ CREATE OR REPLACE FUNCTION procesa_saldo_bloqueado_al_modificar_tabla_participac
     END;
 $procesa_saldo_bloqueado_al_modificar_tabla_participaciones$ LANGUAGE plpgsql;
 
-CREATE TRIGGER procesa_saldo_bloqueado_al_modificar_tabla_participaciones BEFORE INSERT OR UPDATE OR DELETE ON tener_participaciones
+CREATE TRIGGER procesa_saldo_bloqueado_al_modificar_tabla_participaciones BEFORE INSERT OR UPDATE ON tener_participaciones
 FOR EACH ROW EXECUTE PROCEDURE procesa_saldo_bloqueado_al_modificar_tabla_participaciones();
+
+--Actualiza el saldo bloqueado al actualizar la tabla de tener_participaciones en base a los anuncios de beneficios existentes
+CREATE OR REPLACE FUNCTION procesa_saldo_bloqueado_al_borrar_tabla_participaciones() RETURNS trigger AS $procesa_saldo_bloqueado_al_borrar_tabla_participaciones$
+    DECLARE
+		diferencia_beneficios_a_pagar double precision;
+		max double precision;
+    BEGIN
+		SELECT (COALESCE((- COALESCE(old.num_participaciones,0)) * (beneficios.importe_por_participacion),0)) into diferencia_beneficios_a_pagar --cogemos la fila anterior de tener_participaciones, y la nueva, y multiplicamos su diferencia por cada uno de los importes por participacion anunciados. Sumamos todo, y esa es la diferencia total que tendremos que reservar.
+		FROM beneficios
+		WHERE id=old.id2;
+		
+		SELECT saldo into max
+		FROM usuario_mercado
+		WHERE id=old.id2;
+		  
+		IF diferencia_beneficios_a_pagar > max THEN
+            		RAISE EXCEPTION 'Los beneficios no podrían pagarse';
+		END IF;
+
+		--sumamos al saldo bloqueado, y restamos al saldo disponible
+		UPDATE usuario_empresa SET importe_bloqueado=importe_bloqueado+diferencia_beneficios_a_pagar WHERE id=old.id2;
+		UPDATE usuario_mercado SET saldo=saldo-diferencia_beneficios_a_pagar WHERE id=old.id2;
+
+		RETURN OLD;
+		 
+    END;
+$procesa_saldo_bloqueado_al_borrar_tabla_participaciones$ LANGUAGE plpgsql;
+
+CREATE TRIGGER procesa_saldo_bloqueado_al_borrar_tabla_participaciones BEFORE DELETE ON tener_participaciones
+FOR EACH ROW EXECUTE PROCEDURE procesa_saldo_bloqueado_al_borrar_tabla_participaciones();
 
 --Comprueba que no se repite el ID entre usuarios_empresa, inversores y el regulador
 CREATE OR REPLACE FUNCTION comprueba_tipo_unico_usuario() RETURNS trigger AS $comprueba_tipo_unico_usuario$
