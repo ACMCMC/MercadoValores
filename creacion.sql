@@ -83,6 +83,35 @@ CREATE TABLE anuncio_venta(
   CHECK (precio >= 0::double precision AND comision_en_fecha >= 0::double precision AND num_participaciones > 0::integer)
 );
 
+CREATE ROLE Regulador;
+CREATE ROLE
+
+GRANT INSERT, SELECT, UPDATE estado ON usuario_de_mercado TO Regulador;
+GRANT PRIVILEGE
+
+CREATE ROLE MercadoUser;
+CREATE ROLE
+
+GRANT INSERT, SELECT num_participaciones ON tener_participaciones TO MercadoUser;
+GRANT PRIVILEGE
+
+GRANT INSERT, SELECT, UPDATE fecha, precio, comision_en_fecha, numero_participaciones ON anuncio_venta TO MercadoUser;
+GRANT PRIVILEGE
+
+CREATE ROLE InversorUser INHERIT;
+CREATE ROLE
+
+GRANT MercadoUser TO InversorUser;
+GRANT PRIVILEGE
+
+CREATE ROLE EmpresaUser INHERIT;
+CREATE ROLE
+
+GRANT MercadoUser TO EmpresaUser;
+GRANT PRIVILEGE
+
+GRANT SELECT ON beneficios TO EmpresaUser;
+
 CREATE OR REPLACE FUNCTION comprueba_participaciones() RETURNS trigger AS $comprueba_participaciones$
     DECLARE
 		total double precision;
