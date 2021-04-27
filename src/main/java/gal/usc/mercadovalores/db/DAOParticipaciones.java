@@ -1,5 +1,6 @@
 package gal.usc.mercadovalores.db;
 
+import gal.usc.mercadovalores.aplicacion.Beneficios;
 import gal.usc.mercadovalores.aplicacion.EstadoUsuario;
 import gal.usc.mercadovalores.aplicacion.FachadaAplicacion;
 import java.sql.Connection;
@@ -366,13 +367,14 @@ public class DAOParticipaciones extends DAO<Participacion> {
         }
     }
 
-    public void BajaBeneficios(UsuarioEmpresa u) {
+    public void BajaBeneficios(Beneficios b) {
         Connection c = startTransaction();
         PreparedStatement preparedStatement = null;
 
         try {
-            preparedStatement = c.prepareStatement("delete from beneficios where id=?");
-            preparedStatement.setString(1, u.getId());
+            preparedStatement = c.prepareStatement("delete from beneficios where id=? and fecha_pago=?");
+            preparedStatement.setString(1, b.getEmpresa().getId());
+            preparedStatement.setTimestamp(2, b.getFecha());
             preparedStatement.executeUpdate();
             c.commit();
         } catch (SQLException e) {
@@ -386,7 +388,8 @@ public class DAOParticipaciones extends DAO<Participacion> {
         }
     }
 
-    public void pagoBeneficios(UsuarioEmpresa u) {
+
+    public void pagoBeneficios(UsuarioEmpresa u,Double importe_por_participacion) {
         Connection c = startTransaction();
         PreparedStatement preparedStatement = null;
         PreparedStatement preparedStatement2 = null;
@@ -394,17 +397,18 @@ public class DAOParticipaciones extends DAO<Participacion> {
 
         try {
 
-            preparedStatement = c.prepareStatement("select id1 from tener_participaciones where id2=?");
+            preparedStatement = c.prepareStatement("SELECT pagar_beneficios(?, ?);");
             preparedStatement.setString(1, u.getId());
+            preparedStatement.setDouble(2, importe_por_participacion);
             resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
+            /*while (resultSet.next()) {
                 String id = resultSet.getString("id1");
                 preparedStatement2 = c.prepareStatement("update usuario_mercado set saldo=? where id=?");
                 preparedStatement2.setDouble(1, calcularBeneficioUsuario(id, u));
                 preparedStatement2.setString(2, id);
                 preparedStatement2.executeUpdate();
 
-            }
+            }*/
             c.commit();
         } catch (SQLException e) {
             FachadaAplicacion.muestraExcepcion(e);
