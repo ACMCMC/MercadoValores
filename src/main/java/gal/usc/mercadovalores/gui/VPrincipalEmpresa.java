@@ -67,7 +67,7 @@ public class VPrincipalEmpresa extends javax.swing.JFrame {
         setResizable(false);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowActivated(java.awt.event.WindowEvent evt) {
-                formWindowActivated(evt);
+                //formWindowActivated(evt);
             }
         });
 
@@ -187,17 +187,6 @@ public class VPrincipalEmpresa extends javax.swing.JFrame {
         });
         BeneficiosMenu.add(AltaPagoMenuItem);
 
-        BajaPagoMenuItem.setText("Baja de pago");
-        BeneficiosMenu.add(BajaPagoMenuItem);
-
-        PagarMenuItem.setText("Pagar");
-        PagarMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                PagarMenuItemActionPerformed(evt);
-            }
-        });
-        BeneficiosMenu.add(PagarMenuItem);
-
         Menu.add(BeneficiosMenu);
 
         setJMenuBar(Menu);
@@ -241,7 +230,7 @@ public class VPrincipalEmpresa extends javax.swing.JFrame {
     private void GestionParticipacionMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GestionParticipacionMenuItemActionPerformed
         // TODO add your handling code here:
         this.fa.ventanaParticipaciones(this.usr);
-        
+
     }//GEN-LAST:event_GestionParticipacionMenuItemActionPerformed
 
     //salimos de la aplicacion
@@ -259,12 +248,12 @@ public class VPrincipalEmpresa extends javax.swing.JFrame {
 
     private void botonActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonActualizarActionPerformed
         // TODO add your handling code here:
-        
+
         //comprobar que ni el nombre ni la contraseña esten vacios
         String idCheck = (String) this.TablaDatos.getValueAt(0, 1);
         String passCheck = (String) this.TablaDatos.getValueAt(9, 1);
         if(!idCheck.isEmpty() && !passCheck.isEmpty()){
-            
+
             String idActual = this.usr.getId();
             this.usr.setId((String) this.TablaDatos.getValueAt(0, 1));
             this.usr.setDireccion((String) this.TablaDatos.getValueAt(2, 1));
@@ -297,7 +286,7 @@ public class VPrincipalEmpresa extends javax.swing.JFrame {
         }
         this.ActualizarTablaDatos();
 
-        
+
     }//GEN-LAST:event_botonActualizarActionPerformed
 
     private void ModificarMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ModificarMenuItemActionPerformed
@@ -314,27 +303,24 @@ public class VPrincipalEmpresa extends javax.swing.JFrame {
     private void AltaPagoMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AltaPagoMenuItemActionPerformed
 
         this.fa.ventanaBeneficios(this.usr);
-        
+
     }//GEN-LAST:event_AltaPagoMenuItemActionPerformed
 
     private void BajaVentaMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BajaVentaMenuItemActionPerformed
         this.fa.ventanaAnuncios(this.usr);
     }//GEN-LAST:event_BajaVentaMenuItemActionPerformed
-    private void PagarMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PagarMenuItemActionPerformed
-        
-    }//GEN-LAST:event_PagarMenuItemActionPerformed
 
     private void ActualizarTablaDatos(){
         int n_part = 0, n_crea = 0;
-        
+
         for(Participacion part: FachadaDB.getFachada().getParticipacionesUsuarioDeMercado(usr)){
             n_part += part.getNumero();
         }
-        
+
         for(Participacion part: FachadaDB.getFachada().getParticipacionesEmpresa(usr)){
             n_crea += part.getNumero();
         }
-        
+
         this.TablaDatos.setValueAt(usr.getId(), 0, 1);
         this.TablaDatos.setValueAt(usr.getSaldo(), 1, 1);
         this.TablaDatos.setValueAt(usr.getDireccion(), 2, 1);
