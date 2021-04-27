@@ -1,17 +1,15 @@
 package gal.usc.mercadovalores.db;
 
-import gal.usc.mercadovalores.aplicacion.EstadoUsuario;
-import gal.usc.mercadovalores.aplicacion.FachadaAplicacion;
-import gal.usc.mercadovalores.aplicacion.UsuarioEmpresa;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
-import gal.usc.mercadovalores.aplicacion.UsuarioInversor;
-import java.sql.PreparedStatement;
-
 import java.util.HashSet;
 import java.util.Set;
+
+import gal.usc.mercadovalores.aplicacion.EstadoUsuario;
+import gal.usc.mercadovalores.aplicacion.FachadaAplicacion;
+import gal.usc.mercadovalores.aplicacion.UsuarioInversor;
 
 public final class DAOUsuarioInversor extends DAO<UsuarioInversor> {
 
@@ -68,7 +66,7 @@ public final class DAOUsuarioInversor extends DAO<UsuarioInversor> {
 
 		try {
 			preparedStatement = c.prepareStatement(
-					"insert into usuario_mercado(clave, saldo, direccion, telefono, estado, id) values (?,?,?,?,CAST (? AS enum_estado),?)");
+					"insert into usuario_mercado(clave, saldo, direccion, telefono, estado, id) values (crypt(?,gen_salt('bf')),?,?,?,CAST (? AS enum_estado),?)");
 			preparedStatement.setString(1, user.getClave());
 			preparedStatement.setDouble(2, user.getSaldo());
 			preparedStatement.setString(3, user.getDireccion());
@@ -76,6 +74,7 @@ public final class DAOUsuarioInversor extends DAO<UsuarioInversor> {
 			preparedStatement.setString(5, user.getEstado().toString());
 			preparedStatement.setString(6, user.getId());
 			preparedStatement.executeUpdate();
+			preparedStatement.close();
 
 			preparedStatement = c
 					.prepareStatement("insert into usuario_inversor(dni, nombre_completo, id) values (?,?,?)");
@@ -107,6 +106,7 @@ public final class DAOUsuarioInversor extends DAO<UsuarioInversor> {
 			preparedStatement.setString(2, user.getNombreCompleto());
 			preparedStatement.setString(3, user.getId());
 			preparedStatement.executeUpdate();
+			preparedStatement.close();
                         
 			preparedStatement = getConexion().prepareStatement(
 					"update usuario_mercado set clave=?, saldo=?, direccion=?, telefono=?, estado=CAST(? AS enum_estado) where id=?");
@@ -179,6 +179,7 @@ public final class DAOUsuarioInversor extends DAO<UsuarioInversor> {
 			preparedStatement = getConexion().prepareStatement("delete from usuario_inversor where id=?");
 			preparedStatement.setString(1, user.getId());
 			preparedStatement.executeUpdate();
+			preparedStatement.close();
                         
 			preparedStatement = getConexion().prepareStatement("delete from usuario_mercado where id=?");
 			preparedStatement.setString(1, user.getId());

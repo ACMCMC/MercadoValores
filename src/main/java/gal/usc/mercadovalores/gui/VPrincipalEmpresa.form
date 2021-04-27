@@ -71,7 +71,7 @@
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="AltaPagoMenuItem">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Alta de pago"/>
+                <Property name="text" type="java.lang.String" value="Altas y pagos"/>
                 <Property name="toolTipText" type="java.lang.String" value=""/>
               </Properties>
             </MenuItem>
@@ -84,6 +84,9 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="Pagar"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="PagarMenuItemActionPerformed"/>
+              </Events>
             </MenuItem>
           </SubComponents>
         </Menu>

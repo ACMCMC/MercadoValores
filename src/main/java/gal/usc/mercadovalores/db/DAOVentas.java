@@ -5,21 +5,23 @@
  */
 package gal.usc.mercadovalores.db;
 
-import gal.usc.mercadovalores.aplicacion.AnuncioVenta;
-import gal.usc.mercadovalores.aplicacion.EstadoUsuario;
-import gal.usc.mercadovalores.aplicacion.FachadaAplicacion;
 import java.sql.Connection;
-import java.util.Set;
-
-import gal.usc.mercadovalores.aplicacion.Participacion;
-import gal.usc.mercadovalores.aplicacion.UsuarioDeMercado;
-import gal.usc.mercadovalores.aplicacion.UsuarioEmpresa;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashSet;
+<<<<<<< HEAD
+=======
+import java.util.Set;
+
+import gal.usc.mercadovalores.aplicacion.AnuncioVenta;
+import gal.usc.mercadovalores.aplicacion.FachadaAplicacion;
+import gal.usc.mercadovalores.aplicacion.Participacion;
+import gal.usc.mercadovalores.aplicacion.UsuarioDeMercado;
+import gal.usc.mercadovalores.aplicacion.UsuarioEmpresa;
+>>>>>>> 0cec37715f83ad1f2cca3d3a2077a6ba0ed1155a
 import java.util.Objects;
 
 /**
@@ -238,12 +240,17 @@ public class DAOVentas extends DAO<Participacion> {
          return ret;
      }
     
+<<<<<<< HEAD
      public void ventaParticipaciones(UsuarioDeMercado Usuario,UsuarioEmpresa empresa,Integer numero,Integer precio){
+=======
+     public void ventaParticipaciones(UsuarioEmpresa empresa,Integer numero,Integer precio,String idUsuario){
+>>>>>>> 0cec37715f83ad1f2cca3d3a2077a6ba0ed1155a
         Connection c = startTransaction();
         Integer ret=numero;
         Double saldoARestar=0.0;
 	PreparedStatement preparedStatement = null;
         PreparedStatement preparedStatement2 = null;
+<<<<<<< HEAD
         PreparedStatement preparedStatement3 = null;
         PreparedStatement preparedStatement4 = null;
         PreparedStatement preparedStatement5 = null;
@@ -259,6 +266,11 @@ public class DAOVentas extends DAO<Participacion> {
 		try {
                         c.setAutoCommit(false);
                         
+=======
+	ResultSet resultSet;
+        
+		try {
+>>>>>>> 0cec37715f83ad1f2cca3d3a2077a6ba0ed1155a
 			preparedStatement = getConexion()
 					.prepareStatement("select * from anuncio_venta" +
                                                           "where ?<=precio and id2=?" +
@@ -272,6 +284,7 @@ public class DAOVentas extends DAO<Participacion> {
                                     String idUsuarioaux=resultSet.getString("id1");
                                     String idEmpresaaux=resultSet.getString("id2");
                                     Timestamp fecha=resultSet.getTimestamp("fecha_pago");
+<<<<<<< HEAD
                                     Double precioaux=resultSet.getDouble("precio");
                                     
                                     
@@ -320,6 +333,37 @@ public class DAOVentas extends DAO<Participacion> {
                                             sumaSaldos.add(aux*precioaux-precioaux*aux*resultSet.getDouble("comision_en_fecha"));
                                             preparedStatement2.executeUpdate();
                                         }
+=======
+                                    Float precioaux=resultSet.getFloat("precio");
+                                    if(aux>=ret){//Si es mayor el numero de participaciones a la venta de la tupla se hace update
+                                        preparedStatement2 = getConexion()
+					.prepareStatement("update anuncio_venta" +
+                                                          "set num_participaciones=?"+ 
+                                                          "where id1=? and id2=? and fecha_pago=?" +
+                                                          "order by precio asc,fecha_pago asc");
+                                        preparedStatement2.setInt(1, aux-numero);
+                                        preparedStatement2.setString(2, idUsuarioaux);
+                                        preparedStatement2.setString(3, idEmpresaaux);
+                                        preparedStatement2.setTimestamp(4, fecha);
+                                        saldoARestar+=aux*precioaux;
+                                        ret=0;//Se compraron todas las que se querían
+                                        
+                                        preparedStatement2.executeUpdate();
+                                    }else{//En todos los demas casos se borra la tupla
+                                         preparedStatement2 = getConexion()
+					.prepareStatement("delete from anuncio_venta" + 
+                                                          "where id1=? and id2=? and fecha_pago=?" +
+                                                          "order by precio asc,fecha_pago asc");
+                                        preparedStatement2.setString(1, idUsuarioaux);
+                                        preparedStatement2.setString(2, idEmpresaaux);
+                                        preparedStatement2.setTimestamp(3, fecha);
+                                        saldoARestar+=aux*precioaux;
+                                        ret-=aux;//Se compraron un numero hasta que llegue a 0
+                                        
+                                        preparedStatement2.executeUpdate();
+                                    
+                                    
+>>>>>>> 0cec37715f83ad1f2cca3d3a2077a6ba0ed1155a
                                     }
 				} catch (EnumConstantNotPresentException e) {
 					FachadaAplicacion.muestraExcepcion(e);
@@ -327,6 +371,7 @@ public class DAOVentas extends DAO<Participacion> {
 			}
                         //FALTA ACTUALIZAR LOS SALDOS DE LOS USUARIOS Y PAGAR LAS COMISIONES
                         
+<<<<<<< HEAD
                         //Attualizacion regulador
                         preparedStatement3 = getConexion()
 					.prepareStatement("update usuario_regulador" +
@@ -386,17 +431,22 @@ public class DAOVentas extends DAO<Participacion> {
                             preparedStatement6.setInt(8, numCompradas);
                          preparedStatement6.executeUpdate();
                         
+=======
+>>>>>>> 0cec37715f83ad1f2cca3d3a2077a6ba0ed1155a
                         c.commit();
 		} catch (SQLException e) {
 			FachadaAplicacion.muestraExcepcion(e);
 		} finally {
 			try {
 				preparedStatement.close();
+<<<<<<< HEAD
                                 preparedStatement2.close();
                                 preparedStatement3.close();
                                 preparedStatement4.close();
                                 preparedStatement5.close();
                                 preparedStatement6.close();
+=======
+>>>>>>> 0cec37715f83ad1f2cca3d3a2077a6ba0ed1155a
 			} catch (SQLException e) {
 				FachadaAplicacion.muestraExcepcion(e);
 			}

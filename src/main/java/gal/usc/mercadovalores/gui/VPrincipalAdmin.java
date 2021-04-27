@@ -78,6 +78,11 @@ public class VPrincipalAdmin extends javax.swing.JFrame {
 
         BajaPagosBoton.setText("Dar de baja pagos de beneficios");
         BajaPagosBoton.setToolTipText("");
+        BajaPagosBoton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BajaPagosBotonActionPerformed(evt);
+            }
+        });
 
         tablaUsuarios.setModel(new TablaUsuarios());
         jScrollPane1.setViewportView(tablaUsuarios);
@@ -201,6 +206,10 @@ public class VPrincipalAdmin extends javax.swing.JFrame {
         // TODO add your handling code here:
         fa.cerrarSesion(this);
     }//GEN-LAST:event_botonCerrarSesionActionPerformed
+
+    private void BajaPagosBotonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BajaPagosBotonActionPerformed
+        this.fa.verBeneficios();
+    }//GEN-LAST:event_BajaPagosBotonActionPerformed
 
     
     //funcion que actualiza usuarios de la tabla que se muestra al regulador

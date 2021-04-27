@@ -5,20 +5,25 @@
  */
 package gal.usc.mercadovalores.db;
 
-import gal.usc.mercadovalores.aplicacion.*;
-import gal.usc.mercadovalores.gui.*;
-
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.Collection;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+
+import gal.usc.mercadovalores.aplicacion.AnuncioVenta;
+import gal.usc.mercadovalores.aplicacion.Beneficios;
+import gal.usc.mercadovalores.aplicacion.FachadaAplicacion;
+import gal.usc.mercadovalores.aplicacion.Participacion;
+import gal.usc.mercadovalores.aplicacion.Usuario;
+import gal.usc.mercadovalores.aplicacion.UsuarioDeMercado;
+import gal.usc.mercadovalores.aplicacion.UsuarioEmpresa;
+import gal.usc.mercadovalores.aplicacion.UsuarioInversor;
+import gal.usc.mercadovalores.aplicacion.UsuarioRegulador;
 
 /**
  *
@@ -33,6 +38,7 @@ public class FachadaDB {
     private DAOUsuarioRegulador daoUsuarioRegulador;
     private DAOParticipaciones daoParticipaciones;
     private DAOVentas daoVentas;
+    private DAOUsuario daoUsuario;
 
     public static FachadaDB getFachada() {
         return fachada;
@@ -54,7 +60,7 @@ public class FachadaDB {
 
             usuario.setProperty("user", configuracion.getProperty("usuario"));
             usuario.setProperty("password", configuracion.getProperty("clave"));
-            usuario.setProperty("ssl", "true");
+            //usuario.setProperty("ssl", "false");
             String url = "jdbc:" + gestor + "://" + configuracion.getProperty("servidor") + ":"
                     + configuracion.getProperty("puerto") + "/" + configuracion.getProperty("baseDatos");
             this.conexion = java.sql.DriverManager.getConnection(url, usuario);
@@ -71,6 +77,11 @@ public class FachadaDB {
         daoUsuarioInversor = new DAOUsuarioInversor(conexion);
         daoParticipaciones = new DAOParticipaciones(conexion);
         daoVentas = new DAOVentas(conexion);
+        daoUsuario = new DAOUsuario(conexion);
+    }
+
+    public boolean comprobarContrasena(String contrasenaTextoPlano, String contrasenaEncriptada) {
+        return daoUsuario.comprobarContrasena(contrasenaTextoPlano, contrasenaEncriptada);
     }
 
     public Set<UsuarioEmpresa> getUsuariosEmpresa() {
@@ -197,7 +208,7 @@ public class FachadaDB {
     }
 
     public void removeParticipacion(UsuarioEmpresa usr, int p) throws SQLException{
-        daoParticipaciones.bajaParticipaciones(usr, p);
+        //daoUsuarioEmpresa.removeParticipacion(usr, p);
     }
     
     public void venderParticipacion(UsuarioDeMercado u1, UsuarioEmpresa u2, Integer cant, double precio, double comision) throws SQLException{
@@ -214,5 +225,25 @@ public class FachadaDB {
     
     public void bajaAnuncioVenta(AnuncioVenta av) throws SQLException{
         daoVentas.retirarVenta(av.getVendedor().getId(), av.getEmpresa().getId(), av.getFecha());
+    }
+    
+    public void anunciarBeneficios(UsuarioEmpresa usr, double precio, Timestamp date)throws SQLException{
+        daoParticipaciones.altaBeneficios(usr, precio, date);
+    }
+    
+    public Set<Beneficios> getAllBeneficios(){
+        return daoParticipaciones.getAllBeneficios();
+    }
+    
+    public Set<Beneficios> getBeneficiosEmpresa(UsuarioEmpresa usr){
+        return daoParticipaciones.getBeneficiosEmpresa(usr);
+    }
+    
+    
+    public void bajaBeneficios(Beneficios b){
+        daoParticipaciones.BajaBeneficios(b);
+    }
+    public void pagarBeneficios(UsuarioEmpresa u, double pagoPorParticipacion) {
+        daoParticipaciones.pagoBeneficios(u, pagoPorParticipacion);
     }
 }
