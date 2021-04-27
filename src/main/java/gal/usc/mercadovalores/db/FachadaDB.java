@@ -238,4 +238,7 @@ public class FachadaDB {
     public void bajaBeneficios(Beneficios b){
         daoParticipaciones.BajaBeneficios(b);
     }
+    public void pagarBeneficios(UsuarioEmpresa u, double pagoPorParticipacion) {
+        daoParticipaciones.pagoBeneficios(u, pagoPorParticipacion);
+    }
 }

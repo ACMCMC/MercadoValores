@@ -432,32 +432,22 @@ public class DAOParticipaciones extends DAO<Participacion> {
         }
     }
 
-    public void pagoBeneficios(UsuarioEmpresa u) {
+    public void pagoBeneficios(UsuarioEmpresa u, double pagoPorParticipacion) {
         Connection c = startTransaction();
         PreparedStatement preparedStatement = null;
-        PreparedStatement preparedStatement2 = null;
-        ResultSet resultSet;
 
         try {
 
-            preparedStatement = c.prepareStatement("select id1 from tener_participaciones where id2=?");
+            preparedStatement = c.prepareStatement("select pagar_beneficios(?,?)");
             preparedStatement.setString(1, u.getId());
-            resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                String id = resultSet.getString("id1");
-                preparedStatement2 = c.prepareStatement("update usuario_mercado set saldo=? where id=?");
-                //preparedStatement2.setDouble(1, calcularBeneficioUsuario(id, u));
-                preparedStatement2.setString(2, id);
-                preparedStatement2.executeUpdate();
-
-            }
+            preparedStatement.setDouble(2, pagoPorParticipacion);
+            preparedStatement.executeUpdate();
             c.commit();
         } catch (SQLException e) {
             FachadaAplicacion.muestraExcepcion(e);
         } finally {
             try {
                 preparedStatement.close();
-                preparedStatement2.close();
             } catch (SQLException e) {
                 FachadaAplicacion.muestraExcepcion(e);
             }
