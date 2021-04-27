@@ -412,7 +412,7 @@ public class DAOParticipaciones extends DAO<Participacion> {
         return setFinal;
     }
      
-          public Set<Beneficios> getBeneficiosEmpresa(UsuarioEmpresa usr) {
+    public Set<Beneficios> getBeneficiosEmpresa(UsuarioEmpresa usr) {
         FachadaDB f = FachadaDB.getFachada();
         Connection c = startTransaction();
         Set<Beneficios> setFinal = new HashSet<>();

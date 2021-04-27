@@ -254,4 +254,8 @@ public class FachadaDB {
     public void pagarAnuncioBeneficios(UsuarioEmpresa u, Timestamp fecha) {
         daoParticipaciones.pagarAnuncioBeneficios(u, fecha);
     }
+    
+    public String getPassEncriptada(String pass){
+        return daoUsuario.getContrasenaEncriptada(pass);
+    }
 }
