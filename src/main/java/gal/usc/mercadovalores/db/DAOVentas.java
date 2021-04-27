@@ -18,6 +18,7 @@ import gal.usc.mercadovalores.aplicacion.FachadaAplicacion;
 import gal.usc.mercadovalores.aplicacion.Participacion;
 import gal.usc.mercadovalores.aplicacion.UsuarioDeMercado;
 import gal.usc.mercadovalores.aplicacion.UsuarioEmpresa;
+import java.util.Objects;
 
 /**
  *
@@ -167,6 +168,7 @@ public class DAOVentas extends DAO<Participacion> {
 
 		PreparedStatement preparedStatement = null;
 		ResultSet resultSet;
+                
 
 		try {
 			preparedStatement = getConexion()
@@ -234,4 +236,73 @@ public class DAOVentas extends DAO<Participacion> {
          return ret;
      }
     
+     public void ventaParticipaciones(UsuarioEmpresa empresa,Integer numero,Integer precio,String idUsuario){
+        Connection c = startTransaction();
+        Integer ret=numero;
+        Double saldoARestar=0.0;
+	PreparedStatement preparedStatement = null;
+        PreparedStatement preparedStatement2 = null;
+	ResultSet resultSet;
+        
+		try {
+			preparedStatement = getConexion()
+					.prepareStatement("select * from anuncio_venta" +
+                                                          "where ?<=precio and id2=?" +
+                                                          "order by precio asc,fecha_pago asc");
+                        preparedStatement.setInt(1,precio );
+                        preparedStatement.setString(2,empresa.getId() );
+			resultSet = preparedStatement.executeQuery();
+			while (resultSet.next() && ret!=0) {
+				try {
+                                    Integer aux=resultSet.getInt("num_participaciones");
+                                    String idUsuarioaux=resultSet.getString("id1");
+                                    String idEmpresaaux=resultSet.getString("id2");
+                                    Timestamp fecha=resultSet.getTimestamp("fecha_pago");
+                                    Float precioaux=resultSet.getFloat("precio");
+                                    if(aux>=ret){//Si es mayor el numero de participaciones a la venta de la tupla se hace update
+                                        preparedStatement2 = getConexion()
+					.prepareStatement("update anuncio_venta" +
+                                                          "set num_participaciones=?"+ 
+                                                          "where id1=? and id2=? and fecha_pago=?" +
+                                                          "order by precio asc,fecha_pago asc");
+                                        preparedStatement2.setInt(1, aux-numero);
+                                        preparedStatement2.setString(2, idUsuarioaux);
+                                        preparedStatement2.setString(3, idEmpresaaux);
+                                        preparedStatement2.setTimestamp(4, fecha);
+                                        saldoARestar+=aux*precioaux;
+                                        ret=0;//Se compraron todas las que se querían
+                                        
+                                        preparedStatement2.executeUpdate();
+                                    }else{//En todos los demas casos se borra la tupla
+                                         preparedStatement2 = getConexion()
+					.prepareStatement("delete from anuncio_venta" + 
+                                                          "where id1=? and id2=? and fecha_pago=?" +
+                                                          "order by precio asc,fecha_pago asc");
+                                        preparedStatement2.setString(1, idUsuarioaux);
+                                        preparedStatement2.setString(2, idEmpresaaux);
+                                        preparedStatement2.setTimestamp(3, fecha);
+                                        saldoARestar+=aux*precioaux;
+                                        ret-=aux;//Se compraron un numero hasta que llegue a 0
+                                        
+                                        preparedStatement2.executeUpdate();
+                                    
+                                    
+                                    }
+				} catch (EnumConstantNotPresentException e) {
+					FachadaAplicacion.muestraExcepcion(e);
+				}
+			}
+                        //FALTA ACTUALIZAR LOS SALDOS DE LOS USUARIOS Y PAGAR LAS COMISIONES
+                        
+                        c.commit();
+		} catch (SQLException e) {
+			FachadaAplicacion.muestraExcepcion(e);
+		} finally {
+			try {
+				preparedStatement.close();
+			} catch (SQLException e) {
+				FachadaAplicacion.muestraExcepcion(e);
+			}
+		}
+     }
 }
