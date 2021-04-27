@@ -12,8 +12,6 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashSet;
-<<<<<<< HEAD
-=======
 import java.util.Set;
 
 import gal.usc.mercadovalores.aplicacion.AnuncioVenta;
@@ -21,7 +19,6 @@ import gal.usc.mercadovalores.aplicacion.FachadaAplicacion;
 import gal.usc.mercadovalores.aplicacion.Participacion;
 import gal.usc.mercadovalores.aplicacion.UsuarioDeMercado;
 import gal.usc.mercadovalores.aplicacion.UsuarioEmpresa;
->>>>>>> 0cec37715f83ad1f2cca3d3a2077a6ba0ed1155a
 import java.util.Objects;
 
 /**
@@ -240,37 +237,15 @@ public class DAOVentas extends DAO<Participacion> {
          return ret;
      }
     
-<<<<<<< HEAD
-     public void ventaParticipaciones(UsuarioDeMercado Usuario,UsuarioEmpresa empresa,Integer numero,Integer precio){
-=======
      public void ventaParticipaciones(UsuarioEmpresa empresa,Integer numero,Integer precio,String idUsuario){
->>>>>>> 0cec37715f83ad1f2cca3d3a2077a6ba0ed1155a
         Connection c = startTransaction();
         Integer ret=numero;
         Double saldoARestar=0.0;
 	PreparedStatement preparedStatement = null;
         PreparedStatement preparedStatement2 = null;
-<<<<<<< HEAD
-        PreparedStatement preparedStatement3 = null;
-        PreparedStatement preparedStatement4 = null;
-        PreparedStatement preparedStatement5 = null;
-        PreparedStatement preparedStatement6 = null;
-	ResultSet resultSet;
-        //Variiables para hacer update
-        ArrayList<String> ids=new ArrayList();
-        ArrayList<Double> sumaSaldos=new ArrayList();
-        ArrayList<Integer> participacionesVendidas=new ArrayList();
-        Double Comision=0.0;
-        Integer numCompradas=0;
-        
-		try {
-                        c.setAutoCommit(false);
-                        
-=======
 	ResultSet resultSet;
         
 		try {
->>>>>>> 0cec37715f83ad1f2cca3d3a2077a6ba0ed1155a
 			preparedStatement = getConexion()
 					.prepareStatement("select * from anuncio_venta" +
                                                           "where ?<=precio and id2=?" +
@@ -284,56 +259,6 @@ public class DAOVentas extends DAO<Participacion> {
                                     String idUsuarioaux=resultSet.getString("id1");
                                     String idEmpresaaux=resultSet.getString("id2");
                                     Timestamp fecha=resultSet.getTimestamp("fecha_pago");
-<<<<<<< HEAD
-                                    Double precioaux=resultSet.getDouble("precio");
-                                    
-                                    
-                                    if(Usuario.getSaldo()-numero*precioaux-saldoARestar>=0){//Si no tiene dinero para pagar las participaciones se va a la siguiente opción
-                                        //Guardamos los ids para hacer luego update
-                                        ids.add(idUsuarioaux);
-                                        participacionesVendidas.add(aux);
-                                        numCompradas+=aux;
-                                        if(aux>=ret){//Si es mayor el numero de participaciones a la venta de la tupla se hace update
-
-                                            preparedStatement2 = getConexion()
-                                            .prepareStatement("update anuncio_venta" +
-                                                              "set num_participaciones=?"+ 
-                                                              "where id1=? and id2=? and fecha_pago=?");
-                                            preparedStatement2.setInt(1, aux-numero);
-                                            preparedStatement2.setString(2, idUsuarioaux);
-                                            preparedStatement2.setString(3, idEmpresaaux);
-                                            preparedStatement2.setTimestamp(4, fecha);
-
-                                            //Cantdad a restar al usuario que compra
-                                            saldoARestar+=aux*precioaux;
-                                            ret=0;//Se compraron todas las que se querían
-
-                                            //Comision
-                                            Comision+=precioaux*aux*resultSet.getDouble("comision_en_fecha");
-
-                                            //Cantidad a sumar a cada usuario que vende(venta total - comisión)
-                                             sumaSaldos.add(aux*precioaux-precioaux*aux*resultSet.getDouble("comision_en_fecha"));
-                                            preparedStatement2.executeUpdate();
-                                        }else{//En todos los demas casos se borra la tupla
-                                             preparedStatement2 = getConexion()
-                                            .prepareStatement("delete from anuncio_venta" + 
-                                                              "where id1=? and id2=? and fecha_pago=?");
-                                            preparedStatement2.setString(1, idUsuarioaux);
-                                            preparedStatement2.setString(2, idEmpresaaux);
-                                            preparedStatement2.setTimestamp(3, fecha);
-
-                                            //Cantdad a restar al usuario que compra
-                                            saldoARestar+=aux*precioaux;
-                                            ret-=aux;//Se compraron un numero hasta que llegue a 0
-
-                                            //Comision
-                                            Comision+=precioaux*aux*resultSet.getDouble("comision_en_fecha");
-
-                                            //Cantidad a sumar a cada usuario que vende(venta total - comisión)
-                                            sumaSaldos.add(aux*precioaux-precioaux*aux*resultSet.getDouble("comision_en_fecha"));
-                                            preparedStatement2.executeUpdate();
-                                        }
-=======
                                     Float precioaux=resultSet.getFloat("precio");
                                     if(aux>=ret){//Si es mayor el numero de participaciones a la venta de la tupla se hace update
                                         preparedStatement2 = getConexion()
@@ -363,7 +288,6 @@ public class DAOVentas extends DAO<Participacion> {
                                         preparedStatement2.executeUpdate();
                                     
                                     
->>>>>>> 0cec37715f83ad1f2cca3d3a2077a6ba0ed1155a
                                     }
 				} catch (EnumConstantNotPresentException e) {
 					FachadaAplicacion.muestraExcepcion(e);
@@ -371,82 +295,12 @@ public class DAOVentas extends DAO<Participacion> {
 			}
                         //FALTA ACTUALIZAR LOS SALDOS DE LOS USUARIOS Y PAGAR LAS COMISIONES
                         
-<<<<<<< HEAD
-                        //Attualizacion regulador
-                        preparedStatement3 = getConexion()
-					.prepareStatement("update usuario_regulador" +
-                                                          "set saldo=?");
-                        preparedStatement3.setDouble(1, Comision);
-                        preparedStatement3.executeUpdate();
-                        
-                         //ACTUALIZAMOS EL SALDO DEL USUARIO QUE COMPRA
-                         preparedStatement4 = getConexion()
-					.prepareStatement("update usuario_mercado" +
-                                                          "set saldo=saldo-? where id=?");
-                         preparedStatement4.setDouble(1, saldoARestar);
-                         preparedStatement4.setString(2, Usuario.getId());
-                         preparedStatement4.executeUpdate();
-                         
-                         //Actualizamos el saldo de los usuarios que venden
-                        for(int i=0;i<ids.size();i++){
-                            preparedStatement5 = getConexion()
-					.prepareStatement("update usuario_mercado" +
-                                                          "set saldo=saldo+? where id=?");
-                         preparedStatement5.setDouble(1, sumaSaldos.get(i));
-                         preparedStatement5.setString(2, ids.get(i));
-                         preparedStatement5.executeUpdate();
-                        }
-                        
-                        //Actualizar la tabla de tener_participaciones para los que venden
-                        for(int i=0;i<ids.size();i++){
-                                preparedStatement5 = getConexion()
-					.prepareStatement("update tener_participaciones" +
-                                                          "set num_participaciones=num_participaciones-? where id1=? and id2=?");
-                            preparedStatement5.setInt(1,participacionesVendidas.get(i) );
-                            preparedStatement5.setString(2, ids.get(i));
-                            preparedStatement5.setString(3, empresa.getId());
-                         preparedStatement5.executeUpdate();
-                        }
-                        
-                        
-                                
-                        //Actualizar tabla tener_participaciones para el comprador
-                        preparedStatement6 = getConexion()
-					.prepareStatement("do $$" +
-                                                          "begin" +
-                                                          "if exists(select id1 from tener_participaciones where id1=? and id2=?) then" +
-                                                          "update tener_particiones set num_participaciones=num_participaciones+? where id1=? and id2=?;" +
-                                                          "else" +
-                                                          "insert into tener_participaciones values(?,?,?);" +
-                                                          "end if;" +
-                                                          "end $$");
-                            preparedStatement6.setString(1, Usuario.getId());
-                            preparedStatement6.setString(2, empresa.getId());
-                            preparedStatement6.setInt(3, numCompradas);
-                            preparedStatement6.setString(4, Usuario.getId());
-                            preparedStatement6.setString(5, empresa.getId());
-                            
-                            preparedStatement6.setString(6, Usuario.getId());
-                            preparedStatement6.setString(7, empresa.getId());
-                            preparedStatement6.setInt(8, numCompradas);
-                         preparedStatement6.executeUpdate();
-                        
-=======
->>>>>>> 0cec37715f83ad1f2cca3d3a2077a6ba0ed1155a
                         c.commit();
 		} catch (SQLException e) {
 			FachadaAplicacion.muestraExcepcion(e);
 		} finally {
 			try {
 				preparedStatement.close();
-<<<<<<< HEAD
-                                preparedStatement2.close();
-                                preparedStatement3.close();
-                                preparedStatement4.close();
-                                preparedStatement5.close();
-                                preparedStatement6.close();
-=======
->>>>>>> 0cec37715f83ad1f2cca3d3a2077a6ba0ed1155a
 			} catch (SQLException e) {
 				FachadaAplicacion.muestraExcepcion(e);
 			}
