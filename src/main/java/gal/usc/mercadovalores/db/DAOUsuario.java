@@ -51,4 +51,38 @@ public class DAOUsuario extends DAO<Usuario> {
 		return resultado;
     }
     
+    public String getContrasenaEncriptada(String contrasenaTextoPlano) {
+        String resultado = null;
+		Connection c = startTransaction();
+
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet;
+
+		try {
+			preparedStatement = c
+					.prepareStatement("select crypt(?, gen_salt('bf')");
+			preparedStatement.setString(1, contrasenaTextoPlano);
+
+			resultSet = preparedStatement.executeQuery();
+            c.commit();
+			if (resultSet.next()) {
+				try {
+					resultado = resultSet.getString(1);
+				} catch (EnumConstantNotPresentException e) {
+					FachadaAplicacion.muestraExcepcion(e);
+				}
+			}
+		} catch (SQLException e) {
+			FachadaAplicacion.muestraExcepcion(e);
+		} finally {
+			try {
+				preparedStatement.close();
+			} catch (SQLException e) {
+				FachadaAplicacion.muestraExcepcion(e);
+			}
+		}
+
+		return resultado;
+    }
+    
 }

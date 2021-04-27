@@ -246,4 +246,8 @@ public class FachadaDB {
     public void pagarBeneficios(UsuarioEmpresa u, double pagoPorParticipacion) {
         daoParticipaciones.pagoBeneficios(u, pagoPorParticipacion);
     }
+    
+    public String getPassEncriptada(String pass){
+        return daoUsuario.getContrasenaEncriptada(pass);
+    }
 }

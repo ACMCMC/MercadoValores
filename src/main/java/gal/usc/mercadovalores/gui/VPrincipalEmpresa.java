@@ -255,6 +255,7 @@ public class VPrincipalEmpresa extends javax.swing.JFrame {
         if(!idCheck.isEmpty() && !passCheck.isEmpty()){
 
             String idActual = this.usr.getId();
+            String passActual = this.usr.getClave();
             this.usr.setId((String) this.TablaDatos.getValueAt(0, 1));
             this.usr.setDireccion((String) this.TablaDatos.getValueAt(2, 1));
             this.usr.setTelefono((String) this.TablaDatos.getValueAt(3, 1));
@@ -265,6 +266,11 @@ public class VPrincipalEmpresa extends javax.swing.JFrame {
             res = FachadaDB.getFachada().getUsuarioById(this.usr.getId());
 
             if(res != null && res.getId().equals(idActual)){
+                
+                if(!passActual.equals(this.usr.getClave())){
+                    this.usr.setClave(FachadaDB.getFachada().getPassEncriptada(this.usr.getClave()));
+                }
+                
                 FachadaDB.getFachada().actualizarUser(this.usr);
             }else if(res != null ){
                 VAviso x = new VAviso(this,true,"Nombre de usuario ya en uso, por favor elige otro.");
@@ -325,6 +331,7 @@ public class VPrincipalEmpresa extends javax.swing.JFrame {
             n_crea += part.getNumero();
         }
 
+        
         this.TablaDatos.setValueAt(usr.getId(), 0, 1);
         this.TablaDatos.setValueAt(usr.getSaldo(), 1, 1);
         this.TablaDatos.setValueAt(usr.getDireccion(), 2, 1);
