@@ -316,80 +316,6 @@ public class DAOParticipaciones extends DAO<Participacion> {
             }
         }
     }
-    
-      public Set<Beneficios> getAllBeneficios() {
-        FachadaDB f = FachadaDB.getFachada();
-        Connection c = startTransaction();
-        Set<Beneficios> setFinal = new HashSet<>();
-
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet;
-
-        try {
-            preparedStatement = c.prepareStatement("select * from beneficios");
-            resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                Beneficios b;
-                try {
-                    String id1 = resultSet.getString("id");
-                    Timestamp t = resultSet.getTimestamp("fecha_pago");
-                    Double precio = resultSet.getDouble("importe_por_participacion");
-                    b = new Beneficios((UsuarioEmpresa)f.getUsuarioById(id1),t,precio);
-                    setFinal.add(b);
-                } catch (EnumConstantNotPresentException e) {
-                    FachadaAplicacion.muestraExcepcion(e);
-                }
-            }
-            c.commit();
-        } catch (SQLException e) {
-            FachadaAplicacion.muestraExcepcion(e);
-        } finally {
-            try {
-                preparedStatement.close();
-            } catch (SQLException e) {
-                FachadaAplicacion.muestraExcepcion(e);
-            }
-        }
-        return setFinal;
-    }
-     
-          public Set<Beneficios> getBeneficiosEmpresa(UsuarioEmpresa usr) {
-        FachadaDB f = FachadaDB.getFachada();
-        Connection c = startTransaction();
-        Set<Beneficios> setFinal = new HashSet<>();
-
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet;
-
-        try {
-            preparedStatement = c.prepareStatement("select * from beneficios where id=?");
-            preparedStatement.setString(1, usr.getId());
-            resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                Beneficios b;
-                try {
-                    String id1 = resultSet.getString("id");
-                    Timestamp t = resultSet.getTimestamp("fecha_pago");
-                    Double precio = resultSet.getDouble("importe_por_participacion");
-                    b = new Beneficios((UsuarioEmpresa)f.getUsuarioById(id1),t,precio);
-                    setFinal.add(b);
-                } catch (EnumConstantNotPresentException e) {
-                    FachadaAplicacion.muestraExcepcion(e);
-                }
-            }
-            c.commit();
-        } catch (SQLException e) {
-            FachadaAplicacion.muestraExcepcion(e);
-        } finally {
-            try {
-                preparedStatement.close();
-            } catch (SQLException e) {
-                FachadaAplicacion.muestraExcepcion(e);
-            }
-        }
-        return setFinal;
-    }
-     
 
      public Set<Beneficios> getAllBeneficios() {
         FachadaDB f = FachadaDB.getFachada();
@@ -530,9 +456,9 @@ public class DAOParticipaciones extends DAO<Participacion> {
         }
     }
     
-    private double calcularBeneficioUsuario(String u,UsuarioEmpresa u2){//FUNCION AUXILIAR PARA PGAO BENEFICIOS
+    /*private double calcularBeneficioUsuario(String u,UsuarioEmpresa u2){//FUNCION AUXILIAR PARA PGAO BENEFICIOS
         double ret=0.0;
-        /*Connection c = startTransaction();
+        Connection c = startTransaction();
         PreparedStatement preparedStatement = null;
         PreparedStatement preparedStatement2 = null;
         PreparedStatement preparedStatement3 = null;
@@ -550,7 +476,7 @@ public class DAOParticipaciones extends DAO<Participacion> {
                 preparedStatement2.setString(2, id);
                 preparedStatement2.executeUpdate();
 
-            }*/
+            }
             c.commit();
         } catch (SQLException e) {
             FachadaAplicacion.muestraExcepcion(e);
@@ -561,7 +487,7 @@ public class DAOParticipaciones extends DAO<Participacion> {
             } catch (SQLException e) {
                 FachadaAplicacion.muestraExcepcion(e);
             }
-        }*/
+        }
         return ret;
-    }
+    }*/
 }
