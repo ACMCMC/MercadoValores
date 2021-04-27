@@ -279,7 +279,7 @@ public class VPrincipalEmpresa extends javax.swing.JFrame {
                 }
             }
 
-
+            
         }else{
             VAviso x = new VAviso(this,true,"Los campos deben estar completos");
             x.setVisible(true);
@@ -298,16 +298,20 @@ public class VPrincipalEmpresa extends javax.swing.JFrame {
 
     private void VenderMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_VenderMenuItemActionPerformed
         this.fa.ventanaVender(this.usr);
+        this.ActualizarTablaDatos();
     }//GEN-LAST:event_VenderMenuItemActionPerformed
 
     private void AltaPagoMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AltaPagoMenuItemActionPerformed
 
         this.fa.ventanaBeneficios(this.usr);
+        this.ActualizarTablaDatos();
 
     }//GEN-LAST:event_AltaPagoMenuItemActionPerformed
 
     private void BajaVentaMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BajaVentaMenuItemActionPerformed
         this.fa.ventanaAnuncios(this.usr);
+        this.ActualizarTablaDatos();
+
     }//GEN-LAST:event_BajaVentaMenuItemActionPerformed
 
     private void ActualizarTablaDatos(){
