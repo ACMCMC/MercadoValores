@@ -177,6 +177,11 @@ public class VPrincipalEmpresa extends javax.swing.JFrame {
         BeneficiosMenu.add(BajaPagoMenuItem);
 
         PagarMenuItem.setText("Pagar");
+        PagarMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                PagarMenuItemActionPerformed(evt);
+            }
+        });
         BeneficiosMenu.add(PagarMenuItem);
 
         Menu.add(BeneficiosMenu);
@@ -291,6 +296,10 @@ public class VPrincipalEmpresa extends javax.swing.JFrame {
     private void VenderMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_VenderMenuItemActionPerformed
         this.fa.ventanaVender(this.usr);
     }//GEN-LAST:event_VenderMenuItemActionPerformed
+
+    private void PagarMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PagarMenuItemActionPerformed
+        
+    }//GEN-LAST:event_PagarMenuItemActionPerformed
 
     private void ActualizarTablaDatos(){
         this.TablaDatos.setValueAt(usr.getId(), 0, 1);

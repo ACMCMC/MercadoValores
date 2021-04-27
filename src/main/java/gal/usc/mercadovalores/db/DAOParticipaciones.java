@@ -343,7 +343,11 @@ public class DAOParticipaciones extends DAO<Participacion> {
 
     public void altaBeneficios(UsuarioEmpresa u, double porcentaje, Timestamp fecha) {
         Connection c = startTransaction();
+        Set<Participacion> setFinal = new HashSet<>();
+
         PreparedStatement preparedStatement = null;
+        ResultSet resultSet;
+
         try {
             preparedStatement = c.prepareStatement("insert into beneficios values(?,?,?)");
             preparedStatement.setString(1, u.getId());
@@ -386,8 +390,8 @@ public class DAOParticipaciones extends DAO<Participacion> {
         Connection c = startTransaction();
         PreparedStatement preparedStatement = null;
         PreparedStatement preparedStatement2 = null;
-        PreparedStatement preparedStatement3 = null;
         ResultSet resultSet;
+
         try {
 
             preparedStatement = c.prepareStatement("select id1 from tener_participaciones where id2=?");
