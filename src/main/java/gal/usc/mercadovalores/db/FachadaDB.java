@@ -5,20 +5,25 @@
  */
 package gal.usc.mercadovalores.db;
 
-import gal.usc.mercadovalores.aplicacion.*;
-import gal.usc.mercadovalores.gui.*;
-
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.Collection;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+
+import gal.usc.mercadovalores.aplicacion.AnuncioVenta;
+import gal.usc.mercadovalores.aplicacion.Beneficios;
+import gal.usc.mercadovalores.aplicacion.FachadaAplicacion;
+import gal.usc.mercadovalores.aplicacion.Participacion;
+import gal.usc.mercadovalores.aplicacion.Usuario;
+import gal.usc.mercadovalores.aplicacion.UsuarioDeMercado;
+import gal.usc.mercadovalores.aplicacion.UsuarioEmpresa;
+import gal.usc.mercadovalores.aplicacion.UsuarioInversor;
+import gal.usc.mercadovalores.aplicacion.UsuarioRegulador;
 
 /**
  *
@@ -33,6 +38,7 @@ public class FachadaDB {
     private DAOUsuarioRegulador daoUsuarioRegulador;
     private DAOParticipaciones daoParticipaciones;
     private DAOVentas daoVentas;
+    private DAOUsuario daoUsuario;
 
     public static FachadaDB getFachada() {
         return fachada;
@@ -71,6 +77,11 @@ public class FachadaDB {
         daoUsuarioInversor = new DAOUsuarioInversor(conexion);
         daoParticipaciones = new DAOParticipaciones(conexion);
         daoVentas = new DAOVentas(conexion);
+        daoUsuario = new DAOUsuario(conexion);
+    }
+
+    public boolean comprobarContrasena(String contrasenaTextoPlano, String contrasenaEncriptada) {
+        return daoUsuario.comprobarContrasena(contrasenaTextoPlano, contrasenaEncriptada);
     }
 
     public Set<UsuarioEmpresa> getUsuariosEmpresa() {
@@ -224,7 +235,15 @@ public class FachadaDB {
         return daoParticipaciones.getAllBeneficios();
     }
     
+    public Set<Beneficios> getBeneficiosEmpresa(UsuarioEmpresa usr){
+        return daoParticipaciones.getBeneficiosEmpresa(usr);
+    }
+    
+    
     public void bajaBeneficios(Beneficios b){
         daoParticipaciones.BajaBeneficios(b);
+    }
+    public void pagarBeneficios(UsuarioEmpresa u, double pagoPorParticipacion) {
+        daoParticipaciones.pagoBeneficios(u, pagoPorParticipacion);
     }
 }

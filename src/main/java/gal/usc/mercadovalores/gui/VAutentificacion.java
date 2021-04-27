@@ -168,7 +168,7 @@ public class VAutentificacion extends javax.swing.JDialog {
         Usuario res;
         res = FachadaDB.getFachada().getUsuarioById(campoUsuario.getText());
         // comprobacion mediante dao de que es el adecuado
-        if (res != null && res.getClave().equals(campoContra.getText())) { // Si existe el usuario y su contraseña es la especificada...
+        if (res != null && FachadaDB.getFachada().comprobarContrasena(campoContra.getText(), res.getClave())) { // Si existe el usuario y su contraseña es la especificada...
             // comprobamos si es el regulador
             if (res instanceof UsuarioRegulador) {
                 // lanzamos ventana de regulador

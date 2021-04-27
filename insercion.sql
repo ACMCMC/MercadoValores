@@ -2,12 +2,12 @@ Insert into usuario_regulador (id,clave,saldo,comision_actual)
 Values ('Reg','asdf',0.0,0.1);
 
 Insert into usuario_mercado (id,clave,saldo,direccion,telefono,estado)
-Values ('Tim','red',1000.73,'Gotham','+1578543221','DADO_DE_ALTA'),
-('Clark','Luthor',300.12,'Metropolis','+1578123456','SOLICITANDO_ALTA'),
-('Bruce','Joker',1500.23,'Brasilia','+55675432876','SOLICITANDO_BAJA'),
-('Opti','Out',190000.12,'Gotham','+1578537145','DADO_DE_ALTA'),
-('SI','1234',110000000.23,'Barcelona','+34951123456','SOLICITANDO_ALTA'),
-('WW','Luc',150000000.23,'Madrid','+34902432876','SOLICITANDO_ALTA');
+Values ('Tim',crypt('red', gen_salt('bf')),1000.73,'Gotham','+1578543221','DADO_DE_ALTA'),
+('Clark',crypt('Luthor', gen_salt('bf')),300.12,'Metropolis','+1578123456','SOLICITANDO_ALTA'),
+('Bruce',crypt('Joker', gen_salt('bf')),1500.23,'Brasilia','+55675432876','SOLICITANDO_BAJA'),
+('Opti',crypt('Out', gen_salt('bf')),190000.12,'Gotham','+1578537145','DADO_DE_ALTA'),
+('SI',crypt('1234', gen_salt('bf')),110000000.23,'Barcelona','+34951123456','SOLICITANDO_ALTA'),
+('WW',crypt('Luc', gen_salt('bf')),150000000.23,'Madrid','+34902432876','SOLICITANDO_ALTA');
 
 Insert into usuario_empresa (id,cif,nombre_comercial)
 VALUES ('Opti','B22222222','Optitrón'),
