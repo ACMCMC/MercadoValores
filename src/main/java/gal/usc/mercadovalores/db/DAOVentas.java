@@ -245,16 +245,19 @@ public class DAOVentas extends DAO<Participacion> {
                                     Integer aux=resultSet.getInt("num_participaciones");
                                     String idUsuarioaux=resultSet.getString("id1");
                                     String idEmpresaaux=resultSet.getString("id2");
-                                    Timestamp fecha=resultSet.getTimestamp("fecha_pago");
+                                    Timestamp fecha=resultSet.getTimestamp("fecha");
                                     Double precioaux=resultSet.getDouble("precio");
                                     
                                     
-                                    if(Usuario.getSaldo()-numero*precioaux-saldoARestar>=0){//Si no tiene dinero para pagar las participaciones se va a la siguiente opción
+                                    if(Usuario.getSaldo()-precioaux-saldoARestar>=0){//Si no tiene dinero para pagar las participaciones se va a la siguiente opción
                                         //Guardamos los ids para hacer luego update
                                         ids.add(idUsuarioaux);
+                                            if(numCompradas+aux>numero){//Vompradas hasta el momento + las obtenidas en esta iteracion es mayor que el numero que quiere el numero obtenido será las que quedan
+                                                aux=ret;
+                                            }
                                         participacionesVendidas.add(aux);
                                         numCompradas+=aux;
-                                        if(aux>=ret){//Si es mayor el numero de participaciones a la venta de la tupla se hace update
+                                        if(aux>ret){//Si es mayor el numero de participaciones a la venta de la tupla se hace update
 
                                             preparedStatement2 = getConexion()
                                             .prepareStatement("update anuncio_venta " +
@@ -286,7 +289,7 @@ public class DAOVentas extends DAO<Participacion> {
                                             //Cantdad a restar al usuario que compra
                                             saldoARestar+=aux*precioaux;
                                             ret-=aux;//Se compraron un numero hasta que llegue a 0
-
+                                            numCompradas+=aux;
                                             //Comision
                                             Comision+=precioaux*aux*resultSet.getDouble("comision_en_fecha");
 
@@ -324,6 +327,7 @@ public class DAOVentas extends DAO<Participacion> {
                          preparedStatement5.setDouble(1, sumaSaldos.get(i));
                          preparedStatement5.setString(2, ids.get(i));
                          preparedStatement5.executeUpdate();
+                                preparedStatement5.close();
                         }
                         
                         //Actualizar la tabla de tener_participaciones para los que venden
@@ -335,6 +339,7 @@ public class DAOVentas extends DAO<Participacion> {
                             preparedStatement5.setString(2, ids.get(i));
                             preparedStatement5.setString(3, empresa.getId());
                          preparedStatement5.executeUpdate();
+                                preparedStatement5.close();
                         }
                         
                         
@@ -359,11 +364,11 @@ public class DAOVentas extends DAO<Participacion> {
                          preparedStatement6.executeUpdate();
                          }else{
                              preparedStatement6 = getConexion()
-					.prepareStatement("update tener_particiones set num_participaciones=num_participaciones+? where id1=? and id2=?");
+					.prepareStatement("update tener_participaciones set num_participaciones=num_participaciones+? where id1=? and id2=?");
                             preparedStatement6.setInt(1, numCompradas);
                             preparedStatement6.setString(2, Usuario.getId());
                             preparedStatement6.setString(3, empresa.getId());
-                         preparedStatement6.executeUpdate();
+                            preparedStatement6.executeUpdate();
                          
                          }
                         
@@ -376,7 +381,6 @@ public class DAOVentas extends DAO<Participacion> {
                                 //preparedStatement2.close();
                                 preparedStatement3.close();
                                 preparedStatement4.close();
-                                preparedStatement5.close();
                                 preparedStatement6.close();
 			} catch (SQLException e) {
 				FachadaAplicacion.muestraExcepcion(e);
@@ -400,8 +404,8 @@ public class DAOVentas extends DAO<Participacion> {
 				try {
                                     String id=resultSet.getString("id2");
                                     preparedStatement2 = getConexion()
-					.prepareStatement("select * from usuario_empresa inner join usuario_mercado using(id) where id=?");
-                                preparedStatement.setString(1,id );
+					.prepareStatement("select * from usuario_empresa inner join usuario_mercado using(id) where id=? ");
+                                preparedStatement2.setString(1,id);
                                     
 			resultSet2 = preparedStatement2.executeQuery();
                                 while(resultSet2.next()){
