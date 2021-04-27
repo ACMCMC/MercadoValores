@@ -410,6 +410,44 @@ public class DAOParticipaciones extends DAO<Participacion> {
         }
         return setFinal;
     }
+     
+          public Set<Beneficios> getBeneficiosEmpresa(UsuarioEmpresa usr) {
+        FachadaDB f = FachadaDB.getFachada();
+        Connection c = startTransaction();
+        Set<Beneficios> setFinal = new HashSet<>();
+
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet;
+
+        try {
+            preparedStatement = c.prepareStatement("select * from beneficios where id=?");
+            preparedStatement.setString(1, usr.getId());
+            resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                Beneficios b;
+                try {
+                    String id1 = resultSet.getString("id");
+                    Timestamp t = resultSet.getTimestamp("fecha_pago");
+                    Double precio = resultSet.getDouble("importe_por_participacion");
+                    b = new Beneficios((UsuarioEmpresa)f.getUsuarioById(id1),t,precio);
+                    setFinal.add(b);
+                } catch (EnumConstantNotPresentException e) {
+                    FachadaAplicacion.muestraExcepcion(e);
+                }
+            }
+            c.commit();
+        } catch (SQLException e) {
+            FachadaAplicacion.muestraExcepcion(e);
+        } finally {
+            try {
+                preparedStatement.close();
+            } catch (SQLException e) {
+                FachadaAplicacion.muestraExcepcion(e);
+            }
+        }
+        return setFinal;
+    }
+     
     
     public void BajaBeneficios(Beneficios b) {
         Connection c = startTransaction();

@@ -4,11 +4,13 @@
  * and open the template in the editor.
  */
 package gal.usc.mercadovalores.gui;
+import gal.usc.mercadovalores.aplicacion.Beneficios;
 import gal.usc.mercadovalores.aplicacion.UsuarioEmpresa;
 import gal.usc.mercadovalores.db.FachadaDB;
 import gal.usc.mercadovalores.aplicacion.Participacion;
 import java.util.Set;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 
 /**
  *
@@ -25,6 +27,7 @@ public class VBeneficios extends javax.swing.JFrame {
         initComponents();
         this.usr = usr;
         this.setCampos();
+        this.updateTabla();
     }
 
     /**
@@ -50,6 +53,10 @@ public class VBeneficios extends javax.swing.JFrame {
         botonAnunciar = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tablaBeneficios = new javax.swing.JTable();
+        botonPagar = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
 
         jLabel3.setText("jLabel3");
 
@@ -114,7 +121,7 @@ public class VBeneficios extends javax.swing.JFrame {
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(campoParticipaciones, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(textoSaldo)))))
-                .addContainerGap(33, Short.MAX_VALUE))
+                .addContainerGap(39, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -131,7 +138,7 @@ public class VBeneficios extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
                     .addComponent(textoSaldo))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 73, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 86, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(botonAnunciar)
                     .addComponent(jButton1))
@@ -140,15 +147,47 @@ public class VBeneficios extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("Anunciar Pago", jPanel1);
 
+        tablaBeneficios.setModel(new TablaBeneficios());
+        jScrollPane1.setViewportView(tablaBeneficios);
+
+        botonPagar.setText("Pagar");
+        botonPagar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonPagarActionPerformed(evt);
+            }
+        });
+
+        jButton3.setText("Salir");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 343, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                .addContainerGap(36, Short.MAX_VALUE)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(jButton3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(botonPagar))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(33, 33, 33))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 244, Short.MAX_VALUE)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(24, 24, 24)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(botonPagar)
+                    .addComponent(jButton3))
+                .addContainerGap(24, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Pagar Beneficios", jPanel3);
@@ -189,6 +228,24 @@ public class VBeneficios extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void botonPagarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonPagarActionPerformed
+        // TODO add your handling code here:
+        try{
+            TablaBeneficios tB = (TablaBeneficios)this.tablaBeneficios.getModel();
+            Beneficios b = tB.obtenerBeneficios(this.tablaBeneficios.getSelectedRow());
+            //pagar beneficios
+        }catch(Exception e){
+            VAviso x = new VAviso(this,true,e.getMessage());
+            x.setVisible(true);
+        }
+        
+    }//GEN-LAST:event_botonPagarActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here:
+        this.dispose();
+    }//GEN-LAST:event_jButton3ActionPerformed
+
     //obtenemos numero de participaciones de la empresa
     private void setCampos(){
         Set<Participacion> allParts = FachadaDB.getFachada().getParticipacionesEmpresa(usr);
@@ -205,13 +262,29 @@ public class VBeneficios extends javax.swing.JFrame {
         this.textoSaldo.setText(totalSaldo.toString());
     }
     
-  
+   private void updateTabla(){
+       TablaBeneficios tB = (TablaBeneficios)this.tablaBeneficios.getModel();
+       
+       Set<Beneficios> allBens = FachadaDB.getFachada().getBeneficiosEmpresa(this.usr);
+       ArrayList<Beneficios> benFinales = new ArrayList<>();
+       for(Beneficios b: allBens){
+           benFinales.add(b);
+       }
+       
+       tB.setFilas(benFinales);
+       
+        if(tB.getRowCount()>0){
+            this.tablaBeneficios.setRowSelectionInterval(0, 0);
+        }
+   }
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton botonAnunciar;
+    private javax.swing.JButton botonPagar;
     private javax.swing.JTextField campoParticipaciones;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -220,8 +293,10 @@ public class VBeneficios extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JLabel nParticipaciones;
+    private javax.swing.JTable tablaBeneficios;
     private javax.swing.JLabel textoSaldo;
     // End of variables declaration//GEN-END:variables
 }
