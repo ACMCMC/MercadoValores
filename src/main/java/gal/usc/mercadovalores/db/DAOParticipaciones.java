@@ -479,7 +479,7 @@ public class DAOParticipaciones extends DAO<Participacion> {
             preparedStatement = c.prepareStatement("select pagar_beneficios(?,?)");
             preparedStatement.setString(1, u.getId());
             preparedStatement.setDouble(2, pagoPorParticipacion);
-            preparedStatement.executeUpdate();
+            preparedStatement.executeQuery();
             c.commit();
         } catch (SQLException e) {
             FachadaAplicacion.muestraExcepcion(e);
