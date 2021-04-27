@@ -1,25 +1,25 @@
 package gal.usc.mercadovalores.db;
 
-import gal.usc.mercadovalores.aplicacion.EstadoUsuario;
-import gal.usc.mercadovalores.aplicacion.Beneficios;
-import gal.usc.mercadovalores.aplicacion.FachadaAplicacion;
 import java.sql.Connection;
-import java.util.Set;
-
-import gal.usc.mercadovalores.aplicacion.Participacion;
-import gal.usc.mercadovalores.aplicacion.UsuarioDeMercado;
-import gal.usc.mercadovalores.aplicacion.UsuarioEmpresa;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.HashSet;
+import java.util.Set;
+
+import gal.usc.mercadovalores.aplicacion.Beneficios;
+import gal.usc.mercadovalores.aplicacion.FachadaAplicacion;
+import gal.usc.mercadovalores.aplicacion.Participacion;
+import gal.usc.mercadovalores.aplicacion.UsuarioDeMercado;
+import gal.usc.mercadovalores.aplicacion.UsuarioEmpresa;
 
 public class DAOParticipaciones extends DAO<Participacion> {
     public DAOParticipaciones(Connection con) {
         super(con);
     }
 
+    
     public void crearParticipaciones(UsuarioEmpresa u, Integer x) throws SQLException {
         Connection c = startTransaction();
         PreparedStatement preparedStatement = null;
@@ -352,7 +352,11 @@ public class DAOParticipaciones extends DAO<Participacion> {
 
     public void altaBeneficios(UsuarioEmpresa u, double porcentaje, Timestamp fecha) {
         Connection c = startTransaction();
+        Set<Participacion> setFinal = new HashSet<>();
+
         PreparedStatement preparedStatement = null;
+        ResultSet resultSet;
+
         try {
             preparedStatement = c.prepareStatement("insert into beneficios values(?,?,?)");
             preparedStatement.setString(1, u.getId());
@@ -466,8 +470,31 @@ public class DAOParticipaciones extends DAO<Participacion> {
         }
     }
 
-    public void pagoBeneficios(UsuarioEmpresa u) {
+    public void pagoBeneficios(UsuarioEmpresa u, double pagoPorParticipacion) {
         Connection c = startTransaction();
+        PreparedStatement preparedStatement = null;
+
+        try {
+
+            preparedStatement = c.prepareStatement("select pagar_beneficios(?,?)");
+            preparedStatement.setString(1, u.getId());
+            preparedStatement.setDouble(2, pagoPorParticipacion);
+            preparedStatement.executeUpdate();
+            c.commit();
+        } catch (SQLException e) {
+            FachadaAplicacion.muestraExcepcion(e);
+        } finally {
+            try {
+                preparedStatement.close();
+            } catch (SQLException e) {
+                FachadaAplicacion.muestraExcepcion(e);
+            }
+        }
+    }
+    
+    private double calcularBeneficioUsuario(String u,UsuarioEmpresa u2){//FUNCION AUXILIAR PARA PGAO BENEFICIOS
+        double ret=0.0;
+        /*Connection c = startTransaction();
         PreparedStatement preparedStatement = null;
         PreparedStatement preparedStatement2 = null;
         PreparedStatement preparedStatement3 = null;
@@ -480,7 +507,7 @@ public class DAOParticipaciones extends DAO<Participacion> {
             while (resultSet.next()) {
                 String id = resultSet.getString("id1");
                 preparedStatement2 = c.prepareStatement("update usuario_mercado set saldo=? where id=?");
-                //preparedStatement2.setDouble(1, calcularBeneficioUsuario(id, u));
+                preparedStatement2.setDouble(1, calcularBeneficioUsuario(id, u));
                 preparedStatement2.setString(2, id);
                 preparedStatement2.executeUpdate();
 
@@ -495,6 +522,7 @@ public class DAOParticipaciones extends DAO<Participacion> {
             } catch (SQLException e) {
                 FachadaAplicacion.muestraExcepcion(e);
             }
-        }
+        }*/
+        return ret;
     }
 }

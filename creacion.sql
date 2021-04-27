@@ -140,6 +140,7 @@ $comprueba_pago_beneficios$ LANGUAGE plpgsql;
 CREATE TRIGGER comprueba_pago_beneficios BEFORE INSERT OR UPDATE ON tener_participaciones
 FOR EACH ROW EXECUTE PROCEDURE comprueba_pago_beneficios();
 
+--Actualiza el saldo bloqueado al actualizar la tabla de beneficios en base a las participaciones ya existentes en el mercado
 CREATE OR REPLACE FUNCTION procesa_bloqueo_importe_pago_beneficios() RETURNS trigger AS $procesa_bloqueo_importe_pago_beneficios$
     DECLARE
 		diferencia_beneficios_a_pagar double precision;
@@ -166,9 +167,35 @@ CREATE OR REPLACE FUNCTION procesa_bloqueo_importe_pago_beneficios() RETURNS tri
     END;
 $procesa_bloqueo_importe_pago_beneficios$ LANGUAGE plpgsql;
 
-CREATE TRIGGER procesa_bloqueo_importe_pago_beneficios BEFORE INSERT OR UPDATE OR DELETE ON beneficios
+CREATE TRIGGER procesa_bloqueo_importe_pago_beneficios BEFORE INSERT OR UPDATE ON beneficios
 FOR EACH ROW EXECUTE PROCEDURE procesa_bloqueo_importe_pago_beneficios();
 
+CREATE OR REPLACE FUNCTION procesa_bloqueo_importe_pago_beneficios_al_borrar() RETURNS trigger AS $procesa_bloqueo_importe_pago_beneficios_al_borrar$
+    DECLARE
+		diferencia_beneficios_a_pagar double precision;
+		max double precision;
+    BEGIN
+		SELECT (-COALESCE(old.importe_por_participacion,0))*(COALESCE(SUM(tener_participaciones.num_participaciones),0)) into diferencia_beneficios_a_pagar --el importe que vamos a pagar ahora - el que pagaríamos antes
+		FROM tener_participaciones
+		WHERE id2=old.id;
+		
+		SELECT saldo into max
+		FROM usuario_mercado
+		WHERE id=old.id;
+
+		--sumamos al saldo bloqueado, y restamos al saldo disponible
+		UPDATE usuario_empresa SET importe_bloqueado=importe_bloqueado+diferencia_beneficios_a_pagar WHERE id=old.id;
+		UPDATE usuario_mercado SET saldo=saldo-diferencia_beneficios_a_pagar WHERE id=old.id;
+
+		RETURN OLD;
+		 
+    END;
+$procesa_bloqueo_importe_pago_beneficios_al_borrar$ LANGUAGE plpgsql;
+
+CREATE TRIGGER procesa_bloqueo_importe_pago_beneficios_al_borrar BEFORE DELETE ON beneficios
+FOR EACH ROW EXECUTE PROCEDURE procesa_bloqueo_importe_pago_beneficios_al_borrar();
+
+--Actualiza el saldo bloqueado al actualizar la tabla de tener_participaciones en base a los anuncios de beneficios existentes
 CREATE OR REPLACE FUNCTION procesa_saldo_bloqueado_al_modificar_tabla_participaciones() RETURNS trigger AS $procesa_saldo_bloqueado_al_modificar_tabla_participaciones$
     DECLARE
 		diferencia_beneficios_a_pagar double precision;
@@ -195,17 +222,136 @@ CREATE OR REPLACE FUNCTION procesa_saldo_bloqueado_al_modificar_tabla_participac
     END;
 $procesa_saldo_bloqueado_al_modificar_tabla_participaciones$ LANGUAGE plpgsql;
 
-CREATE TRIGGER procesa_saldo_bloqueado_al_modificar_tabla_participaciones BEFORE INSERT OR UPDATE OR DELETE ON tener_participaciones
+CREATE TRIGGER procesa_saldo_bloqueado_al_modificar_tabla_participaciones BEFORE INSERT OR UPDATE ON tener_participaciones
 FOR EACH ROW EXECUTE PROCEDURE procesa_saldo_bloqueado_al_modificar_tabla_participaciones();
+
+--Actualiza el saldo bloqueado al actualizar la tabla de tener_participaciones en base a los anuncios de beneficios existentes
+CREATE OR REPLACE FUNCTION procesa_saldo_bloqueado_al_borrar_tabla_participaciones() RETURNS trigger AS $procesa_saldo_bloqueado_al_borrar_tabla_participaciones$
+    DECLARE
+		diferencia_beneficios_a_pagar double precision;
+		max double precision;
+    BEGIN
+		SELECT (COALESCE((- COALESCE(old.num_participaciones,0)) * (beneficios.importe_por_participacion),0)) into diferencia_beneficios_a_pagar --cogemos la fila anterior de tener_participaciones, y la nueva, y multiplicamos su diferencia por cada uno de los importes por participacion anunciados. Sumamos todo, y esa es la diferencia total que tendremos que reservar.
+		FROM beneficios
+		WHERE id=old.id2;
+		
+		SELECT saldo into max
+		FROM usuario_mercado
+		WHERE id=old.id2;
+		  
+		IF diferencia_beneficios_a_pagar > max THEN
+            		RAISE EXCEPTION 'Los beneficios no podrían pagarse';
+		END IF;
+
+		--sumamos al saldo bloqueado, y restamos al saldo disponible
+		UPDATE usuario_empresa SET importe_bloqueado=importe_bloqueado+diferencia_beneficios_a_pagar WHERE id=old.id2;
+		UPDATE usuario_mercado SET saldo=saldo-diferencia_beneficios_a_pagar WHERE id=old.id2;
+
+		RETURN OLD;
+		 
+    END;
+$procesa_saldo_bloqueado_al_borrar_tabla_participaciones$ LANGUAGE plpgsql;
+
+CREATE TRIGGER procesa_saldo_bloqueado_al_borrar_tabla_participaciones BEFORE DELETE ON tener_participaciones
+FOR EACH ROW EXECUTE PROCEDURE procesa_saldo_bloqueado_al_borrar_tabla_participaciones();
+
+--Si una fila tiene saldo 0, la borramos
+CREATE OR REPLACE FUNCTION borrar_fila_tener_participaciones_si_es_cero() RETURNS trigger AS $borrar_fila_tener_participaciones_si_es_cero$
+    BEGIN
+		
+		DELETE FROM tener_participaciones WHERE id1=new.id1 and id2=new.id2 and num_participaciones=0;
+
+		RETURN NEW;
+		 
+    END;
+$borrar_fila_tener_participaciones_si_es_cero$ LANGUAGE plpgsql;
+
+CREATE TRIGGER borrar_fila_tener_participaciones_si_es_cero AFTER UPDATE ON tener_participaciones
+FOR EACH ROW EXECUTE PROCEDURE borrar_fila_tener_participaciones_si_es_cero();
+
+--Comprueba que no se repite el ID entre usuarios_empresa, inversores y el regulador
+CREATE OR REPLACE FUNCTION comprueba_tipo_unico_usuario() RETURNS trigger AS $comprueba_tipo_unico_usuario$
+    DECLARE
+		num_ids_duplicados integer;
+    BEGIN
+		SELECT count(*) into num_ids_duplicados FROM (SELECT todos_los_ids.id FROM (SELECT id FROM usuario_regulador
+UNION ALL
+SELECT id FROM usuario_empresa
+UNION ALL
+SELECT id FROM usuario_inversor
+UNION ALL
+SELECT new.id) as todos_los_ids GROUP BY id HAVING COUNT(id) > 1) as ids_duplicados;
+		  
+		IF num_ids_duplicados<>0 THEN
+            		RAISE EXCEPTION 'Ya existe un usuario con ese ID';
+		END IF;
+
+		RETURN NEW;
+		 
+    END;
+$comprueba_tipo_unico_usuario$ LANGUAGE plpgsql;
+
+CREATE TRIGGER comprueba_tipo_unico_usuario BEFORE INSERT ON usuario_regulador
+FOR EACH ROW EXECUTE PROCEDURE comprueba_tipo_unico_usuario();
+CREATE TRIGGER comprueba_tipo_unico_usuario BEFORE INSERT ON usuario_mercado
+FOR EACH ROW EXECUTE PROCEDURE comprueba_tipo_unico_usuario();
+CREATE TRIGGER comprueba_tipo_unico_usuario BEFORE INSERT ON usuario_inversor
+FOR EACH ROW EXECUTE PROCEDURE comprueba_tipo_unico_usuario();
+CREATE TRIGGER comprueba_tipo_unico_usuario BEFORE INSERT ON usuario_empresa
+FOR EACH ROW EXECUTE PROCEDURE comprueba_tipo_unico_usuario();
+
+--Cada vez que se modifica la tabla tener_participaciones, se registra una compra
+CREATE OR REPLACE FUNCTION comprar(id_empresa usuario_empresa.id%TYPE, id_comprador usuario_mercado.id%TYPE, numero integer, precio_compra double precision) RETURNS void
+    DECLARE
+		diferencia_beneficios_a_pagar double precision;
+		max double precision;
+    BEGIN
+
+		SELECT  FROM anuncio_venta WHERE anuncio_venta.id2=id_empresa ORDER BY anuncio_venta.precio asc;
+
+		INSERT INTO compra(empresa, comprador, fecha) VALUES ()
+
+		SELECT (COALESCE(SUM((new.num_participaciones - COALESCE(old.num_participaciones,0)) * (beneficios.importe_por_participacion)),0)) into diferencia_beneficios_a_pagar --cogemos la fila anterior de tener_participaciones, y la nueva, y multiplicamos su diferencia por cada uno de los importes por participacion anunciados. Sumamos todo, y esa es la diferencia total que tendremos que reservar.
+		FROM beneficios
+		WHERE id=new.id2;
+		
+		SELECT saldo into max
+		FROM usuario_mercado
+		WHERE id=new.id2;
+
+		--sumamos al saldo bloqueado, y restamos al saldo disponible
+		UPDATE usuario_empresa SET importe_bloqueado=importe_bloqueado+diferencia_beneficios_a_pagar WHERE id=new.id2;
+		UPDATE usuario_mercado SET saldo=saldo-diferencia_beneficios_a_pagar WHERE id=new.id2;
+		 
+    END;
+$mantener_registro_compras$ LANGUAGE plpgsql;
+
+CREATE TRIGGER mantener_registro_compras BEFORE INSERT OR UPDATE ON tener_participaciones
+FOR EACH ROW EXECUTE PROCEDURE mantener_registro_compras();
+
+--Cada vez que se modifica la tabla tener_participaciones, se registra una compra
+CREATE OR REPLACE FUNCTION pagar_beneficios(id_empresa usuario_empresa.id%TYPE, pago_por_participacion double precision) RETURNS void AS $$
+	DECLARE
+		comision double precision;
+    BEGIN
+
+		SELECT usuario_regulador.comision_actual into comision FROM usuario_regulador LIMIT 1;
+
+		UPDATE usuario_mercado SET saldo=saldo-((SELECT sum(num_participaciones * pago_por_participacion) FROM tener_participaciones WHERE tener_participaciones.id2=id_empresa) * (1.0 + comision)) WHERE usuario_mercado.id=id_empresa; --Primero le restamos a la empresa el saldo que se usaría para pagar
+
+		UPDATE usuario_mercado SET saldo=saldo+(SELECT num_participaciones * pago_por_participacion FROM tener_participaciones WHERE tener_participaciones.id2=id_empresa and tener_participaciones.id1=usuario_mercado.id) WHERE usuario_mercado.id in (SELECT id1 FROM tener_participaciones WHERE tener_participaciones.id2=id_empresa); --A cada usuario le sumamos el importe correspondiente a sus participaciones
+		 
+    END;
+$$ LANGUAGE plpgsql;
 
 --Funcionalidades extra
 
 CREATE TABLE compra(
-    id_compra serial UNIQUE,
+    id_compra serial,
 	empresa varchar(30),
 	comprador varchar(30),
 	fecha timestamp,
-	primary key(id_compra,empresa,comprador),
+	primary key(id_compra),
 	foreign key (comprador) references usuario_mercado(id)
         	on update cascade
         	on delete restrict, 
@@ -214,12 +360,12 @@ CREATE TABLE compra(
         	on delete restrict
 );
 CREATE TABLE parte_compra(
-	id_parte serial UNIQUE,
+	id_parte serial,
 	id_compra integer,
 	vendedor varchar(30),
 	precio double precision,
 	cantidad integer,
-	primary key(id_compra,id_parte,vendedor),
+	primary key(id_compra,id_parte),
 	foreign key (vendedor) references usuario_mercado(id)
         	on update cascade
         	on delete restrict, 

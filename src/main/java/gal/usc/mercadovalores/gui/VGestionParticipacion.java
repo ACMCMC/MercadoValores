@@ -17,10 +17,11 @@ import java.sql.SQLException;
 public class VGestionParticipacion extends javax.swing.JFrame {
 
     private UsuarioEmpresa usr;
+    
     /**
      * Creates new form VGestionParticipacion
      */
-    public VGestionParticipacion(UsuarioEmpresa usr) {
+    public VGestionParticipacion( UsuarioEmpresa usr) {
         initComponents();
         this.usr = usr;
     }
@@ -119,7 +120,8 @@ public class VGestionParticipacion extends javax.swing.JFrame {
         }
         catch(SQLException e){
             FachadaAplicacion.muestraExcepcion(e);
-        }    
+        }   
+        this.dispose();
     }//GEN-LAST:event_DarAltaBotonActionPerformed
 
     private void DarBajaBotonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DarBajaBotonActionPerformed
@@ -130,6 +132,7 @@ public class VGestionParticipacion extends javax.swing.JFrame {
         catch(SQLException e){
             FachadaAplicacion.muestraExcepcion(e);
         }    
+        this.dispose();
     }//GEN-LAST:event_DarBajaBotonActionPerformed
 
 

@@ -1,8 +1,9 @@
 package gal.usc.mercadovalores.aplicacion;
 
-import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+
+import gal.usc.mercadovalores.db.FachadaDB;
 
 public final class UsuarioEmpresa extends UsuarioDeMercado {
     private String cif;
@@ -40,8 +41,8 @@ public final class UsuarioEmpresa extends UsuarioDeMercado {
     /**
      * @return the usuariosConParticipaciones
      */
-    public Set<UsuarioDeMercado> getUsuariosConParticipaciones() {
-        return null;
+    public Set<Participacion> getUsuariosConParticipaciones() {
+        return FachadaDB.getFachada().getParticipacionesEmpresa(this);
     }
 
     public void setCif(String cif) {

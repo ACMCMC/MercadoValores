@@ -57,6 +57,10 @@ public class FachadaAplicacion {
         this.fgui.cerrarSesion(frame);
     }
 
+    public void ventanaParticipaciones(UsuarioEmpresa usr){
+        this.fgui.ventanaParticipaciones(usr);
+    }
+    
     public void ventanaSaldos(){
         this.fgui.ventanaSaldos();
     }
