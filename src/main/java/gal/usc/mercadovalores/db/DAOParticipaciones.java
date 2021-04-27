@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Set;
@@ -470,7 +471,7 @@ public class DAOParticipaciones extends DAO<Participacion> {
         }
     }
 
-    public void pagoBeneficios(UsuarioEmpresa u, double pagoPorParticipacion) {
+    public void pagarBeneficiosInmediatamente(UsuarioEmpresa u, double pagoPorParticipacion) {
         Connection c = startTransaction();
         PreparedStatement preparedStatement = null;
 
@@ -479,6 +480,28 @@ public class DAOParticipaciones extends DAO<Participacion> {
             preparedStatement = c.prepareStatement("select pagar_beneficios(?,?)");
             preparedStatement.setString(1, u.getId());
             preparedStatement.setDouble(2, pagoPorParticipacion);
+            preparedStatement.executeQuery();
+            c.commit();
+        } catch (SQLException e) {
+            FachadaAplicacion.muestraExcepcion(e);
+        } finally {
+            try {
+                preparedStatement.close();
+            } catch (SQLException e) {
+                FachadaAplicacion.muestraExcepcion(e);
+            }
+        }
+    }
+
+    public void pagarAnuncioBeneficios(UsuarioEmpresa u, Timestamp fecha) {
+        Connection c = startTransaction();
+        PreparedStatement preparedStatement = null;
+
+        try {
+
+            preparedStatement = c.prepareStatement("select pagar_anuncio_beneficios(?,?)");
+            preparedStatement.setString(1, u.getId());
+            preparedStatement.setTimestamp(2, fecha);
             preparedStatement.executeQuery();
             c.commit();
         } catch (SQLException e) {
