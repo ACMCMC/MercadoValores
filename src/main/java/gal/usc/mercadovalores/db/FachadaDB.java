@@ -224,6 +224,11 @@ public class FachadaDB {
         return daoParticipaciones.getAllBeneficios();
     }
     
+    public Set<Beneficios> getBeneficiosEmpresa(UsuarioEmpresa usr){
+        return daoParticipaciones.getBeneficiosEmpresa(usr);
+    }
+    
+    
     public void bajaBeneficios(Beneficios b){
         daoParticipaciones.BajaBeneficios(b);
     }
