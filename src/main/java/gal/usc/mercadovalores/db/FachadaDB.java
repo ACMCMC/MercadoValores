@@ -84,6 +84,10 @@ public class FachadaDB {
         return daoUsuario.comprobarContrasena(contrasenaTextoPlano, contrasenaEncriptada);
     }
 
+    public String getContrasenaEncriptada(String contrasenaTextoPlano) {
+        return daoUsuario.getContrasenaEncriptada(contrasenaTextoPlano);
+    }
+
     public Set<UsuarioEmpresa> getUsuariosEmpresa() {
         return daoUsuarioEmpresa.getAll();
     }
@@ -239,10 +243,10 @@ public class FachadaDB {
         return daoParticipaciones.getBeneficiosEmpresa(usr);
     }
     
-    
     public void bajaBeneficios(Beneficios b){
         daoParticipaciones.BajaBeneficios(b);
     }
+
     public void pagarBeneficios(UsuarioEmpresa u, double pagoPorParticipacion) {
         daoParticipaciones.pagoBeneficios(u, pagoPorParticipacion);
     }
