@@ -329,18 +329,34 @@ $mantener_registro_compras$ LANGUAGE plpgsql;
 CREATE TRIGGER mantener_registro_compras BEFORE INSERT OR UPDATE ON tener_participaciones
 FOR EACH ROW EXECUTE PROCEDURE mantener_registro_compras();
 
---Cada vez que se modifica la tabla tener_participaciones, se registra una compra
+--Realiza inmediatamente un pago de beneficios
 CREATE OR REPLACE FUNCTION pagar_beneficios(id_empresa usuario_empresa.id%TYPE, pago_por_participacion double precision) RETURNS void AS $$
 	DECLARE
-		comision double precision;
+		--comision double precision;
     BEGIN
 
-		SELECT usuario_regulador.comision_actual into comision FROM usuario_regulador LIMIT 1;
+		--SELECT usuario_regulador.comision_actual into comision FROM usuario_regulador LIMIT 1;
 
-		UPDATE usuario_mercado SET saldo=saldo-((SELECT sum(num_participaciones * pago_por_participacion) FROM tener_participaciones WHERE tener_participaciones.id2=id_empresa) * (1.0 + comision)) WHERE usuario_mercado.id=id_empresa; --Primero le restamos a la empresa el saldo que se usaría para pagar
+		--UPDATE usuario_mercado SET saldo=saldo-((SELECT sum(num_participaciones * pago_por_participacion) FROM tener_participaciones WHERE tener_participaciones.id2=id_empresa) * (1.0 + comision)) WHERE usuario_mercado.id=id_empresa; --Primero le restamos a la empresa el saldo que se usaría para pagar (Esta versión no la usamos porque tiene en cuenta la comisión actual)
+		UPDATE usuario_mercado SET saldo=saldo-(SELECT sum(num_participaciones * pago_por_participacion) FROM tener_participaciones WHERE tener_participaciones.id2=id_empresa) WHERE usuario_mercado.id=id_empresa; --Primero le restamos a la empresa el saldo que se usaría para pagar
 
 		UPDATE usuario_mercado SET saldo=saldo+(SELECT num_participaciones * pago_por_participacion FROM tener_participaciones WHERE tener_participaciones.id2=id_empresa and tener_participaciones.id1=usuario_mercado.id) WHERE usuario_mercado.id in (SELECT id1 FROM tener_participaciones WHERE tener_participaciones.id2=id_empresa); --A cada usuario le sumamos el importe correspondiente a sus participaciones
-		 
+
+    END;
+$$ LANGUAGE plpgsql;
+
+--Función para realizar el pago de un anuncio de beneficios
+CREATE OR REPLACE FUNCTION pagar_anuncio_beneficios(id_empresa beneficios.id%TYPE, fecha beneficios.fecha_pago%TYPE) RETURNS void AS $$
+	DECLARE
+		importe beneficios.importe_por_participacion%TYPE;
+    BEGIN
+
+		SELECT beneficios.importe_por_participacion into importe FROM beneficios WHERE beneficios.id=id_empresa and beneficios.fecha_pago=fecha;
+
+		DELETE FROM beneficios WHERE beneficios.id=id_empresa and beneficios.fecha_pago=fecha; --Primero borramos el anuncio, por lo que el saldo se vuelve disponible inmediatamente para la funcion pagar_beneficios
+
+		PERFORM pagar_beneficios(id_empresa, importe); --Llamamos a la funcion
+
     END;
 $$ LANGUAGE plpgsql;
 

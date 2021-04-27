@@ -52,6 +52,7 @@ public class VBeneficios extends javax.swing.JFrame {
         textoSaldo = new javax.swing.JLabel();
         botonAnunciar = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
+        botonPagarAhora = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tablaBeneficios = new javax.swing.JTable();
@@ -97,6 +98,13 @@ public class VBeneficios extends javax.swing.JFrame {
             }
         });
 
+        botonPagarAhora.setText("Pagar Ahora");
+        botonPagarAhora.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonPagarAhoraActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -106,22 +114,25 @@ public class VBeneficios extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel1)
-                        .addGap(18, 18, 18)
-                        .addComponent(nParticipaciones))
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addComponent(jButton1)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(botonAnunciar))
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(jLabel2)
-                                .addComponent(jLabel5))
-                            .addGap(24, 24, 24)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(campoParticipaciones, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(textoSaldo)))))
-                .addContainerGap(39, Short.MAX_VALUE))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel2)
+                                    .addComponent(jLabel5))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(campoParticipaciones, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(textoSaldo)
+                                    .addComponent(nParticipaciones)))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jButton1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(botonPagarAhora)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(botonAnunciar)))
+                        .addGap(33, 33, 33))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -138,11 +149,12 @@ public class VBeneficios extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
                     .addComponent(textoSaldo))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 86, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 85, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(botonAnunciar)
-                    .addComponent(jButton1))
-                .addGap(23, 23, 23))
+                    .addComponent(jButton1)
+                    .addComponent(botonPagarAhora))
+                .addGap(24, 24, 24))
         );
 
         jTabbedPane1.addTab("Anunciar Pago", jPanel1);
@@ -169,13 +181,13 @@ public class VBeneficios extends javax.swing.JFrame {
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap(36, Short.MAX_VALUE)
+                .addGap(33, 33, 33)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(jButton3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(botonPagar))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(160, 160, 160)
+                        .addComponent(botonPagar)))
                 .addGap(33, 33, 33))
         );
         jPanel3Layout.setVerticalGroup(
@@ -212,7 +224,7 @@ public class VBeneficios extends javax.swing.JFrame {
         try{
             Double precio = Double.parseDouble(this.campoParticipaciones.getText());
             FachadaDB.getFachada().anunciarBeneficios(this.usr,precio,new Timestamp(System.currentTimeMillis()));
-
+            this.setCampos();
         }catch(Exception e){
             VAviso x = new VAviso(this,true,e.getMessage());
             x.setVisible(true);
@@ -234,6 +246,8 @@ public class VBeneficios extends javax.swing.JFrame {
             TablaBeneficios tB = (TablaBeneficios)this.tablaBeneficios.getModel();
             Beneficios b = tB.obtenerBeneficios(this.tablaBeneficios.getSelectedRow());
             //pagar beneficios
+            //FachadaDB.getFachada().pagarBeneficios(b.getEmpresa(),b.getImporteParticipacion());
+            this.updateTabla();
         }catch(Exception e){
             VAviso x = new VAviso(this,true,e.getMessage());
             x.setVisible(true);
@@ -245,6 +259,17 @@ public class VBeneficios extends javax.swing.JFrame {
         // TODO add your handling code here:
         this.dispose();
     }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void botonPagarAhoraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonPagarAhoraActionPerformed
+        try{
+            Double precio = Double.parseDouble(this.campoParticipaciones.getText());
+            FachadaDB.getFachada().pagarBeneficiosInmediatamente(this.usr, precio);
+            this.setCampos();
+        }catch(Exception e){
+            VAviso x = new VAviso(this,true,e.getMessage());
+            x.setVisible(true);
+        }
+    }//GEN-LAST:event_botonPagarAhoraActionPerformed
 
     //obtenemos numero de participaciones de la empresa
     private void setCampos(){
@@ -258,7 +283,7 @@ public class VBeneficios extends javax.swing.JFrame {
         Integer totalParticipaciones = this.nParts;
         this.nParticipaciones.setText(totalParticipaciones.toString());
         
-        Double totalSaldo = this.usr.getSaldo();
+        Double totalSaldo = FachadaDB.getFachada().getUsuarioById(this.usr.getId()).getSaldo();
         this.textoSaldo.setText(totalSaldo.toString());
     }
     
@@ -282,6 +307,7 @@ public class VBeneficios extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton botonAnunciar;
     private javax.swing.JButton botonPagar;
+    private javax.swing.JButton botonPagarAhora;
     private javax.swing.JTextField campoParticipaciones;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton3;

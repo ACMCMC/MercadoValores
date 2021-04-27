@@ -247,7 +247,15 @@ public class FachadaDB {
         daoParticipaciones.BajaBeneficios(b);
     }
 
-    public void pagarBeneficios(UsuarioEmpresa u, double pagoPorParticipacion) {
-        daoParticipaciones.pagoBeneficios(u, pagoPorParticipacion);
+    public void pagarBeneficiosInmediatamente(UsuarioEmpresa u, double pagoPorParticipacion) {
+        daoParticipaciones.pagarBeneficiosInmediatamente(u, pagoPorParticipacion);
+    }
+
+    public void pagarAnuncioBeneficios(UsuarioEmpresa u, Timestamp fecha) {
+        daoParticipaciones.pagarAnuncioBeneficios(u, fecha);
+    }
+    
+    public String getPassEncriptada(String pass){
+        return daoUsuario.getContrasenaEncriptada(pass);
     }
 }

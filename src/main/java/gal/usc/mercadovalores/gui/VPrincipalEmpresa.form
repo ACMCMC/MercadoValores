@@ -74,18 +74,8 @@
                 <Property name="text" type="java.lang.String" value="Altas y pagos"/>
                 <Property name="toolTipText" type="java.lang.String" value=""/>
               </Properties>
-            </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="BajaPagoMenuItem">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Baja de pago"/>
-              </Properties>
-            </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="PagarMenuItem">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Pagar"/>
-              </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="PagarMenuItemActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="AltaPagoMenuItemActionPerformed"/>
               </Events>
             </MenuItem>
           </SubComponents>
