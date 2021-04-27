@@ -360,9 +360,9 @@ public class DAOVentas extends DAO<Participacion> {
                          }else{
                              preparedStatement6 = getConexion()
 					.prepareStatement("update tener_particiones set num_participaciones=num_participaciones+? where id1=? and id2=?");
-                            preparedStatement6.setInt(3, numCompradas);
-                            preparedStatement6.setString(1, Usuario.getId());
-                            preparedStatement6.setString(2, empresa.getId());
+                            preparedStatement6.setInt(1, numCompradas);
+                            preparedStatement6.setString(2, Usuario.getId());
+                            preparedStatement6.setString(3, empresa.getId());
                          preparedStatement6.executeUpdate();
                          
                          }
