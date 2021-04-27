@@ -246,7 +246,7 @@ public class VBeneficios extends javax.swing.JFrame {
             TablaBeneficios tB = (TablaBeneficios)this.tablaBeneficios.getModel();
             Beneficios b = tB.obtenerBeneficios(this.tablaBeneficios.getSelectedRow());
             //pagar beneficios
-            //FachadaDB.getFachada().pagarBeneficios(b.getEmpresa(),b.getImporteParticipacion());
+            FachadaDB.getFachada().pagarAnuncioBeneficios(b.getEmpresa(),b.getFecha());
             this.updateTabla();
         }catch(Exception e){
             VAviso x = new VAviso(this,true,e.getMessage());
