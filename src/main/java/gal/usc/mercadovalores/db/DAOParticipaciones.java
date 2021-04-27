@@ -1,5 +1,6 @@
 package gal.usc.mercadovalores.db;
 
+import gal.usc.mercadovalores.aplicacion.Beneficios;
 import gal.usc.mercadovalores.aplicacion.EstadoUsuario;
 import gal.usc.mercadovalores.aplicacion.FachadaAplicacion;
 import java.sql.Connection;
@@ -366,13 +367,14 @@ public class DAOParticipaciones extends DAO<Participacion> {
         }
     }
 
-    public void BajaBeneficios(UsuarioEmpresa u) {
+    public void BajaBeneficios(Beneficios b) {
         Connection c = startTransaction();
         PreparedStatement preparedStatement = null;
 
         try {
-            preparedStatement = c.prepareStatement("delete from beneficios where id=?");
-            preparedStatement.setString(1, u.getId());
+            preparedStatement = c.prepareStatement("delete from beneficios where id=? and fecha_pago=?");
+            preparedStatement.setString(1, b.getEmpresa().getId());
+            preparedStatement.setTimestamp(2, b.getFecha());
             preparedStatement.executeUpdate();
             c.commit();
         } catch (SQLException e) {
@@ -386,7 +388,8 @@ public class DAOParticipaciones extends DAO<Participacion> {
         }
     }
 
-    public void pagoBeneficios(UsuarioEmpresa u) {
+
+    public void pagoBeneficios(UsuarioEmpresa u,Double importe_por_participacion) {
         Connection c = startTransaction();
         PreparedStatement preparedStatement = null;
         PreparedStatement preparedStatement2 = null;
@@ -394,17 +397,18 @@ public class DAOParticipaciones extends DAO<Participacion> {
 
         try {
 
-            preparedStatement = c.prepareStatement("select id1 from tener_participaciones where id2=?");
+            preparedStatement = c.prepareStatement("SELECT pagar_beneficios(?, ?);");
             preparedStatement.setString(1, u.getId());
+            preparedStatement.setDouble(2, importe_por_participacion);
             resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
+            /*while (resultSet.next()) {
                 String id = resultSet.getString("id1");
                 preparedStatement2 = c.prepareStatement("update usuario_mercado set saldo=? where id=?");
                 preparedStatement2.setDouble(1, calcularBeneficioUsuario(id, u));
                 preparedStatement2.setString(2, id);
                 preparedStatement2.executeUpdate();
 
-            }
+            }*/
             c.commit();
         } catch (SQLException e) {
             FachadaAplicacion.muestraExcepcion(e);
@@ -420,35 +424,54 @@ public class DAOParticipaciones extends DAO<Participacion> {
     
     private double calcularBeneficioUsuario(String u,UsuarioEmpresa u2){//FUNCION AUXILIAR PARA PGAO BENEFICIOS
         double ret=0.0;
-        /*Connection c = startTransaction();
+        Connection c = startTransaction();
         PreparedStatement preparedStatement = null;
         PreparedStatement preparedStatement2 = null;
         PreparedStatement preparedStatement3 = null;
         ResultSet resultSet;
+        ResultSet resultSet2;
+        ResultSet resultSet3;
         try {
-
-            preparedStatement = c.prepareStatement("select id1 from tener_participaciones where id2=?");
-            preparedStatement.setString(1, u.getId());
-            resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                String id = resultSet.getString("id1");
-                preparedStatement2 = c.prepareStatement("update usuario_mercado set saldo=? where id=?");
-                preparedStatement2.setDouble(1, calcularBeneficioUsuario(id, u));
-                preparedStatement2.setString(2, id);
-                preparedStatement2.executeUpdate();
-
-            }
-            c.commit();
-        } catch (SQLException e) {
-            FachadaAplicacion.muestraExcepcion(e);
-        } finally {
-            try {
-                preparedStatement.close();
-                preparedStatement2.close();
-            } catch (SQLException e) {
-                FachadaAplicacion.muestraExcepcion(e);
-            }
-        }*/
+                        
+			preparedStatement = getConexion()
+					.prepareStatement("select num_participaciones from tener_participaciones where id1=? and id2=?");
+                        preparedStatement.setString(1, u);
+                        preparedStatement.setString(2, u2.getId());
+                        resultSet=preparedStatement.executeQuery();
+                        while(resultSet.next()){
+                            Integer num=resultSet.getInt("num_participaciones");
+                            preparedStatement2 = getConexion()
+					.prepareStatement("select importe_por_participacion from beneficios where id=?");
+                            
+                            preparedStatement2.setString(1, u2.getId());
+                            resultSet2=preparedStatement2.executeQuery();
+                            while(resultSet2.next()){
+                                double aux=resultSet2.getDouble("importe_por_participacion");
+                                ret=aux*num;
+                            }
+                            preparedStatement3 = getConexion()
+					.prepareStatement("select saldo from usuario_mercado where id=?");
+                            
+                            preparedStatement3.setString(1, u);
+                            resultSet3=preparedStatement3.executeQuery();
+                             while(resultSet3.next()){
+                                double aux=resultSet3.getDouble("saldo");
+                                ret+=aux;
+                            }
+                            
+                        }
+                         getConexion().commit();
+		} catch (SQLException e) {
+			FachadaAplicacion.muestraExcepcion(e);
+		} finally {
+			try {
+				preparedStatement.close();
+                                preparedStatement2.close();
+                                preparedStatement3.close();
+			} catch (SQLException e) {
+				FachadaAplicacion.muestraExcepcion(e);
+			}
+		}
         return ret;
     }
 }
