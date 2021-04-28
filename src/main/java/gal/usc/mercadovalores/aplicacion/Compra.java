@@ -1,6 +1,6 @@
 package gal.usc.mercadovalores.aplicacion;
 
-import java.security.Timestamp;
+import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
