@@ -36,8 +36,8 @@ public class DAOParticipaciones extends DAO<Participacion> {
             participaciones = tenerParticipaciones(u, u);
             if (participaciones != null) {
                 preparedStatement = c.prepareStatement(
-                        "update tener_participaciones set num_participaciones=? where id1=? and id2=?");
-                preparedStatement.setInt(1, x + participaciones.getNumero());
+                        "update tener_participaciones set num_participaciones=num_participaciones + ? where id1=? and id2=?");
+                preparedStatement.setInt(1, x);
                 preparedStatement.setString(2, u.getId());
                 preparedStatement.setString(3, u.getId());
                 preparedStatement.executeUpdate();
@@ -74,15 +74,10 @@ public class DAOParticipaciones extends DAO<Participacion> {
             participaciones = tenerParticipaciones(u, u);
             if (participaciones != null) {
                 preparedStatement = c.prepareStatement(
-                        "update tener_participaciones set num_participaciones=? where id1=? and id2=?");
-                preparedStatement.setInt(1, participaciones.getNumero() - x);
+                        "update tener_participaciones set num_participaciones=num_participaciones - ? where id1=? and id2=?");
+                preparedStatement.setInt(1, x);
                 preparedStatement.setString(2, u.getId());
                 preparedStatement.setString(3, u.getId());
-            } else {
-                preparedStatement = c.prepareStatement("delete from tener_participaciones where id1=? and id2=?");
-                preparedStatement.setString(1, u.getId());
-                preparedStatement.setString(2, u.getId());
-
             }
             preparedStatement.executeUpdate();
             preparedStatement.close();
@@ -417,7 +412,7 @@ public class DAOParticipaciones extends DAO<Participacion> {
 
         try {
 
-            preparedStatement = c.prepareStatement("SELECT pagar_beneficios(?, ?);");
+            preparedStatement = c.prepareStatement("select pagar_beneficios(?, ?);");
             preparedStatement.setString(1, u.getId());
             preparedStatement.setDouble(2, pagoPorParticipacion);
             preparedStatement.executeQuery();
@@ -456,4 +451,4 @@ public class DAOParticipaciones extends DAO<Participacion> {
         }
     }
     
-}
+}ent.setString(3, u.getId());
