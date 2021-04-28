@@ -212,7 +212,7 @@ public class DAOVentas extends DAO<Participacion> {
          return ret;
      }
     
-     public void ventaParticipaciones(UsuarioDeMercado Usuario,UsuarioEmpresa empresa,Integer numero,Integer precio){
+      public void compraParticipaciones(UsuarioDeMercado Usuario,UsuarioEmpresa empresa,Integer numero,double precio){
         Connection c = startTransaction();
         Integer ret=numero;
         Double saldoARestar=0.0;
@@ -235,13 +235,15 @@ public class DAOVentas extends DAO<Participacion> {
                         
 			preparedStatement = getConexion()
 					.prepareStatement("select * from anuncio_venta " +
-                                                          "where ?<=precio and id2=? " +
+                                                          "where ?>precio and id2=? " +
                                                           "order by precio asc,fecha asc");
-                        preparedStatement.setInt(1,precio );
+                        preparedStatement.setDouble(1,precio);
                         preparedStatement.setString(2,empresa.getId() );
+        System.out.print(precio);
+        
+        System.out.print(preparedStatement.toString());
 			resultSet = preparedStatement.executeQuery();
 			while (resultSet.next() && ret!=0) {
-				try {
                                     Integer aux=resultSet.getInt("num_participaciones");
                                     String idUsuarioaux=resultSet.getString("id1");
                                     String idEmpresaaux=resultSet.getString("id2");
@@ -249,13 +251,14 @@ public class DAOVentas extends DAO<Participacion> {
                                     Double precioaux=resultSet.getDouble("precio");
                                     
                                     
-                                    
+                                    System.out.println(aux);
                                         //Guardamos los ids para hacer luego update
                                         ids.add(idUsuarioaux);
                                         
                                        
                                         
                                         if(aux>ret){//Si es mayor el numero de participaciones a la venta de la tupla se hace update
+                                            System.out.println(1);
 
                                             preparedStatement2 = getConexion()
                                             .prepareStatement("update anuncio_venta " +
@@ -301,9 +304,7 @@ public class DAOVentas extends DAO<Participacion> {
                                             preparedStatement2.executeUpdate();
                                         }
                                     
-				} catch (EnumConstantNotPresentException e) {
-					FachadaAplicacion.muestraExcepcion(e);
-				}
+				 
 			}
                         //FALTA ACTUALIZAR LOS SALDOS DE LOS USUARIOS Y PAGAR LAS COMISIONES
                         
@@ -330,6 +331,7 @@ public class DAOVentas extends DAO<Participacion> {
                          preparedStatement5.setDouble(1, sumaSaldos.get(i));
                          preparedStatement5.setString(2, ids.get(i));
                          preparedStatement5.executeUpdate();
+                                preparedStatement5.close();
                         }
                         
                         //Actualizar la tabla de tener_participaciones para los que venden
@@ -341,7 +343,7 @@ public class DAOVentas extends DAO<Participacion> {
                             preparedStatement5.setString(2, ids.get(i));
                             preparedStatement5.setString(3, empresa.getId());
                          preparedStatement5.executeUpdate();
-                         
+                                preparedStatement5.close();
                         }
                         
                         
@@ -380,17 +382,15 @@ public class DAOVentas extends DAO<Participacion> {
 		} finally {
 			try {
 				preparedStatement.close();
-                                //preparedStatement2.close();
+                                /*//preparedStatement2.close();
                                 preparedStatement3.close();
                                 preparedStatement4.close();
-                                preparedStatement5.close();
-                                preparedStatement6.close();
+                                preparedStatement6.close();*/
 			} catch (SQLException e) {
 				FachadaAplicacion.muestraExcepcion(e);
 			}
 		}
      }
-     
      
      public Set<UsuarioEmpresa> empresasConAnuncios(){
          Connection c = startTransaction();
