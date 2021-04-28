@@ -118,24 +118,35 @@ CREATE TABLE parte_compra(
 
 --Permisos
 
-CREATE ROLE ReguladorUser;
-CREATE ROLE MercadoUser;
-CREATE ROLE InversorUser INHERIT;
-GRANT MercadoUser TO InversorUser;
-CREATE ROLE EmpresaUser INHERIT;
-GRANT MercadoUser TO EmpresaUser;
+CREATE ROLE regulador_user;
+CREATE ROLE mercado_user;
+CREATE ROLE inversor_user INHERIT;
+GRANT mercado_user TO inversor_user;
+CREATE ROLE empresa_user INHERIT;
+GRANT mercado_user TO empresa_user;
 
-GRANT SELECT, UPDATE (estado) ON usuario_mercado TO ReguladorUser;
+GRANT SELECT, UPDATE (estado) ON usuario_mercado TO regulador_user;
 
-GRANT INSERT, SELECT, UPDATE ON usuario_regulador TO ReguladorUser;
-GRANT INSERT, SELECT, UPDATE, DELETE ON tener_participaciones TO MercadoUser;
-GRANT INSERT, SELECT, UPDATE ON usuario_mercado TO MercadoUser;
-GRANT INSERT, SELECT, UPDATE, DELETE ON anuncio_venta TO MercadoUser;
-GRANT INSERT, SELECT, UPDATE ON compra TO MercadoUser;
-GRANT INSERT, SELECT, UPDATE ON parte_compra TO MercadoUser;
-GRANT INSERT, SELECT, UPDATE ON usuario_empresa TO EmpresaUser;
-GRANT INSERT, SELECT, UPDATE, DELETE ON beneficios TO EmpresaUser;
-GRANT INSERT, SELECT, UPDATE ON usuario_inversor TO InversorUser;
+GRANT INSERT, SELECT, UPDATE ON usuario_regulador TO regulador_user;
+GRANT INSERT, SELECT, UPDATE, DELETE ON tener_participaciones TO mercado_user;
+GRANT INSERT, SELECT, UPDATE ON usuario_mercado TO mercado_user;
+GRANT INSERT, SELECT, UPDATE, DELETE ON anuncio_venta TO mercado_user;
+GRANT INSERT, SELECT, UPDATE ON compra TO mercado_user;
+GRANT INSERT, SELECT, UPDATE ON parte_compra TO mercado_user;
+GRANT INSERT, SELECT, UPDATE ON usuario_empresa TO empresa_user;
+GRANT INSERT, SELECT, UPDATE, DELETE ON beneficios TO empresa_user;
+GRANT SELECT ON beneficios TO mercado_user;
+GRANT INSERT, SELECT, UPDATE ON usuario_inversor TO inversor_user;
+GRANT SELECT ON usuario_regulador TO mercado_user;
+GRANT UPDATE (saldo) ON usuario_regulador TO mercado_user;
+GRANT SELECT, UPDATE ON usuario_empresa TO inversor_user;
+GRANT SELECT ON usuario_inversor TO empresa_user;
+GRANT SELECT, DELETE ON beneficios TO regulador_user;
+GRANT SELECT ON tener_participaciones TO regulador_user;
+GRANT SELECT, DELETE, UPDATE ON usuario_empresa TO regulador_user;
+GRANT SELECT, DELETE ON usuario_inversor TO regulador_user;
+GRANT SELECT, DELETE, UPDATE ON usuario_mercado TO regulador_user;
+GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO mercado_user;
 
 CREATE OR REPLACE FUNCTION comprueba_participaciones() RETURNS trigger AS $comprueba_participaciones$
     DECLARE
