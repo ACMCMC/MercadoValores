@@ -278,7 +278,6 @@ public class DAOVentas extends DAO<Participacion> {
                                     
                                         //Guardamos los ids para hacer luego update
                                         ids.add(idUsuarioaux);
-                                        participacionesVendidas.add(aux);
                                         
                                        
                                         
@@ -286,9 +285,9 @@ public class DAOVentas extends DAO<Participacion> {
 
                                             preparedStatement2 = getConexion()
                                             .prepareStatement("update anuncio_venta " +
-                                                              "set num_participaciones=? "+ 
+                                                              "set num_participaciones=num_participaciones-? "+ 
                                                               "where id1=? and id2=? and fecha=?");
-                                            preparedStatement2.setInt(1, aux-ret);
+                                            preparedStatement2.setInt(1, ret);
                                             preparedStatement2.setString(2, idUsuarioaux);
                                             preparedStatement2.setString(3, idEmpresaaux);
                                             preparedStatement2.setTimestamp(4, fecha);
@@ -298,6 +297,7 @@ public class DAOVentas extends DAO<Participacion> {
                                             //Se compraron todas las que se querían
 
                                             //Comision
+                                            participacionesVendidas.add(ret);
                                             Comision+=precioaux*ret*resultSet.getDouble("comision_en_fecha");
 
                                             //Cantidad a sumar a cada usuario que vende(venta total - comisión)
@@ -315,6 +315,7 @@ public class DAOVentas extends DAO<Participacion> {
                                             preparedStatement2.setTimestamp(3, fecha);
 
                                             //Cantdad a restar al usuario que compra
+                                            participacionesVendidas.add(aux);
                                             saldoARestar+=aux*precioaux;
                                             ret-=aux;//Se compraron un numero hasta que llegue a 0
                                             numCompradas+=aux;
