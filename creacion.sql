@@ -50,11 +50,12 @@ CREATE TABLE beneficios(
   id varchar(30),
   fecha_pago timestamp,
   importe_por_participacion double precision,
+  num_participaciones double precision,
   primary key (id,fecha_pago),
 	foreign key (id) references usuario_empresa
         	on update cascade
         	on delete cascade, --si una empresa se borra desaparecen sus anuncios de pago de beneficios
-  CHECK (importe_por_participacion >= 0::double precision)
+  CHECK (importe_por_participacion >= 0::double precision AND num_participaciones >= 0::integer)
 );
 
 CREATE TABLE tener_participaciones(
@@ -454,17 +455,28 @@ CREATE OR REPLACE FUNCTION comprar(id_empresa usuario_empresa.id%TYPE, id_compra
 $$ LANGUAGE plpgsql;
 
 --Realiza inmediatamente un pago de beneficios
-CREATE OR REPLACE FUNCTION pagar_beneficios(id_empresa usuario_empresa.id%TYPE, pago_por_participacion double precision) RETURNS void AS $$
-	DECLARE
-		--comision double precision;
+CREATE OR REPLACE FUNCTION pagar_beneficios(id_empresa usuario_empresa.id%TYPE, pago_por_participacion double precision, num_participaciones_por_participacion integer) RETURNS void AS $$
     BEGIN
 
-		--SELECT usuario_regulador.comision_actual into comision FROM usuario_regulador LIMIT 1;
+		IF pago_por_participacion > 0::double precision THEN
 
-		--UPDATE usuario_mercado SET saldo=saldo-((SELECT sum(num_participaciones * pago_por_participacion) FROM tener_participaciones WHERE tener_participaciones.id2=id_empresa) * (1.0 + comision)) WHERE usuario_mercado.id=id_empresa; --Primero le restamos a la empresa el saldo que se usaría para pagar (Esta versión no la usamos porque tiene en cuenta la comisión actual)
 		UPDATE usuario_mercado SET saldo=saldo-(SELECT sum(num_participaciones * pago_por_participacion) FROM tener_participaciones WHERE tener_participaciones.id2=id_empresa) WHERE usuario_mercado.id=id_empresa; --Primero le restamos a la empresa el saldo que se usaría para pagar
 
 		UPDATE usuario_mercado SET saldo=saldo+(SELECT num_participaciones * pago_por_participacion FROM tener_participaciones WHERE tener_participaciones.id2=id_empresa and tener_participaciones.id1=usuario_mercado.id) WHERE usuario_mercado.id in (SELECT id1 FROM tener_participaciones WHERE tener_participaciones.id2=id_empresa); --A cada usuario le sumamos el importe correspondiente a sus participaciones
+
+		END IF;
+
+		IF num_participaciones_por_participacion > 0 THEN
+
+		IF COALESCE((SELECT num_participaciones FROM tener_participaciones WHERE tener_participaciones.id1=id_empresa and tener_participaciones.id2=id_empresa),0) < (SELECT sum(t2.num_participaciones * num_participaciones_por_participacion) FROM tener_participaciones as t2 WHERE t2.id1 <> id_empresa and t2.id2=id_empresa) THEN
+			RAISE EXCEPTION 'No se dispone de suficientes participaciones para hacer el pago';
+		END IF;
+
+		UPDATE tener_participaciones SET num_participaciones=num_participaciones-(SELECT sum(t2.num_participaciones * num_participaciones_por_participacion) FROM tener_participaciones as t2 WHERE t2.id1 <> id_empresa and t2.id2=id_empresa) WHERE tener_participaciones.id1=id_empresa and tener_participaciones.id2=id_empresa; --Primero le restamos a la empresa las participaciones que va a otorgar, no pagamos participaciones a la propia empresa
+
+		UPDATE tener_participaciones SET num_participaciones=num_participaciones+(num_participaciones * num_participaciones_por_participacion) WHERE tener_participaciones.id1 <> id_empresa and tener_participaciones.id2=id_empresa; --A cada usuario le sumamos las participaciones adecuadas
+
+		END IF;
 
     END;
 $$ LANGUAGE plpgsql;
