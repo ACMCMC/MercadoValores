@@ -116,7 +116,13 @@ public class VGestionParticipacion extends javax.swing.JFrame {
     private void DarAltaBotonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DarAltaBotonActionPerformed
         // TODO add your handling code here:
         try{
-            FachadaDB.getFachada().crearParticipacion(usr,(int)NumeroParticipacionesSpinner.getValue());
+            int numeroP = (int)this.NumeroParticipacionesSpinner.getValue();
+            if(numeroP >= 0){
+                FachadaDB.getFachada().crearParticipacion(usr,numeroP);
+            }else{
+                VAviso x = new VAviso(this,true,"El valor debe ser positivo");
+                x.setVisible(true);
+            }
         }
         catch(SQLException e){
             FachadaAplicacion.muestraExcepcion(e);
@@ -127,7 +133,13 @@ public class VGestionParticipacion extends javax.swing.JFrame {
     private void DarBajaBotonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DarBajaBotonActionPerformed
         // TODO add your handling code here:
         try{
-            FachadaDB.getFachada().bajaParticipacion(usr,(int)NumeroParticipacionesSpinner.getValue());
+            int numeroP = (int)this.NumeroParticipacionesSpinner.getValue();
+            if(numeroP >= 0){
+                FachadaDB.getFachada().bajaParticipacion(usr,numeroP);
+            }else{
+                VAviso x = new VAviso(this,true,"El valor debe ser positivo");
+                x.setVisible(true);               
+            }
         }
         catch(SQLException e){
             FachadaAplicacion.muestraExcepcion(e);

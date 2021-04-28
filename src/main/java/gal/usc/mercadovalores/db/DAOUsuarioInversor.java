@@ -129,6 +129,32 @@ public final class DAOUsuarioInversor extends DAO<UsuarioInversor> {
 		}
 	}
 
+	public void updateId(UsuarioInversor user, String oldId) {
+		Connection c = startTransaction();
+		PreparedStatement preparedStatement = null;
+
+		try {
+			c.setAutoCommit(false);
+			preparedStatement = c
+					.prepareStatement("update usuario_mercado set id=? where id=?");
+			preparedStatement.setString(1, user.getId());
+			preparedStatement.setString(2, oldId);
+			preparedStatement.executeUpdate();
+			preparedStatement.close();
+			c.commit();
+
+			update(user);
+		} catch (SQLException e) {
+			FachadaAplicacion.muestraExcepcion(e);
+		} finally {
+			try {
+				preparedStatement.close();
+			} catch (SQLException e) {
+				FachadaAplicacion.muestraExcepcion(e);
+			}
+		}
+	}
+
 	public Set<UsuarioInversor> getAll() {
 		Connection c = startTransaction();
 		Set<UsuarioInversor> setFinal = new HashSet<>();

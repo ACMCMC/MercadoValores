@@ -59,7 +59,7 @@ public class DAOUsuario extends DAO<Usuario> {
 
 		try {
 			preparedStatement = c
-					.prepareStatement("select crypt(?, gen_salt('bf')");
+					.prepareStatement("select crypt(?, gen_salt('bf'))");
 			preparedStatement.setString(1, contrasenaTextoPlano);
 
 			resultSet = preparedStatement.executeQuery();

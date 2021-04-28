@@ -255,8 +255,8 @@ public class VPrincipalInversor extends javax.swing.JFrame {
         if(!idCheck.isEmpty() && !passCheck.isEmpty()){
             //actualizamos el usuario local
             String idActual = this.usr.getId();
+            String passActual = this.usr.getClave();
             this.usr.setId((String) this.TablaDatos.getValueAt(0, 1));
-            //this.usr.setSaldo((double) this.TablaDatos.getValueAt(1, 1));
             this.usr.setDireccion((String) this.TablaDatos.getValueAt(2, 1));
             this.usr.setTelefono((String) this.TablaDatos.getValueAt(3, 1));
             this.usr.setDni((String) this.TablaDatos.getValueAt(4, 1));
@@ -268,14 +268,20 @@ public class VPrincipalInversor extends javax.swing.JFrame {
             res = FachadaDB.getFachada().getUsuarioById(this.usr.getId());
 
             if(res != null && res.getId().equals(idActual)){
+                
+                if(!passActual.equals(this.usr.getClave())){
+                    this.usr.setClave(FachadaDB.getFachada().getPassEncriptada(this.usr.getClave()));
+                }
+                
+                
                 FachadaDB.getFachada().actualizarUser(this.usr);
-            }else if(res != null ){
+            }else if(res != null){
                 VAviso x = new VAviso(this,true,"Nombre de usuario ya en uso, por favor elige otro.");
                 x.setVisible(true);
                 this.usr.setId(idActual);
             }else{
                 try{
-                    FachadaDB.getFachada().add(this.usr);
+                    FachadaDB.getFachada().actualizarUserEID(this.usr, idActual);
                 }catch(Exception e){
                     VAviso x = new VAviso(this,true,e.getMessage());
                     x.setVisible(true);

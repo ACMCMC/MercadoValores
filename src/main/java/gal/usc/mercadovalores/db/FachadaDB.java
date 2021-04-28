@@ -61,7 +61,7 @@ public class FachadaDB {
 
             usuario.setProperty("user", configuracion.getProperty("usuario"));
             usuario.setProperty("password", configuracion.getProperty("clave"));
-            //usuario.setProperty("ssl", "false");
+            usuario.setProperty("ssl", "true");
             String url = "jdbc:" + gestor + "://" + configuracion.getProperty("servidor") + ":"
                     + configuracion.getProperty("puerto") + "/" + configuracion.getProperty("baseDatos");
             this.conexion = java.sql.DriverManager.getConnection(url, usuario);
@@ -135,7 +135,7 @@ public class FachadaDB {
         if (res != null && res.getId().equals(id)) {
             return res;
         }
-        return res;
+        return null;
     }
 
     public void add(Usuario u) throws SQLException {
@@ -200,6 +200,14 @@ public class FachadaDB {
             daoUsuarioEmpresa.update((UsuarioEmpresa) u);
         } else if (u instanceof UsuarioInversor) {
             daoUsuarioInversor.update((UsuarioInversor) u);
+        }
+    }
+
+    public void actualizarUserEID(UsuarioDeMercado u, String oldId) {
+        if (u instanceof UsuarioEmpresa) {
+            daoUsuarioEmpresa.updateId((UsuarioEmpresa) u, oldId);
+        } else if (u instanceof UsuarioInversor) {
+            daoUsuarioInversor.updateId((UsuarioInversor) u, oldId);
         }
     }
 

@@ -61,8 +61,6 @@ public class VPrincipalEmpresa extends javax.swing.JFrame {
         BajaVentaMenuItem = new javax.swing.JMenuItem();
         BeneficiosMenu = new javax.swing.JMenu();
         AltaPagoMenuItem = new javax.swing.JMenuItem();
-        BajaPagoMenuItem = new javax.swing.JMenuItem();
-        PagarMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Ventana  Empresa");
@@ -187,6 +185,11 @@ public class VPrincipalEmpresa extends javax.swing.JFrame {
 
         AltaPagoMenuItem.setText("Altas y pagos");
         AltaPagoMenuItem.setToolTipText("");
+        AltaPagoMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                AltaPagoMenuItemActionPerformed(evt);
+            }
+        });
         BeneficiosMenu.add(AltaPagoMenuItem);
 
         Menu.add(BeneficiosMenu);
@@ -274,13 +277,13 @@ public class VPrincipalEmpresa extends javax.swing.JFrame {
                 }
                 
                 FachadaDB.getFachada().actualizarUser(this.usr);
-            }else if(res != null ){
+            }else if(res != null){
                 VAviso x = new VAviso(this,true,"Nombre de usuario ya en uso, por favor elige otro.");
                 x.setVisible(true);
                 this.usr.setId(idActual);
             }else{
                 try{
-                    FachadaDB.getFachada().add(this.usr);
+                    FachadaDB.getFachada().actualizarUserEID(this.usr, idActual);
                 }catch(Exception e){
                     VAviso x = new VAviso(this,true,e.getMessage());
                     x.setVisible(true);
@@ -309,13 +312,6 @@ public class VPrincipalEmpresa extends javax.swing.JFrame {
         this.ActualizarTablaDatos();
     }//GEN-LAST:event_VenderMenuItemActionPerformed
 
-    private void AltaPagoMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AltaPagoMenuItemActionPerformed
-
-        this.fa.ventanaBeneficios(this.usr);
-        this.ActualizarTablaDatos();
-
-    }//GEN-LAST:event_AltaPagoMenuItemActionPerformed
-
     private void BajaVentaMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BajaVentaMenuItemActionPerformed
         this.fa.ventanaAnuncios(this.usr);
         this.ActualizarTablaDatos();
@@ -335,6 +331,11 @@ public class VPrincipalEmpresa extends javax.swing.JFrame {
     private void updater(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_updater
         this.ActualizarTablaDatos();
     }//GEN-LAST:event_updater
+
+    private void AltaPagoMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AltaPagoMenuItemActionPerformed
+        // TODO add your handling code here:
+        this.fa.ventanaBeneficios(this.usr);
+    }//GEN-LAST:event_AltaPagoMenuItemActionPerformed
 
     private void ActualizarTablaDatos(){
         try{
@@ -371,7 +372,6 @@ public class VPrincipalEmpresa extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem AltaPagoMenuItem;
     private javax.swing.JMenuItem BajaMenuItem;
-    private javax.swing.JMenuItem BajaPagoMenuItem;
     private javax.swing.JMenuItem BajaVentaMenuItem;
     private javax.swing.JMenu BeneficiosMenu;
     private javax.swing.JButton BotonCerrarSesion;
@@ -380,7 +380,6 @@ public class VPrincipalEmpresa extends javax.swing.JFrame {
     private javax.swing.JMenuItem GestionParticipacionMenuItem;
     private javax.swing.JMenuBar Menu;
     private javax.swing.JMenuItem ModificarMenuItem;
-    private javax.swing.JMenuItem PagarMenuItem;
     private javax.swing.JMenu ParticipacionesMenu;
     private javax.swing.JButton SalirBoton;
     private javax.swing.JTable TablaDatos;
