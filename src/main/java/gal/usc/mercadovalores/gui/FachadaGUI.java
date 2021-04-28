@@ -116,6 +116,11 @@ public class FachadaGUI {
         vB.setVisible(true);
     }
     
+    public void ventanaCompras(UsuarioDeMercado usr){
+        VCompra vC = new VCompra(usr);
+        vC.setVisible(true);
+    }
+    
     public void verBeneficios(){
         VBeneficiosAdmin vBA = new VBeneficiosAdmin();
         vBA.setVisible(true);

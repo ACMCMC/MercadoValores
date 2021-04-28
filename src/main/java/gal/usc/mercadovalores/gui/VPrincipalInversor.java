@@ -291,6 +291,7 @@ public class VPrincipalInversor extends javax.swing.JFrame {
     }//GEN-LAST:event_botonUpdateActionPerformed
 
     private void ComprarMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ComprarMenuItemActionPerformed
+        this.fa.ventanaCompras(this.usr);
     }//GEN-LAST:event_ComprarMenuItemActionPerformed
 
     private void VenderMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_VenderMenuItemActionPerformed
