@@ -160,9 +160,10 @@ public class VCompra extends javax.swing.JFrame {
     private void ComprarBotonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ComprarBotonActionPerformed
         // TODO add your handling code here:
         if(emp!=null){
-            FachadaDB.getFachada().ventaParticipaciones(usr, emp, (Integer)numParticipacionesSpinner.getValue(),Integer.valueOf(precioTexto.getText()));
+            FachadaDB.getFachada().compraParticipaciones(usr, emp, (Integer)numParticipacionesSpinner.getValue(),Integer.valueOf(precioTexto.getText()));
         }
         updateTable();
+        textoSaldo();
     }//GEN-LAST:event_ComprarBotonActionPerformed
 
     private void tablaAnunciosMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaAnunciosMousePressed

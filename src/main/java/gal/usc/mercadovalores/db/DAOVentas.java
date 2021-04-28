@@ -212,36 +212,36 @@ public class DAOVentas extends DAO<Participacion> {
                 return setFinal;
         }
 
-        public Integer getParticipacionesDeEmpresaALaVentaPorUsuario(String id1, String id2) {
+        public Integer getParticipacionesDeEmpresaALaVentaPorUsuario(String id1,String id2){
                 Connection c = startTransaction();
-                Integer ret = 0;
+                Integer ret=0;
                 PreparedStatement preparedStatement = null;
                 ResultSet resultSet;
-                try {
-                        preparedStatement = getConexion()
-                                        .prepareStatement("select * from anuncio_venta where id1=? and id2=?");
-                        preparedStatement.setString(1, id1);
-                        preparedStatement.setString(2, id2);
-                        resultSet = preparedStatement.executeQuery();
-                        while (resultSet.next()) {
+                        try {
+                                preparedStatement = getConexion()
+                                                .prepareStatement("select * from anuncio_venta where id1=? and id2=?");
+                                preparedStatement.setString(1,id1 );
+                                preparedStatement.setString(2,id2 );
+                                resultSet = preparedStatement.executeQuery();
+                                while (resultSet.next()) {
+                                        try {
+                                            Integer aux=resultSet.getInt("num_participaciones");
+                                            ret+=aux;
+                                        } catch (EnumConstantNotPresentException e) {
+                                                FachadaAplicacion.muestraExcepcion(e);
+                                        }
+                                }
+                        } catch (SQLException e) {
+                                FachadaAplicacion.muestraExcepcion(e);
+                        } finally {
                                 try {
-                                        Integer aux = resultSet.getInt("num_participaciones");
-                                        ret += aux;
-                                } catch (EnumConstantNotPresentException e) {
+                                        preparedStatement.close();
+                                } catch (SQLException e) {
                                         FachadaAplicacion.muestraExcepcion(e);
                                 }
                         }
-                } catch (SQLException e) {
-                        FachadaAplicacion.muestraExcepcion(e);
-                } finally {
-                        try {
-                                preparedStatement.close();
-                        } catch (SQLException e) {
-                                FachadaAplicacion.muestraExcepcion(e);
-                        }
-                }
-                return ret;
-        }
+                 return ret;
+             }
 
         /**
          * Devuelve el precio medio de las últimas X compras a la empresa, o NULL si no
@@ -284,6 +284,60 @@ public class DAOVentas extends DAO<Participacion> {
                 }
                 return ret;
         }
+
+        public Set<UsuarioEmpresa> empresasConAnuncios(){
+                Connection c = startTransaction();
+               Set<UsuarioEmpresa> ret=new HashSet<>();
+               PreparedStatement preparedStatement = null;
+               PreparedStatement preparedStatement2 = null;
+               ResultSet resultSet,resultSet2;
+               UsuarioEmpresa usuario=null;
+                       try {
+                               preparedStatement = getConexion()
+                                               .prepareStatement("select distinct id2 from anuncio_venta");
+                               resultSet = preparedStatement.executeQuery();
+                               while (resultSet.next()) {
+                                       try {
+                                           String id=resultSet.getString("id2");
+                                           preparedStatement2 = getConexion()
+                                               .prepareStatement("select * from usuario_empresa inner join usuario_mercado using(id) where id=? ");
+                                       preparedStatement2.setString(1,id);
+                                           
+                               resultSet2 = preparedStatement2.executeQuery();
+                                       while(resultSet2.next()){
+                                           
+                                               String id2 = resultSet2.getString("id");
+                                               String clave = resultSet2.getString("clave");
+                                               double saldo = resultSet2.getDouble("saldo");
+                                               String direccion = resultSet2.getString("direccion");
+                                               String telefono = resultSet2.getString("telefono");
+                                               EstadoUsuario estado = EstadoUsuario.getByName(resultSet2.getString("estado"));
+                                               String cif = resultSet2.getString("cif");
+                                               String nombreComercial = resultSet2.getString("nombre_comercial");
+                                               double importeBloqueado = resultSet2.getDouble("importe_bloqueado");
+       
+                                               usuario = new UsuarioEmpresa(id2, clave, saldo, direccion, telefono, estado, cif, nombreComercial,
+                                                               importeBloqueado);
+                                               ret.add(usuario);
+                                       
+                                           }
+                                       } catch (EnumConstantNotPresentException e) {
+                                               FachadaAplicacion.muestraExcepcion(e);
+                                       }
+                               }
+                       } catch (SQLException e) {
+                               FachadaAplicacion.muestraExcepcion(e);
+                       } finally {
+                               try {
+                                       preparedStatement.close();
+                                       preparedStatement2.close();
+                               } catch (SQLException e) {
+                                       FachadaAplicacion.muestraExcepcion(e);
+                               }
+                       }
+                return ret;
+            
+            }
 
         /**
          * Se encarga de realizar una compra
@@ -434,61 +488,6 @@ public class DAOVentas extends DAO<Participacion> {
                         }
                 }
                 return ret;
-        }
-
-        public Set<UsuarioEmpresa> empresasConAnuncios() {
-                Connection c = startTransaction();
-                Set<UsuarioEmpresa> ret = new HashSet<>();
-                PreparedStatement preparedStatement = null;
-                PreparedStatement preparedStatement2 = null;
-                ResultSet resultSet, resultSet2;
-                UsuarioEmpresa usuario = null;
-                try {
-                        preparedStatement = c.prepareStatement("select distinct id2 from anuncio_venta");
-                        resultSet = preparedStatement.executeQuery();
-                        while (resultSet.next()) {
-                                try {
-                                        String id = resultSet.getString("id2");
-                                        preparedStatement2 = c.prepareStatement(
-                                                        "select * from usuario_empresa inner join usuario_mercado using(id) where id=? ");
-                                        preparedStatement2.setString(1, id);
-
-                                        resultSet2 = preparedStatement2.executeQuery();
-                                        while (resultSet2.next()) {
-
-                                                String id2 = resultSet2.getString("id");
-                                                String clave = resultSet2.getString("clave");
-                                                double saldo = resultSet2.getDouble("saldo");
-                                                String direccion = resultSet2.getString("direccion");
-                                                String telefono = resultSet2.getString("telefono");
-                                                EstadoUsuario estado = EstadoUsuario
-                                                                .getByName(resultSet2.getString("estado"));
-                                                String cif = resultSet2.getString("cif");
-                                                String nombreComercial = resultSet2.getString("nombre_comercial");
-                                                double importeBloqueado = resultSet2.getDouble("importe_bloqueado");
-
-                                                usuario = new UsuarioEmpresa(id2, clave, saldo, direccion, telefono,
-                                                                estado, cif, nombreComercial, importeBloqueado);
-                                                ret.add(usuario);
-
-                                        }
-                                } catch (EnumConstantNotPresentException e) {
-                                        FachadaAplicacion.muestraExcepcion(e);
-                                }
-                                c.commit();
-                        }
-                } catch (SQLException e) {
-                        FachadaAplicacion.muestraExcepcion(e);
-                } finally {
-                        try {
-                                preparedStatement.close();
-                                preparedStatement2.close();
-                        } catch (SQLException e) {
-                                FachadaAplicacion.muestraExcepcion(e);
-                        }
-                }
-                return ret;
-
         }
 
         public Set<UsuarioEmpresa> getEmpresasConAnuncios() {
