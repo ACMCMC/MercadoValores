@@ -14,14 +14,18 @@ public class FachadaAplicacion {
     
     private FachadaGUI fgui;
 
+    private static FachadaAplicacion singleton = new FachadaAplicacion();
+
+    public static FachadaAplicacion getFachada() {
+        return singleton;
+    }
+
     public FachadaAplicacion() {
         this.fgui = new FachadaGUI(this);
     }
 
     public static void main(String args[]){
-        FachadaAplicacion fa;
-        fa= new FachadaAplicacion();
-        fa.iniciarAplicacion();
+        FachadaAplicacion.getFachada().iniciarAplicacion();
     }
 
     public void iniciarAplicacion(){
@@ -36,7 +40,6 @@ public class FachadaAplicacion {
         this.fgui.registro();
     }
 
-
     public void iniciarAdmin(UsuarioRegulador usr){
         this.fgui.iniciarAdmin(usr);
     }
@@ -50,7 +53,7 @@ public class FachadaAplicacion {
     }
 
     public static void muestraExcepcion(Throwable t) {
-        FachadaGUI.muestraExcepcion(t);
+        FachadaAplicacion.getFachada().fgui.muestraExcepcion(t);
     }
     
     public void cerrarSesion(javax.swing.JFrame frame){
