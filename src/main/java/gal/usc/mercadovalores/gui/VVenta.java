@@ -17,6 +17,7 @@ import java.util.Set;
  */
 public class VVenta extends javax.swing.JFrame {
     private UsuarioDeMercado usr;
+    private UsuarioEmpresa emp = null;
     /**
      * Creates new form VCompra
      */
@@ -37,9 +38,6 @@ public class VVenta extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        tablaEmpresas = new javax.swing.JTable();
-        jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         campoCantidad = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
@@ -48,19 +46,16 @@ public class VVenta extends javax.swing.JFrame {
         precioComision = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         precioMedio = new javax.swing.JLabel();
-        BotonPrecioMedio = new javax.swing.JButton();
         numeroVentasMedioSpinner = new javax.swing.JSpinner();
+        jLabel1 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tablaEmpresas = new javax.swing.JTable();
         botonSalir = new javax.swing.JButton();
         botonVender = new javax.swing.JButton();
+        textoX = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
-
-        tablaEmpresas.setModel(new TablaEmpresasUsuario());
-        tablaEmpresas.setToolTipText("");
-        jScrollPane1.setViewportView(tablaEmpresas);
-
-        jLabel1.setText("Venta de participaciones:");
 
         jLabel2.setText("Cantidad:");
 
@@ -74,16 +69,20 @@ public class VVenta extends javax.swing.JFrame {
 
         jLabel4.setText("Comisión actual: ");
 
-        jLabel5.setText("Precio medio de las últimas  X  ventas:      X = ");
-
-        BotonPrecioMedio.setText("Obtener precio medio");
-        BotonPrecioMedio.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                BotonPrecioMedioActionPerformed(evt);
-            }
-        });
+        jLabel5.setText("Precio medio de las últimas  X  ventas deaempresa");
 
         numeroVentasMedioSpinner.setModel(new javax.swing.SpinnerNumberModel(10, 0, null, 1));
+
+        jLabel1.setText("Venta de participaciones:");
+
+        tablaEmpresas.setModel(new TablaEmpresasUsuario());
+        tablaEmpresas.setToolTipText("");
+        tablaEmpresas.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tablaEmpresasMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tablaEmpresas);
 
         botonSalir.setText("Salir");
         botonSalir.addActionListener(new java.awt.event.ActionListener() {
@@ -99,51 +98,55 @@ public class VVenta extends javax.swing.JFrame {
             }
         });
 
+        textoX.setText("X =");
+        textoX.setToolTipText("");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(33, 33, 33)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel2)
+                                    .addComponent(jLabel3)
+                                    .addComponent(campoPrecio, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel4)
+                                    .addComponent(campoCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(precioComision)))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel1)
+                                    .addComponent(jLabel5)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(textoX)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(numeroVentasMedioSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(precioMedio, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(0, 0, Short.MAX_VALUE))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(botonSalir)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(botonVender))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel5)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(numeroVentasMedioSpinner))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 48, Short.MAX_VALUE)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel3)
-                            .addComponent(campoPrecio, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel4)
-                            .addComponent(campoCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(precioComision)))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(BotonPrecioMedio)
-                                .addGap(18, 18, 18)
-                                .addComponent(precioMedio, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addGap(30, 30, 30))
+                        .addComponent(botonVender)))
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel1)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(campoCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jLabel3)
@@ -152,22 +155,25 @@ public class VVenta extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jLabel4)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(precioComision)
-                        .addGap(29, 29, 29))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(numeroVentasMedioSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel5))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(precioComision))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(36, 36, 36)
+                .addComponent(jLabel5)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(BotonPrecioMedio, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(precioMedio, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(botonSalir)
-                    .addComponent(botonVender)))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(numeroVentasMedioSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(textoX))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(botonSalir)
+                            .addComponent(botonVender))
+                        .addGap(89, 89, 89))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(precioMedio, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -175,15 +181,14 @@ public class VVenta extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 382, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         pack();
@@ -218,10 +223,14 @@ public class VVenta extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_botonSalirActionPerformed
 
-    private void BotonPrecioMedioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonPrecioMedioActionPerformed
+    private void tablaEmpresasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaEmpresasMouseClicked
         // TODO add your handling code here:
+        TablaEmpresasUsuario tE = (TablaEmpresasUsuario) this.tablaEmpresas.getModel();
+        if(tablaEmpresas.getSelectedRow()>0){
+            UsuarioEmpresa emp = (UsuarioEmpresa)tE.getEmpresaAt(tablaEmpresas.getSelectedRow());
+        }
         textoPrecioMedio();
-    }//GEN-LAST:event_BotonPrecioMedioActionPerformed
+    }//GEN-LAST:event_tablaEmpresasMouseClicked
 
     private void updateTabla(){
         try{
@@ -263,26 +272,26 @@ public class VVenta extends javax.swing.JFrame {
     }
     
     private void textoPrecioMedio(){
-        try{
-            TablaEmpresasUsuario tE = (TablaEmpresasUsuario) this.tablaEmpresas.getModel();
-            if(tablaEmpresas.getSelectedRow()>0){
-                Double precio = FachadaDB.getFachada().getPrecioMedioComprasEmpresa((UsuarioEmpresa)tE.getEmpresaAt(tablaEmpresas.getSelectedRow()), (int) this.numeroVentasMedioSpinner.getValue());
-                if(precio!=null){
-                    String precioText = precio.toString();
-                    this.precioMedio.setText(precioText + "€");
-                }
-                else{
-                    this.precioMedio.setText("No disponible");
-                }
-            }            
-        }catch(Exception e){
-            VAviso x = new VAviso(this,true,e.getMessage());
-            x.setVisible(true);
+        TablaEmpresasUsuario tE = (TablaEmpresasUsuario) this.tablaEmpresas.getModel();
+        if(emp!=null){
+            Double precio = FachadaDB.getFachada().getPrecioMedioComprasEmpresa(emp, (int) this.numeroVentasMedioSpinner.getValue());
+            if(precio!=null){
+                String precioText = precio.toString();
+                this.precioMedio.setText("Precio medio de las últimas  X  ventas da empresa "+emp.getNombreComercial() +": "+ precioText + "€");
+            }
+            else{
+                this.precioMedio.setText("Prezo non dispoñible");
+            }
         }
+        else{
+            this.precioMedio.setText("Empresa non seleccionada");
+            this.textoX.setText("");
+            this.numeroVentasMedioSpinner.setVisible(false);
+        }   
     }
     
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton BotonPrecioMedio;
     private javax.swing.JButton botonSalir;
     private javax.swing.JButton botonVender;
     private javax.swing.JTextField campoCantidad;
@@ -298,5 +307,6 @@ public class VVenta extends javax.swing.JFrame {
     private javax.swing.JLabel precioComision;
     private javax.swing.JLabel precioMedio;
     private javax.swing.JTable tablaEmpresas;
+    private javax.swing.JLabel textoX;
     // End of variables declaration//GEN-END:variables
 }
