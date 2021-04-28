@@ -369,54 +369,6 @@ FOR EACH ROW EXECUTE PROCEDURE comprueba_tipo_unico_usuario();
 CREATE TRIGGER comprueba_tipo_unico_usuario BEFORE INSERT ON usuario_empresa
 FOR EACH ROW EXECUTE PROCEDURE comprueba_tipo_unico_usuario();
 
---Esta funcion realiza la compra de participaciones
-CREATE OR REPLACE FUNCTION comprar(id_empresa usuario_empresa.id%TYPE, id_comprador usuario_mercado.id%TYPE, numero integer, precio_max double precision) RETURNS integer AS $$
-    DECLARE
-		saldo_restante double precision;
-		participaciones_por_comprar integer;
-		id_compra_creada compra.id_compra%TYPE;
-		id_vendedor anuncio_venta.id1%TYPE;
-		fecha_anuncio_venta anuncio_venta.fecha%TYPE;
-		cantidad_compra integer;
-		comision anuncio_venta.comision_en_fecha%TYPE;
-    BEGIN
-
-		SELECT precio_max into saldo_restante;
-		SELECT numero into participaciones_por_comprar;
-		INSERT INTO compra(empresa, comprador, fecha) VALUES (id_empresa, id_comprador, CURRENT_TIMESTAMP) RETURNING id_compra into id_compra_creada; --Puede que luego no se consiga hacer ninguna compra
-
-		RAISE NOTICE 'Creada compra con id %', id_compra_creada;
-
-		WHILE exists(SELECT * FROM anuncio_venta WHERE anuncio_venta.id2=id_empresa and anuncio_venta.precio <= saldo_restante) and saldo_restante > 0 and participaciones_por_comprar > 0 loop
-
-		SELECT anuncio_venta.id1, anuncio_venta.fecha, anuncio_venta.comision_en_fecha into id_vendedor, fecha_anuncio_venta, comision FROM anuncio_venta WHERE anuncio_venta.id2=id_empresa ORDER BY anuncio_venta.precio asc FETCH FIRST ROW ONLY;
-
-		SELECT LEAST(CAST (saldo_restante / (SELECT anuncio_venta.precio FROM anuncio_venta WHERE anuncio_venta.fecha=fecha_anuncio_venta and anuncio_venta.id1=id_vendedor and anuncio_venta.id2=id_empresa) AS integer), participaciones_por_comprar, (SELECT anuncio_venta.num_participaciones FROM anuncio_venta WHERE anuncio_venta.fecha=fecha_anuncio_venta and anuncio_venta.id1=id_vendedor and anuncio_venta.id2=id_empresa)) into cantidad_compra; --El numero de acciones a comprar es el minimo de dos valores: el de las participaciones que nos faltan por comprar, el de las participaciones que se pueden comprar segun este anuncio, y el de las participaciones que nos podriamos permitir comprar
-
-		SELECT participaciones_por_comprar-cantidad_compra into participaciones_por_comprar; --Restamos las participaciones que vamos a comprar
-
-		INSERT INTO parte_compra(id_compra, vendedor, precio, cantidad) VALUES (id_compra_creada, id_vendedor, (SELECT precio FROM anuncio_venta WHERE anuncio_venta.fecha=fecha_anuncio_venta and anuncio_venta.id1=id_vendedor and anuncio_venta.id2=id_empresa), cantidad_compra);
-
-		UPDATE usuario_mercado SET saldo=saldo - cantidad_compra * (SELECT anuncio_venta.precio FROM anuncio_venta WHERE anuncio_venta.fecha=fecha_anuncio_venta and anuncio_venta.id1=id_vendedor and anuncio_venta.id2=id_empresa) WHERE id=id_comprador; --Le quitamos el saldo correspondiente al comprador
-		UPDATE usuario_mercado SET saldo=saldo+cantidad_compra*(1.0-comision)*(SELECT anuncio_venta.precio FROM anuncio_venta WHERE anuncio_venta.fecha=fecha_anuncio_venta and anuncio_venta.id1=id_vendedor and anuncio_venta.id2=id_empresa) WHERE id=id_vendedor; --Le sumamos la parte correspondiente a lo que no son comisiones de la venta al vendedor
-		UPDATE usuario_regulador SET saldo=saldo+cantidad_compra*(comision)*(SELECT anuncio_venta.precio FROM anuncio_venta WHERE anuncio_venta.fecha=fecha_anuncio_venta and anuncio_venta.id1=id_vendedor and anuncio_venta.id2=id_empresa); --Le sumamos la parte correspondiente a las comisiones al regulador
-
-		UPDATE anuncio_venta SET num_participaciones=num_participaciones-cantidad_compra WHERE anuncio_venta.fecha=fecha_anuncio_venta and anuncio_venta.id1=id_vendedor and anuncio_venta.id2=id_empresa; --Le restamos al anuncio de venta las participaciones que hemos vendido. Si pasa a haber 0, se borra automaticamente la fila
-		UPDATE tener_participaciones SET num_participaciones=num_participaciones-cantidad_compra WHERE id1=id_vendedor and id2=id_empresa; --Restamos al que vende en la tabla tener_participaciones
-		IF not exists(SELECT * FROM tener_participaciones WHERE id1=id_comprador and id2=id_empresa) THEN
-		INSERT INTO tener_participaciones(id1, id2, num_participaciones) VALUES (id_comprador, id_empresa, 0);
-		END IF;
-		UPDATE tener_participaciones SET num_participaciones=num_participaciones+cantidad_compra WHERE id1=id_comprador and id2=id_empresa; --Sumamos al que compra
-
-		RAISE NOTICE 'Compradas % participaciones a %', cantidad_compra, id_vendedor;
-
-		end loop;
-
-		RETURN numero - participaciones_por_comprar;
-		 
-    END;
-$$ LANGUAGE plpgsql;
-
 --Realiza inmediatamente un pago de beneficios
 CREATE OR REPLACE FUNCTION pagar_beneficios(id_empresa usuario_empresa.id%TYPE, pago_por_participacion double precision) RETURNS void AS $$
 	DECLARE
