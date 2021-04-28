@@ -12,14 +12,11 @@ import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Set;
 
+import gal.usc.mercadovalores.aplicacion.Beneficios;
+import gal.usc.mercadovalores.aplicacion.FachadaAplicacion;
 import gal.usc.mercadovalores.aplicacion.Participacion;
 import gal.usc.mercadovalores.aplicacion.UsuarioDeMercado;
 import gal.usc.mercadovalores.aplicacion.UsuarioEmpresa;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.util.HashSet;
 
 public class DAOParticipaciones extends DAO<Participacion> {
     public DAOParticipaciones(Connection con) {
@@ -36,8 +33,8 @@ public class DAOParticipaciones extends DAO<Participacion> {
             participaciones = tenerParticipaciones(u, u);
             if (participaciones != null) {
                 preparedStatement = c.prepareStatement(
-                        "update tener_participaciones set num_participaciones=? where id1=? and id2=?");
-                preparedStatement.setInt(1, x + participaciones.getNumero());
+                        "update tener_participaciones set num_participaciones=num_participaciones + ? where id1=? and id2=?");
+                preparedStatement.setInt(1, x);
                 preparedStatement.setString(2, u.getId());
                 preparedStatement.setString(3, u.getId());
                 preparedStatement.executeUpdate();
@@ -50,6 +47,11 @@ public class DAOParticipaciones extends DAO<Participacion> {
             }
 
             preparedStatement.close();
+            preparedStatement = c.prepareStatement("update usuario_empresa set importe_bloqueado=? where id=?");
+            //preparedStatement.setDouble(1,
+            //FachadaDB.getFachada().getParticipacionesEmpresa(u) * this.getImportePorParticipacion(u));
+            preparedStatement.setString(2, u.getId());
+            preparedStatement.executeUpdate();
 
             c.commit();
 
@@ -74,18 +76,17 @@ public class DAOParticipaciones extends DAO<Participacion> {
             participaciones = tenerParticipaciones(u, u);
             if (participaciones != null) {
                 preparedStatement = c.prepareStatement(
-                        "update tener_participaciones set num_participaciones=? where id1=? and id2=?");
-                preparedStatement.setInt(1, participaciones.getNumero() - x);
+                        "update tener_participaciones set num_participaciones=num_participaciones - ? where id1=? and id2=?");
+                preparedStatement.setInt(1, x);
                 preparedStatement.setString(2, u.getId());
                 preparedStatement.setString(3, u.getId());
-            } else {
-                preparedStatement = c.prepareStatement("delete from tener_participaciones where id1=? and id2=?");
-                preparedStatement.setString(1, u.getId());
-                preparedStatement.setString(2, u.getId());
-
             }
             preparedStatement.executeUpdate();
             preparedStatement.close();
+            preparedStatement = c.prepareStatement("update usuario_empresa set importe_bloqueado=? where id=?");
+            //preparedStatement.setDouble(1, this.numeroParticipacionesTotales(u) * this.getImportePorParticipacion(u));
+            preparedStatement.setString(2, u.getId());
+            preparedStatement.executeUpdate();
             c.commit();
 
         } catch (SQLException e) {
@@ -387,7 +388,7 @@ public class DAOParticipaciones extends DAO<Participacion> {
         return setFinal;
     }
      
-
+    
     public void BajaBeneficios(Beneficios b) {
         Connection c = startTransaction();
         PreparedStatement preparedStatement = null;
@@ -412,12 +413,10 @@ public class DAOParticipaciones extends DAO<Participacion> {
     public void pagarBeneficiosInmediatamente(UsuarioEmpresa u, double pagoPorParticipacion) {
         Connection c = startTransaction();
         PreparedStatement preparedStatement = null;
-        PreparedStatement preparedStatement2 = null;
-        ResultSet resultSet;
 
         try {
 
-            preparedStatement = c.prepareStatement("SELECT pagar_beneficios(?, ?);");
+            preparedStatement = c.prepareStatement("select pagar_beneficios(?, ?);");
             preparedStatement.setString(1, u.getId());
             preparedStatement.setDouble(2, pagoPorParticipacion);
             preparedStatement.executeQuery();
@@ -427,7 +426,6 @@ public class DAOParticipaciones extends DAO<Participacion> {
         } finally {
             try {
                 preparedStatement.close();
-                preparedStatement2.close();
             } catch (SQLException e) {
                 FachadaAplicacion.muestraExcepcion(e);
             }
@@ -455,5 +453,4 @@ public class DAOParticipaciones extends DAO<Participacion> {
             }
         }
     }
-    
 }

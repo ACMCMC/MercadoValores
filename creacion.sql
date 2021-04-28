@@ -95,10 +95,10 @@ CREATE TABLE compra(
 	primary key(id_compra),
 	foreign key (comprador) references usuario_mercado(id)
         	on update cascade
-        	on delete restrict, 
+        	on delete cascade, --Podríamos plantearnos plantearnos una restricción a la hora de borrar
 	foreign key (empresa) references usuario_empresa(id)
         	on update cascade
-        	on delete restrict
+        	on delete cascade  --Podríamos plantearnos plantearnos una restricción a la hora de borrar
 );
 CREATE TABLE parte_compra(
 	id_compra serial,
@@ -109,7 +109,7 @@ CREATE TABLE parte_compra(
 	primary key(id_compra,id_parte),
 	foreign key (vendedor) references usuario_mercado(id)
         	on update cascade
-        	on delete restrict, 
+        	on delete cascade, --Podríamos plantearnos plantearnos una restricción a la hora de borrar
 	foreign key (id_compra) references compra(id_compra)
         		on update cascade
         		on delete restrict,
@@ -324,6 +324,22 @@ $borrar_fila_tener_participaciones_si_es_cero$ LANGUAGE plpgsql;
 CREATE TRIGGER borrar_fila_tener_participaciones_si_es_cero AFTER UPDATE ON tener_participaciones
 FOR EACH ROW EXECUTE PROCEDURE borrar_fila_tener_participaciones_si_es_cero();
 
+--Revisa que al actualizar la tabla tener_participaciones no se produzca una actualizacion que haga que el numero de participaciones que vende el usuario de una empresa sea mayor que las que tiene realmente
+CREATE OR REPLACE FUNCTION comprobar_max_anuncios_venta_actualizacion_tener_participaciones() RETURNS trigger AS $comprobar_max_anuncios_venta_actualizacion_tener_participaciones$
+    BEGIN
+		
+		IF (SELECT sum(anuncio_venta.num_participaciones) FROM anuncio_venta WHERE anuncio_venta.id1=new.id1 and anuncio_venta.id2=new.id2) > new.num_participaciones THEN
+			RAISE EXCEPTION 'Los anuncios de venta sobrepasan a las participaciones poseídas';
+		END IF;
+
+		RETURN NEW;
+
+    END;
+$comprobar_max_anuncios_venta_actualizacion_tener_participaciones$ LANGUAGE plpgsql;
+
+CREATE TRIGGER comprobar_max_anuncios_venta_actualizacion_tener_participaciones BEFORE UPDATE ON tener_participaciones
+FOR EACH ROW EXECUTE PROCEDURE comprobar_max_anuncios_venta_actualizacion_tener_participaciones();
+
 --Si una fila tiene numero de participaciones 0, la borramos
 CREATE OR REPLACE FUNCTION borrar_fila_anuncio_venta_si_es_cero() RETURNS trigger AS $borrar_fila_anuncio_venta_si_es_cero$
     BEGIN
@@ -337,6 +353,22 @@ $borrar_fila_anuncio_venta_si_es_cero$ LANGUAGE plpgsql;
 
 CREATE TRIGGER borrar_fila_anuncio_venta_si_es_cero AFTER UPDATE OR INSERT ON anuncio_venta
 FOR EACH ROW EXECUTE PROCEDURE borrar_fila_anuncio_venta_si_es_cero();
+
+--Comprobamos que un usuario no intenta vender más participaciones que las que tiene
+CREATE OR REPLACE FUNCTION comprobar_maximo_anuncios_venta() RETURNS trigger AS $comprobar_maximo_anuncios_venta$
+    BEGIN
+
+		IF ((SELECT sum(anuncio_venta.num_participaciones) FROM anuncio_venta WHERE anuncio_venta.id1=new.id1 and anuncio_venta.id2=new.id2 and anuncio_venta.fecha <> new.fecha) + new.num_participaciones) > (SELECT tener_participaciones.num_participaciones FROM tener_participaciones WHERE tener_participaciones.id1=new.id1 and tener_participaciones.id2=new.id2) THEN
+			RAISE EXCEPTION 'Se ha excedido el máximo de participaciones a la venta';
+		END IF;
+
+		RETURN NEW;
+		 
+    END;
+$comprobar_maximo_anuncios_venta$ LANGUAGE plpgsql;
+
+CREATE TRIGGER comprobar_maximo_anuncios_venta BEFORE UPDATE OR INSERT ON anuncio_venta
+FOR EACH ROW EXECUTE PROCEDURE comprobar_maximo_anuncios_venta();
 
 --Comprueba que no se repite el ID entre usuarios_empresa, inversores y el regulador
 CREATE OR REPLACE FUNCTION comprueba_tipo_unico_usuario() RETURNS trigger AS $comprueba_tipo_unico_usuario$

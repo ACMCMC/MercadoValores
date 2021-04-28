@@ -21,7 +21,7 @@ public final class DAOUsuarioRegulador extends DAO<UsuarioRegulador> {
 		UsuarioRegulador regulador = null;
 
 		try {
-			preparedStatement = getConexion().prepareStatement("select * from usuario_regulador");
+			preparedStatement = c.prepareStatement("select * from usuario_regulador");
 			resultSet = preparedStatement.executeQuery();
 			if (resultSet.next()) {
 				regulador = new UsuarioRegulador(resultSet.getString("id"), resultSet.getString("clave"),
@@ -44,8 +44,8 @@ public final class DAOUsuarioRegulador extends DAO<UsuarioRegulador> {
 		Connection c = startTransaction();
 		PreparedStatement preparedStatement = null;
 		try {
-			getConexion().setAutoCommit(false);
-			preparedStatement = getConexion().prepareStatement(
+			c.setAutoCommit(false);
+			preparedStatement = c.prepareStatement(
 					"update usuario_regulador set clave=?, saldo=?, comision_actual=? where id=?");
 			preparedStatement.setString(1, user.getClave());
 			preparedStatement.setDouble(2, user.getSaldo());
@@ -53,7 +53,7 @@ public final class DAOUsuarioRegulador extends DAO<UsuarioRegulador> {
 			preparedStatement.setString(4, user.getId());
 			preparedStatement.executeUpdate();
                         
-			getConexion().commit();
+			c.commit();
 		} catch (SQLException e) {
 			FachadaAplicacion.muestraExcepcion(e);
 		} finally {

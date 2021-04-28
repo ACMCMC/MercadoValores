@@ -25,8 +25,8 @@ public final class DAOUsuarioInversor extends DAO<UsuarioInversor> {
 		ResultSet resultSet;
 
 		try {
-			getConexion().setAutoCommit(false);
-			preparedStatement = getConexion()
+			c.setAutoCommit(false);
+			preparedStatement = c
 					.prepareStatement("select * from usuario_inversor inner join usuario_mercado using(id) where id=?");
 			preparedStatement.setString(1, idToGet);
 			resultSet = preparedStatement.executeQuery();
@@ -42,7 +42,7 @@ public final class DAOUsuarioInversor extends DAO<UsuarioInversor> {
 					String nombreCompleto = resultSet.getString("nombre_completo");
 
 					usuario = new UsuarioInversor(id, clave, saldo, direccion, telefono, estado, cif, nombreCompleto);
-					getConexion().commit();
+					c.commit();
 				} catch (EnumConstantNotPresentException e) {
 					FachadaAplicacion.muestraExcepcion(e);
 				}
@@ -99,8 +99,8 @@ public final class DAOUsuarioInversor extends DAO<UsuarioInversor> {
 		PreparedStatement preparedStatement = null;
 
 		try {
-			getConexion().setAutoCommit(false);
-			preparedStatement = getConexion()
+			c.setAutoCommit(false);
+			preparedStatement = c
 					.prepareStatement("update usuario_inversor set dni=?, nombre_completo=? where id=?");
 			preparedStatement.setString(1, user.getDni());
 			preparedStatement.setString(2, user.getNombreCompleto());
@@ -108,7 +108,7 @@ public final class DAOUsuarioInversor extends DAO<UsuarioInversor> {
 			preparedStatement.executeUpdate();
 			preparedStatement.close();
                         
-			preparedStatement = getConexion().prepareStatement(
+			preparedStatement = c.prepareStatement(
 					"update usuario_mercado set clave=?, saldo=?, direccion=?, telefono=?, estado=CAST(? AS enum_estado) where id=?");
 			preparedStatement.setString(1, user.getClave());
 			preparedStatement.setDouble(2, user.getSaldo());
@@ -117,7 +117,7 @@ public final class DAOUsuarioInversor extends DAO<UsuarioInversor> {
 			preparedStatement.setString(5, user.getEstado().toString());
 			preparedStatement.setString(6, user.getId());
 			preparedStatement.executeUpdate();
-			getConexion().commit();
+			c.commit();
 		} catch (SQLException e) {
 			FachadaAplicacion.muestraExcepcion(e);
 		} finally {
@@ -137,7 +137,7 @@ public final class DAOUsuarioInversor extends DAO<UsuarioInversor> {
 		ResultSet resultSet;
 
 		try {
-			preparedStatement = getConexion()
+			preparedStatement = c
 					.prepareStatement("select * from usuario_inversor inner join usuario_mercado using(id)");
 			resultSet = preparedStatement.executeQuery();
 			while (resultSet.next()) {
@@ -175,16 +175,16 @@ public final class DAOUsuarioInversor extends DAO<UsuarioInversor> {
 		Connection c = startTransaction();
 		PreparedStatement preparedStatement = null;
 		try {
-			getConexion().setAutoCommit(false);
-			preparedStatement = getConexion().prepareStatement("delete from usuario_inversor where id=?");
+			c.setAutoCommit(false);
+			preparedStatement = c.prepareStatement("delete from usuario_inversor where id=?");
 			preparedStatement.setString(1, user.getId());
 			preparedStatement.executeUpdate();
 			preparedStatement.close();
                         
-			preparedStatement = getConexion().prepareStatement("delete from usuario_mercado where id=?");
+			preparedStatement = c.prepareStatement("delete from usuario_mercado where id=?");
 			preparedStatement.setString(1, user.getId());
 			preparedStatement.executeUpdate();
-			getConexion().commit();
+			c.commit();
 		} catch (SQLException e) {
 			FachadaAplicacion.muestraExcepcion(e);
 		} finally {
@@ -198,14 +198,15 @@ public final class DAOUsuarioInversor extends DAO<UsuarioInversor> {
 
 	public void autorizarRegistro(UsuarioInversor user) {
 		PreparedStatement preparedStatement = null;
+		Connection c = startTransaction();
 		try {
-			getConexion().setAutoCommit(false);
-			preparedStatement = getConexion()
+			c.setAutoCommit(false);
+			preparedStatement = c
 					.prepareStatement("update usuario_mercado set estado=CAST(? AS enum_estado) where id=?");
 			preparedStatement.setString(1, "DADO_DE_ALTA");
 			preparedStatement.setString(2, user.getId());
 			preparedStatement.executeUpdate();
-			getConexion().commit();
+			c.commit();
 		} catch (SQLException e) {
 			FachadaAplicacion.muestraExcepcion(e);
 		} finally {
@@ -219,14 +220,15 @@ public final class DAOUsuarioInversor extends DAO<UsuarioInversor> {
 
 	public void solicitarBaja(UsuarioInversor user) {
 		PreparedStatement preparedStatement = null;
+		Connection c = startTransaction();
 		try {
-			getConexion().setAutoCommit(false);
-			preparedStatement = getConexion()
+			c.setAutoCommit(false);
+			preparedStatement = c
 					.prepareStatement("update usuario_mercado set estado=CAST(? AS enum_estado) where id=?");
 			preparedStatement.setString(1, "SOLICITANDO_BAJA");
 			preparedStatement.setString(2, user.getId());
 			preparedStatement.executeUpdate();
-			getConexion().commit();
+			c.commit();
 		} catch (SQLException e) {
 			FachadaAplicacion.muestraExcepcion(e);
 		} finally {
