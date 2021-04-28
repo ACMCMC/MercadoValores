@@ -38,7 +38,7 @@ public class DAOVentas extends DAO<Participacion> {
         try {
 			getConexion().setAutoCommit(false);
 			preparedStatement = getConexion().prepareStatement(
-					"Insert into anuncio_venta (id1,id2,num_participaciones,fecha_pago,precio,comision_en_fecha)" +
+					"Insert into anuncio_venta (id1,id2,num_participaciones,fecha,precio,comision_en_fecha)" +
                                         "Values (?,?,?,?,?,?)" );
                         preparedStatement.setString(1, u1.getId());
                         preparedStatement.setString(2, u2.getId());
@@ -73,7 +73,7 @@ public class DAOVentas extends DAO<Participacion> {
 			getConexion().setAutoCommit(false);
 			preparedStatement = getConexion().prepareStatement(
 					"delete from anuncio_venta " +
-                                        "where id1=? and id2=? and fecha_pago=?" );
+                                        "where id1=? and id2=? and fecha=?" );
                         preparedStatement.setString(1, id1);
                         preparedStatement.setString(2, id2);
                         preparedStatement.setTimestamp(3, fecha);
@@ -113,7 +113,7 @@ public class DAOVentas extends DAO<Participacion> {
 					String id = resultSet.getString("id1");
                                         String id2 = resultSet.getString("id2");
                                         Integer numero = resultSet.getInt("num_participaciones");
-                                        Timestamp tim=resultSet.getTimestamp("fecha_pago");
+                                        Timestamp tim=resultSet.getTimestamp("fecha");
                                         double precio=resultSet.getDouble("precio");
                                         double comision=resultSet.getDouble("comision_en_fecha");
 
@@ -157,7 +157,7 @@ public class DAOVentas extends DAO<Participacion> {
 					String id = resultSet.getString("id1");
                                         String id2 = resultSet.getString("id2");
                                         Integer numero = resultSet.getInt("num_participaciones");
-                                        Timestamp tim=resultSet.getTimestamp("fecha_pago");
+                                        Timestamp tim=resultSet.getTimestamp("fecha");
                                         double precio=resultSet.getDouble("precio");
                                         double comision=resultSet.getDouble("comision_en_fecha");
 
@@ -236,7 +236,7 @@ public class DAOVentas extends DAO<Participacion> {
 			preparedStatement = getConexion()
 					.prepareStatement("select * from anuncio_venta " +
                                                           "where ?<=precio and id2=? " +
-                                                          "order by precio asc,fecha_pago asc");
+                                                          "order by precio asc,fecha asc");
                         preparedStatement.setInt(1,precio );
                         preparedStatement.setString(2,empresa.getId() );
 			resultSet = preparedStatement.executeQuery();
@@ -249,12 +249,9 @@ public class DAOVentas extends DAO<Participacion> {
                                     Double precioaux=resultSet.getDouble("precio");
                                     
                                     
-                                    if(Usuario.getSaldo()-precioaux-saldoARestar>=0){//Si no tiene dinero para pagar las participaciones se va a la siguiente opción
+                                    if(numCompradas+aux>numero){
                                         //Guardamos los ids para hacer luego update
                                         ids.add(idUsuarioaux);
-                                            if(numCompradas+aux>numero){//Vompradas hasta el momento + las obtenidas en esta iteracion es mayor que el numero que quiere el numero obtenido será las que quedan
-                                                aux=ret;
-                                            }
                                         participacionesVendidas.add(aux);
                                         numCompradas+=aux;
                                         if(aux>ret){//Si es mayor el numero de participaciones a la venta de la tupla se hace update
@@ -262,7 +259,7 @@ public class DAOVentas extends DAO<Participacion> {
                                             preparedStatement2 = getConexion()
                                             .prepareStatement("update anuncio_venta " +
                                                               "set num_participaciones=? "+ 
-                                                              "where id1=? and id2=? and fecha_pago=?");
+                                                              "where id1=? and id2=? and fecha=?");
                                             preparedStatement2.setInt(1, aux-numero);
                                             preparedStatement2.setString(2, idUsuarioaux);
                                             preparedStatement2.setString(3, idEmpresaaux);
@@ -281,7 +278,7 @@ public class DAOVentas extends DAO<Participacion> {
                                         }else{//En todos los demas casos se borra la tupla
                                              preparedStatement2 = getConexion()
                                             .prepareStatement("delete from anuncio_venta " + 
-                                                              "where id1=? and id2=? and fecha_pago=? ");
+                                                              "where id1=? and id2=? and fecha=? ");
                                             preparedStatement2.setString(1, idUsuarioaux);
                                             preparedStatement2.setString(2, idEmpresaaux);
                                             preparedStatement2.setTimestamp(3, fecha);
