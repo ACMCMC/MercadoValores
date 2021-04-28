@@ -5,6 +5,7 @@
  */
 package gal.usc.mercadovalores.gui;
 import gal.usc.mercadovalores.aplicacion.Beneficios;
+import gal.usc.mercadovalores.aplicacion.FachadaAplicacion;
 import gal.usc.mercadovalores.aplicacion.UsuarioEmpresa;
 import gal.usc.mercadovalores.db.FachadaDB;
 import gal.usc.mercadovalores.aplicacion.Participacion;
@@ -17,15 +18,16 @@ import java.util.ArrayList;
  * @author user
  */
 public class VBeneficios extends javax.swing.JFrame {
-
+    private FachadaAplicacion fa;
     private UsuarioEmpresa usr;
     private int nParts;
     /**
      * Creates new form VBeneficios
      */
-    public VBeneficios(UsuarioEmpresa usr) {
+    public VBeneficios(UsuarioEmpresa usr, FachadaAplicacion fa) {
         initComponents();
         this.usr = usr;
+        this.fa = fa;
         this.setCampos();
         this.updateTabla();
     }
@@ -332,6 +334,8 @@ public class VBeneficios extends javax.swing.JFrame {
             this.tablaBeneficios.setRowSelectionInterval(0, 0);
         }
    }
+   
+
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

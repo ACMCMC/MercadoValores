@@ -48,8 +48,8 @@ public class DAOVentas extends DAO<Participacion> {
                 PreparedStatement preparedStatement = null;
                 Timestamp timestamp = new Timestamp(System.currentTimeMillis());
                 try {
-                        getConexion().setAutoCommit(false);
-                        preparedStatement = getConexion().prepareStatement(
+                        c.setAutoCommit(false);
+                        preparedStatement = c.prepareStatement(
                                         "Insert into anuncio_venta (id1,id2,num_participaciones,fecha,precio,comision_en_fecha)"
                                                         + "Values (?,?,?,?,?,?)");
                         preparedStatement.setString(1, u1.getId());
@@ -61,7 +61,7 @@ public class DAOVentas extends DAO<Participacion> {
 
                         preparedStatement.executeUpdate();
 
-                        getConexion().commit();
+                        c.commit();
                 } catch (SQLException e) {
                         throw e;
                 } finally {
@@ -78,8 +78,8 @@ public class DAOVentas extends DAO<Participacion> {
                 Connection c = startTransaction();
                 PreparedStatement preparedStatement = null;
                 try {
-                        getConexion().setAutoCommit(false);
-                        preparedStatement = getConexion().prepareStatement(
+                        c.setAutoCommit(false);
+                        preparedStatement = c.prepareStatement(
                                         "delete from anuncio_venta " + "where id1=? and id2=? and fecha=?");
                         preparedStatement.setString(1, id1);
                         preparedStatement.setString(2, id2);
@@ -87,7 +87,7 @@ public class DAOVentas extends DAO<Participacion> {
 
                         preparedStatement.executeUpdate();
 
-                        getConexion().commit();
+                        c.commit();
                 } catch (SQLException e) {
                         throw e;
                 } finally {
@@ -103,8 +103,8 @@ public class DAOVentas extends DAO<Participacion> {
                 Connection c = startTransaction();
                 PreparedStatement preparedStatement = null;
                 try {
-                        getConexion().setAutoCommit(false);
-                        preparedStatement = getConexion().prepareStatement(
+                        c.setAutoCommit(false);
+                        preparedStatement = c.prepareStatement(
                                         "delete from anuncio_venta " + "where id1=? and id2=? and fecha=?");
                         preparedStatement.setString(1, id1);
                         preparedStatement.setString(2, id2);
@@ -112,7 +112,7 @@ public class DAOVentas extends DAO<Participacion> {
 
                         preparedStatement.executeUpdate();
 
-                        getConexion().commit();
+                        c.commit();
                 } catch (SQLException e) {
                         throw e;
                 } finally {
@@ -134,7 +134,7 @@ public class DAOVentas extends DAO<Participacion> {
                 ResultSet resultSet;
 
                 try {
-                        preparedStatement = getConexion().prepareStatement("select * from anuncio_venta");
+                        preparedStatement = c.prepareStatement("select * from anuncio_venta");
                         resultSet = preparedStatement.executeQuery();
                         while (resultSet.next()) {
                                 AnuncioVenta a;
@@ -154,7 +154,7 @@ public class DAOVentas extends DAO<Participacion> {
                                         FachadaAplicacion.muestraExcepcion(e);
                                 }
                         }
-                        getConexion().commit();
+                        c.commit();
                 } catch (SQLException e) {
                         FachadaAplicacion.muestraExcepcion(e);
                 } finally {
@@ -177,7 +177,7 @@ public class DAOVentas extends DAO<Participacion> {
                 ResultSet resultSet;
 
                 try {
-                        preparedStatement = getConexion().prepareStatement("select * from anuncio_venta where id1=?");
+                        preparedStatement = c.prepareStatement("select * from anuncio_venta where id1=?");
                         preparedStatement.setString(1, u.getId());
                         resultSet = preparedStatement.executeQuery();
                         while (resultSet.next()) {
@@ -198,7 +198,7 @@ public class DAOVentas extends DAO<Participacion> {
                                         FachadaAplicacion.muestraExcepcion(e);
                                 }
                         }
-                        getConexion().commit();
+                        c.commit();
                 } catch (SQLException e) {
                         FachadaAplicacion.muestraExcepcion(e);
                 } finally {
@@ -218,7 +218,7 @@ public class DAOVentas extends DAO<Participacion> {
                 PreparedStatement preparedStatement = null;
                 ResultSet resultSet;
                 try {
-                        preparedStatement = getConexion()
+                        preparedStatement = c
                                         .prepareStatement("select * from anuncio_venta where id1=? and id2=?");
                         preparedStatement.setString(1, id1);
                         preparedStatement.setString(2, id2);
@@ -285,60 +285,6 @@ public class DAOVentas extends DAO<Participacion> {
                 return ret;
         }
 
-        public Set<UsuarioEmpresa> empresasConAnuncios() {
-                Connection c = startTransaction();
-                Set<UsuarioEmpresa> ret = new HashSet<>();
-                PreparedStatement preparedStatement = null;
-                PreparedStatement preparedStatement2 = null;
-                ResultSet resultSet, resultSet2;
-                UsuarioEmpresa usuario = null;
-                try {
-                        preparedStatement = getConexion().prepareStatement("select distinct id2 from anuncio_venta");
-                        resultSet = preparedStatement.executeQuery();
-                        while (resultSet.next()) {
-                                try {
-                                        String id = resultSet.getString("id2");
-                                        preparedStatement2 = getConexion().prepareStatement(
-                                                        "select * from usuario_empresa inner join usuario_mercado using(id) where id=? ");
-                                        preparedStatement2.setString(1, id);
-
-                                        resultSet2 = preparedStatement2.executeQuery();
-                                        while (resultSet2.next()) {
-
-                                                String id2 = resultSet2.getString("id");
-                                                String clave = resultSet2.getString("clave");
-                                                double saldo = resultSet2.getDouble("saldo");
-                                                String direccion = resultSet2.getString("direccion");
-                                                String telefono = resultSet2.getString("telefono");
-                                                EstadoUsuario estado = EstadoUsuario
-                                                                .getByName(resultSet2.getString("estado"));
-                                                String cif = resultSet2.getString("cif");
-                                                String nombreComercial = resultSet2.getString("nombre_comercial");
-                                                double importeBloqueado = resultSet2.getDouble("importe_bloqueado");
-
-                                                usuario = new UsuarioEmpresa(id2, clave, saldo, direccion, telefono,
-                                                                estado, cif, nombreComercial, importeBloqueado);
-                                                ret.add(usuario);
-
-                                        }
-                                } catch (EnumConstantNotPresentException e) {
-                                        FachadaAplicacion.muestraExcepcion(e);
-                                }
-                        }
-                } catch (SQLException e) {
-                        FachadaAplicacion.muestraExcepcion(e);
-                } finally {
-                        try {
-                                preparedStatement.close();
-                                preparedStatement2.close();
-                        } catch (SQLException e) {
-                                FachadaAplicacion.muestraExcepcion(e);
-                        }
-                }
-                return ret;
-
-        }
-
         /**
          * Se encarga de realizar una compra
          * 
@@ -356,11 +302,12 @@ public class DAOVentas extends DAO<Participacion> {
                 ResultSet resultSet;
                 try {
                         preparedStatement = c.prepareStatement("select comprar(?,?,?,?)");
-                        preparedStatement.setString(1, Usuario.getId());
-                        preparedStatement.setString(2, empresa.getId());
+                        preparedStatement.setString(1, empresa.getId());
+                        preparedStatement.setString(2, Usuario.getId());
                         preparedStatement.setInt(3, numero);
                         preparedStatement.setDouble(4, precio_max_por_participacion);
                         resultSet = preparedStatement.executeQuery();
+                        c.commit();
                         if (resultSet.next()) {
                                 try {
                                         Integer idCompra = resultSet.getInt(1);
@@ -369,7 +316,6 @@ public class DAOVentas extends DAO<Participacion> {
                                         FachadaAplicacion.muestraExcepcion(e);
                                 }
                         }
-                        c.commit();
                 } catch (SQLException e) {
                         FachadaAplicacion.muestraExcepcion(e);
                 } finally {
@@ -391,6 +337,7 @@ public class DAOVentas extends DAO<Participacion> {
                         preparedStatement = c
                                         .prepareStatement("select id_compra, empresa, comprador, fecha FROM compra");
                         resultSet = preparedStatement.executeQuery();
+                        c.commit();
                         while (resultSet.next()) {
                                 try {
                                         UsuarioEmpresa empresa = (UsuarioEmpresa) FachadaDB.getFachada()
@@ -405,7 +352,6 @@ public class DAOVentas extends DAO<Participacion> {
                                         FachadaAplicacion.muestraExcepcion(e);
                                 }
                         }
-                        c.commit();
                 } catch (SQLException e) {
                         FachadaAplicacion.muestraExcepcion(e);
                 } finally {
@@ -428,6 +374,7 @@ public class DAOVentas extends DAO<Participacion> {
                                         "select empresa, comprador, fecha FROM compra WHERE id_compra=?");
                         preparedStatement.setInt(1, idCompra);
                         resultSet = preparedStatement.executeQuery();
+                        c.commit();
                         if (resultSet.next()) {
                                 try {
                                         UsuarioEmpresa empresa = (UsuarioEmpresa) FachadaDB.getFachada()
@@ -441,7 +388,6 @@ public class DAOVentas extends DAO<Participacion> {
                                         FachadaAplicacion.muestraExcepcion(e);
                                 }
                         }
-                        c.commit();
                 } catch (SQLException e) {
                         FachadaAplicacion.muestraExcepcion(e);
                 } finally {
@@ -494,38 +440,13 @@ public class DAOVentas extends DAO<Participacion> {
                 Connection c = startTransaction();
                 Set<UsuarioEmpresa> ret = new HashSet<>();
                 PreparedStatement preparedStatement = null;
-                PreparedStatement preparedStatement2 = null;
-                ResultSet resultSet, resultSet2;
-                UsuarioEmpresa usuario = null;
+                ResultSet resultSet;
                 try {
-                        preparedStatement = getConexion().prepareStatement("select distinct id2 from anuncio_venta");
+                        preparedStatement = c.prepareStatement("select distinct id2 from anuncio_venta");
                         resultSet = preparedStatement.executeQuery();
                         while (resultSet.next()) {
                                 try {
-                                        String id = resultSet.getString("id2");
-                                        preparedStatement2 = getConexion().prepareStatement(
-                                                        "select * from usuario_empresa inner join usuario_mercado using(id) where id=? ");
-
-                                        preparedStatement2.setString(1, id);
-
-                                        resultSet2 = preparedStatement2.executeQuery();
-                                        while (resultSet2.next()) {
-                                                String id2 = resultSet2.getString("id");
-                                                String clave = resultSet2.getString("clave");
-                                                double saldo = resultSet2.getDouble("saldo");
-                                                String direccion = resultSet2.getString("direccion");
-                                                String telefono = resultSet2.getString("telefono");
-                                                EstadoUsuario estado = EstadoUsuario
-                                                                .getByName(resultSet2.getString("estado"));
-                                                String cif = resultSet2.getString("cif");
-                                                String nombreComercial = resultSet2.getString("nombre_comercial");
-                                                double importeBloqueado = resultSet2.getDouble("importe_bloqueado");
-
-                                                usuario = new UsuarioEmpresa(id2, clave, saldo, direccion, telefono,
-                                                                estado, cif, nombreComercial, importeBloqueado);
-                                                ret.add(usuario);
-
-                                        }
+                                        ret.add((UsuarioEmpresa) FachadaDB.getFachada().getUsuarioById(resultSet.getString(1)));
                                 } catch (EnumConstantNotPresentException e) {
                                         FachadaAplicacion.muestraExcepcion(e);
                                 }
@@ -535,7 +456,6 @@ public class DAOVentas extends DAO<Participacion> {
                 } finally {
                         try {
                                 preparedStatement.close();
-                                preparedStatement2.close();
                         } catch (SQLException e) {
                                 FachadaAplicacion.muestraExcepcion(e);
                         }

@@ -112,7 +112,7 @@ public class FachadaGUI {
     }
     
     public void ventanaBeneficios(UsuarioEmpresa usr){
-        VBeneficios vB = new VBeneficios(usr);
+        VBeneficios vB = new VBeneficios(usr, fa);
         vB.setVisible(true);
     }
     
@@ -125,4 +125,5 @@ public class FachadaGUI {
         VBeneficiosAdmin vBA = new VBeneficiosAdmin();
         vBA.setVisible(true);
     }
+    
 }
