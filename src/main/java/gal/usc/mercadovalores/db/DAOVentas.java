@@ -15,6 +15,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import gal.usc.mercadovalores.aplicacion.AnuncioVenta;
+import gal.usc.mercadovalores.aplicacion.EstadoUsuario;
 import gal.usc.mercadovalores.aplicacion.FachadaAplicacion;
 import gal.usc.mercadovalores.aplicacion.Participacion;
 import gal.usc.mercadovalores.aplicacion.UsuarioDeMercado;
