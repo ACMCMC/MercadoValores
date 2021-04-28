@@ -232,11 +232,6 @@ public class FachadaDB {
         return daoVentas.empresasConAnuncios();
     }
     
-    //Vende
-    public void compraParticipaciones(UsuarioDeMercado vendedor,UsuarioEmpresa empresa, Integer numero, Integer precio){
-        daoVentas.compraParticipaciones(vendedor, empresa, numero, precio);
-    }
-    
     public void bajaAnuncioVenta(AnuncioVenta av) throws SQLException{
         daoVentas.retirarVenta(av.getVendedor().getId(), av.getEmpresa().getId(), av.getFecha());
     }
