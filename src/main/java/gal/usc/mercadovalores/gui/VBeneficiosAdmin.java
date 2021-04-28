@@ -43,6 +43,7 @@ public class VBeneficiosAdmin extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setResizable(false);
 
         tablaBeneficios.setModel(new TablaBeneficios());
         jScrollPane1.setViewportView(tablaBeneficios);
@@ -128,21 +129,28 @@ public class VBeneficiosAdmin extends javax.swing.JFrame {
         
     }//GEN-LAST:event_jButton1ActionPerformed
 
-   private void updateTabla(){
-       TablaBeneficios tB = (TablaBeneficios)this.tablaBeneficios.getModel();
-       
-       Set<Beneficios> allBens = FachadaDB.getFachada().getAllBeneficios();
-       ArrayList<Beneficios> benFinales = new ArrayList<>();
-       for(Beneficios b: allBens){
-           benFinales.add(b);
-       }
-       
-       tB.setFilas(benFinales);
-       
-        if(tB.getRowCount()>0){
-            this.tablaBeneficios.setRowSelectionInterval(0, 0);
+    private void updateTabla(){
+        try{
+            
+            TablaBeneficios tB = (TablaBeneficios)this.tablaBeneficios.getModel();
+
+            Set<Beneficios> allBens = FachadaDB.getFachada().getAllBeneficios();
+            ArrayList<Beneficios> benFinales = new ArrayList<>();
+            for(Beneficios b: allBens){
+                benFinales.add(b);
+            }
+
+            tB.setFilas(benFinales);
+
+            if(tB.getRowCount()>0){
+                this.tablaBeneficios.setRowSelectionInterval(0, 0);
+            }
+        }catch(Exception e){
+            VAviso x = new VAviso(this,true,e.getMessage());
+            x.setVisible(true);
         }
-   }
+
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;

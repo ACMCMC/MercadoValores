@@ -53,6 +53,7 @@ public class VCompra extends javax.swing.JFrame {
         precioTexto = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setResizable(false);
 
         jLabel1.setText("Compra de participaciones:");
 
@@ -159,11 +160,17 @@ public class VCompra extends javax.swing.JFrame {
 
     private void ComprarBotonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ComprarBotonActionPerformed
         // TODO add your handling code here:
-        if(emp!=null){
-            FachadaDB.getFachada().comprar(usr, emp, (Integer)numParticipacionesSpinner.getValue(),Integer.valueOf(precioTexto.getText()));
+        try{
+            if(emp!=null){
+                FachadaDB.getFachada().comprar(usr, emp, (Integer)numParticipacionesSpinner.getValue(),Integer.valueOf(precioTexto.getText()));
+            }
+            updateTable();
+            textoSaldo(); 
+        }catch(Exception e){
+            VAviso x = new VAviso(this,true,e.getMessage());
+            x.setVisible(true);
         }
-        updateTable();
-        textoSaldo();
+
     }//GEN-LAST:event_ComprarBotonActionPerformed
 
     private void tablaAnunciosMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaAnunciosMousePressed
@@ -175,24 +182,35 @@ public class VCompra extends javax.swing.JFrame {
     private void textoSaldo(){
         
         //mostra o saldo actual do comprador
-        this.usr = (UsuarioDeMercado) FachadaDB.getFachada().getUsuarioById(usr.getId());
-        Double saldo = usr.getSaldo();
-        String saldoText = saldo.toString();
-        this.saldoActual.setText(saldoText + "€");
+        try{
+            this.usr = (UsuarioDeMercado) FachadaDB.getFachada().getUsuarioById(usr.getId());
+            Double saldo = usr.getSaldo();
+            String saldoText = saldo.toString();
+            this.saldoActual.setText(saldoText + "€");
+        }catch(Exception e){
+            VAviso x = new VAviso(this,true,e.getMessage());
+            x.setVisible(true);
+        }
     }
     
     private void updateTable(){
-        TablaEmpresasConAnuncios tA = (TablaEmpresasConAnuncios) this.tablaAnuncios.getModel();
-        Set<UsuarioEmpresa> setEmpresas = FachadaDB.getFachada().getEmpresasConAnuncios();
-       
-        ArrayList<UsuarioEmpresa> arrEmpresas = new ArrayList<>();
-        for(UsuarioEmpresa aV : setEmpresas){
-            arrEmpresas.add(aV);
-        }
         
-        tA.setFilas(arrEmpresas);
-        if(tA.getRowCount()>0){
-            this.tablaAnuncios.setRowSelectionInterval(0, 0);
+        try{
+            TablaEmpresasConAnuncios tA = (TablaEmpresasConAnuncios) this.tablaAnuncios.getModel();
+            Set<UsuarioEmpresa> setEmpresas = FachadaDB.getFachada().getEmpresasConAnuncios();
+
+            ArrayList<UsuarioEmpresa> arrEmpresas = new ArrayList<>();
+            for(UsuarioEmpresa aV : setEmpresas){
+                arrEmpresas.add(aV);
+            }
+        
+            tA.setFilas(arrEmpresas);
+            if(tA.getRowCount()>0){
+                this.tablaAnuncios.setRowSelectionInterval(0, 0);
+            }
+        }catch(Exception e){
+            VAviso x = new VAviso(this,true,e.getMessage());
+            x.setVisible(true);
         }
     }
     

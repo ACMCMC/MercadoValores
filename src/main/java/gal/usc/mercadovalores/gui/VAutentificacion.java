@@ -21,6 +21,7 @@ import gal.usc.mercadovalores.aplicacion.UsuarioInversor;
 public class VAutentificacion extends javax.swing.JDialog {
 
     private FachadaAplicacion fa;
+    private java.awt.Frame parent;
 
     /**
      * Creates new form VAutentificacion
@@ -28,6 +29,7 @@ public class VAutentificacion extends javax.swing.JDialog {
     public VAutentificacion(java.awt.Frame parent, boolean modal, FachadaAplicacion fa) {
         super(parent, modal);
         this.fa = fa;
+        this.parent = parent;
         initComponents();
         this.avisoLogin.setVisible(false);
 
@@ -164,32 +166,37 @@ public class VAutentificacion extends javax.swing.JDialog {
 
     private void botonInicioSesionActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_botonInicioSesionActionPerformed
         this.avisoLogin.setVisible(false);
-
-        Usuario res;
-        res = FachadaDB.getFachada().getUsuarioById(campoUsuario.getText());
-        // comprobacion mediante dao de que es el adecuado
-        if (res != null && FachadaDB.getFachada().comprobarContrasena(campoContra.getText(), res.getClave())) { // Si existe el usuario y su contraseña es la especificada...
-            // comprobamos si es el regulador
-            if (res instanceof UsuarioRegulador) {
-                // lanzamos ventana de regulador
-                fa.iniciarAdmin((UsuarioRegulador) res);
-            } else if (res instanceof UsuarioDeMercado) {
-                if (((UsuarioDeMercado) res).getEstado() != EstadoUsuario.SOLICITANDO_ALTA) { // El estado no puede ser SOLICITANDO_ALTA
-                    if (res instanceof UsuarioEmpresa) {
-                    // lanzamos ventana de empresa
-                        fa.iniciarEmpresa((UsuarioEmpresa) res);
+        try{
+            Usuario res;
+            res = FachadaDB.getFachada().getUsuarioById(campoUsuario.getText());
+            // comprobacion mediante dao de que es el adecuado
+            if (res != null && FachadaDB.getFachada().comprobarContrasena(campoContra.getText(), res.getClave())) { // Si existe el usuario y su contraseña es la especificada...
+                // comprobamos si es el regulador
+                if (res instanceof UsuarioRegulador) {
+                    // lanzamos ventana de regulador
+                    fa.iniciarAdmin((UsuarioRegulador) res);
+                } else if (res instanceof UsuarioDeMercado) {
+                    if (((UsuarioDeMercado) res).getEstado() != EstadoUsuario.SOLICITANDO_ALTA) { // El estado no puede ser SOLICITANDO_ALTA
+                        if (res instanceof UsuarioEmpresa) {
+                        // lanzamos ventana de empresa
+                            fa.iniciarEmpresa((UsuarioEmpresa) res);
+                        }
+                    // lanzamos ventana de inversor
+                        else if (res instanceof UsuarioInversor) {
+                            fa.iniciarInversor((UsuarioInversor) res);
+                        }
+                    } else {
+                        FachadaAplicacion.muestraExcepcion(new Exception("Aún no se ha aprobado la solicitud de alta del usuario"));
                     }
-                // lanzamos ventana de inversor
-                    else if (res instanceof UsuarioInversor) {
-                        fa.iniciarInversor((UsuarioInversor) res);
-                    }
-                } else {
-                    FachadaAplicacion.muestraExcepcion(new Exception("Aún no se ha aprobado la solicitud de alta del usuario"));
                 }
+            } else {
+                this.avisoLogin.setVisible(true);
+            } 
+        }catch(Exception e){
+            VAviso x = new VAviso(this.parent,true,e.getMessage());
+            x.setVisible(true);
         }
-        } else {
-            this.avisoLogin.setVisible(true);
-        }
+ 
     }// GEN-LAST:event_botonInicioSesionActionPerformed
 
     /**

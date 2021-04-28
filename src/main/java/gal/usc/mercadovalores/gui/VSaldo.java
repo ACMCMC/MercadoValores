@@ -17,12 +17,13 @@ import java.util.Set;
  * @author user
  */
 public class VSaldo extends javax.swing.JDialog {
-
+    private java.awt.Frame parent;
     /**
      * Creates new form VSaldo
      */
     public VSaldo(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
+        this.parent = parent;
         initComponents();
         this.updateTabla();
     }
@@ -45,6 +46,7 @@ public class VSaldo extends javax.swing.JDialog {
         campoSaldo = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setResizable(false);
 
         jLabel1.setText("Actualización de saldos");
 
@@ -109,13 +111,19 @@ public class VSaldo extends javax.swing.JDialog {
 
     private void botonActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonActualizarActionPerformed
         //Utilizamos usuario seleccionado -> cambiamos saldo
-        TablaSaldos uT = (TablaSaldos) this.tablaSaldos.getModel();
-        if(!this.campoSaldo.getText().isEmpty()){
-            UsuarioDeMercado u = uT.obtenerUsuario(this.tablaSaldos.getSelectedRow());
-            u.setSaldo(Double.parseDouble(this.campoSaldo.getText()));
-            FachadaDB.getFachada().actualizarUser(u);
+        try{
+            TablaSaldos uT = (TablaSaldos) this.tablaSaldos.getModel();
+            if(!this.campoSaldo.getText().isEmpty()){
+                UsuarioDeMercado u = uT.obtenerUsuario(this.tablaSaldos.getSelectedRow());
+                u.setSaldo(Double.parseDouble(this.campoSaldo.getText()));
+                FachadaDB.getFachada().actualizarUser(u);
+            }
+            this.updateTabla(); 
+        }catch(Exception e){
+            VAviso x = new VAviso(this.parent,true,e.getMessage());
+            x.setVisible(true);
         }
-        this.updateTabla();
+
     }//GEN-LAST:event_botonActualizarActionPerformed
 
     /**
@@ -124,17 +132,22 @@ public class VSaldo extends javax.swing.JDialog {
  
 
     private void updateTabla(){
-        TablaSaldos uT = (TablaSaldos) this.tablaSaldos.getModel();
-        Set<UsuarioDeMercado> u = FachadaDB.getFachada().getUsuariosDeMercado();
-        ArrayList<UsuarioDeMercado> uM = new ArrayList<>();
-        
-        for(UsuarioDeMercado user: u){
-            uM.add(user);
-        }
+        try{
+            TablaSaldos uT = (TablaSaldos) this.tablaSaldos.getModel();
+            Set<UsuarioDeMercado> u = FachadaDB.getFachada().getUsuariosDeMercado();
+            ArrayList<UsuarioDeMercado> uM = new ArrayList<>();
 
-        uM.sort(Comparator.comparing(UsuarioDeMercado::getId));
-        
-        uT.setFilas(uM);
+            for(UsuarioDeMercado user: u){
+                uM.add(user);
+            }
+
+            uM.sort(Comparator.comparing(UsuarioDeMercado::getId));
+
+            uT.setFilas(uM);
+        }catch(Exception e){
+            VAviso x = new VAviso(this.parent,true,e.getMessage());
+            x.setVisible(true);
+        }
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
