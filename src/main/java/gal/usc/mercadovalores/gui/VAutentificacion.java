@@ -172,15 +172,18 @@ public class VAutentificacion extends javax.swing.JDialog {
             // comprobamos si es el regulador
             if (res instanceof UsuarioRegulador) {
                 // lanzamos ventana de regulador
+                FachadaDB.getFachada().cambiarARolRegulador();
                 fa.iniciarAdmin((UsuarioRegulador) res);
             } else if (res instanceof UsuarioDeMercado) {
                 if (((UsuarioDeMercado) res).getEstado() != EstadoUsuario.SOLICITANDO_ALTA) { // El estado no puede ser SOLICITANDO_ALTA
                     if (res instanceof UsuarioEmpresa) {
-                    // lanzamos ventana de empresa
+                        // lanzamos ventana de empresa
+                        FachadaDB.getFachada().cambiarARolEmpresa();
                         fa.iniciarEmpresa((UsuarioEmpresa) res);
                     }
-                // lanzamos ventana de inversor
+                    // lanzamos ventana de inversor
                     else if (res instanceof UsuarioInversor) {
+                        FachadaDB.getFachada().cambiarARolInversor();
                         fa.iniciarInversor((UsuarioInversor) res);
                     }
                 } else {

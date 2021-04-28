@@ -116,27 +116,26 @@ CREATE TABLE parte_compra(
 	CHECK (precio >= 0::double precision AND cantidad >= 0::integer)
 );
 
-/*
-CREATE ROLE Regulador;
+--Permisos
 
-GRANT INSERT, SELECT, UPDATE (estado) ON usuario_mercado TO Regulador;
-
+CREATE ROLE ReguladorUser;
 CREATE ROLE MercadoUser;
-
-GRANT INSERT, SELECT (num_participaciones) ON tener_participaciones TO MercadoUser;
-
-GRANT INSERT, SELECT, UPDATE (fecha, precio, comision_en_fecha, numero_participaciones) ON anuncio_venta TO MercadoUser;
-
 CREATE ROLE InversorUser INHERIT;
-
 GRANT MercadoUser TO InversorUser;
-
 CREATE ROLE EmpresaUser INHERIT;
-
 GRANT MercadoUser TO EmpresaUser;
 
-GRANT SELECT ON beneficios TO EmpresaUser;
-*/
+GRANT SELECT, UPDATE (estado) ON usuario_mercado TO ReguladorUser;
+
+GRANT INSERT, SELECT, UPDATE ON usuario_regulador TO ReguladorUser;
+GRANT INSERT, SELECT, UPDATE, DELETE ON tener_participaciones TO MercadoUser;
+GRANT INSERT, SELECT, UPDATE ON usuario_mercado TO MercadoUser;
+GRANT INSERT, SELECT, UPDATE, DELETE ON anuncio_venta TO MercadoUser;
+GRANT INSERT, SELECT, UPDATE ON compra TO MercadoUser;
+GRANT INSERT, SELECT, UPDATE ON parte_compra TO MercadoUser;
+GRANT INSERT, SELECT, UPDATE ON usuario_empresa TO EmpresaUser;
+GRANT INSERT, SELECT, UPDATE, DELETE ON beneficios TO EmpresaUser;
+GRANT INSERT, SELECT, UPDATE ON usuario_inversor TO InversorUser;
 
 CREATE OR REPLACE FUNCTION comprueba_participaciones() RETURNS trigger AS $comprueba_participaciones$
     DECLARE
@@ -325,7 +324,7 @@ CREATE TRIGGER borrar_fila_tener_participaciones_si_es_cero AFTER UPDATE ON tene
 FOR EACH ROW EXECUTE PROCEDURE borrar_fila_tener_participaciones_si_es_cero();
 
 --Revisa que al actualizar la tabla tener_participaciones no se produzca una actualizacion que haga que el numero de participaciones que vende el usuario de una empresa sea mayor que las que tiene realmente
-CREATE OR REPLACE FUNCTION comprobar_max_anuncios_venta_actualizacion_tener_participaciones() RETURNS trigger AS $comprobar_max_anuncios_venta_actualizacion_tener_participaciones$
+CREATE OR REPLACE FUNCTION comprobar_max_anuncio_venta_actualizar_tener_participaciones() RETURNS trigger AS $comprobar_max_anuncio_venta_actualizar_tener_participaciones$
     BEGIN
 		
 		IF (SELECT sum(anuncio_venta.num_participaciones) FROM anuncio_venta WHERE anuncio_venta.id1=new.id1 and anuncio_venta.id2=new.id2) > new.num_participaciones THEN
@@ -335,10 +334,10 @@ CREATE OR REPLACE FUNCTION comprobar_max_anuncios_venta_actualizacion_tener_part
 		RETURN NEW;
 
     END;
-$comprobar_max_anuncios_venta_actualizacion_tener_participaciones$ LANGUAGE plpgsql;
+$comprobar_max_anuncio_venta_actualizar_tener_participaciones$ LANGUAGE plpgsql;
 
-CREATE TRIGGER comprobar_max_anuncios_venta_actualizacion_tener_participaciones BEFORE UPDATE ON tener_participaciones
-FOR EACH ROW EXECUTE PROCEDURE comprobar_max_anuncios_venta_actualizacion_tener_participaciones();
+CREATE TRIGGER comprobar_max_anuncio_venta_actualizar_tener_participaciones BEFORE UPDATE ON tener_participaciones
+FOR EACH ROW EXECUTE PROCEDURE comprobar_max_anuncio_venta_actualizar_tener_participaciones();
 
 --Si una fila tiene numero de participaciones 0, la borramos
 CREATE OR REPLACE FUNCTION borrar_fila_anuncio_venta_si_es_cero() RETURNS trigger AS $borrar_fila_anuncio_venta_si_es_cero$
