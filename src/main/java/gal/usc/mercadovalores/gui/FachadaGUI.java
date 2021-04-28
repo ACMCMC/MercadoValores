@@ -4,6 +4,8 @@
  * and open the template in the editor.
  */
 package gal.usc.mercadovalores.gui;
+import javax.swing.JFrame;
+
 import gal.usc.mercadovalores.aplicacion.FachadaAplicacion;
 import gal.usc.mercadovalores.aplicacion.UsuarioDeMercado;
 import gal.usc.mercadovalores.aplicacion.UsuarioEmpresa;
@@ -23,13 +25,18 @@ public class FachadaGUI {
     private VPrincipalInversor vinversor;
     private VPrincipalEmpresa vempresa;
 
-    public static void muestraExcepcion(Throwable t) {
+    private JFrame currentFrame;
+
+    public void muestraExcepcion(Throwable t) {
         System.out.println(t.getMessage());
+        VAviso aviso = new VAviso(currentFrame, true, t.getMessage());
+        aviso.setVisible(true);
     }
 
     public FachadaGUI(FachadaAplicacion fa) {
         this.fa = fa;
         this.vi = new VInicio(this.fa);
+        this.currentFrame = vi;
     }
 
     // Mostramos ventana inicial de la aplicación
@@ -56,6 +63,7 @@ public class FachadaGUI {
         // iniciamos la vista de administrador
         this.vadmin = new VPrincipalAdmin(usr, fa);
         vadmin.setVisible(true);
+        this.currentFrame = vadmin;
     }
 
     public void iniciarInversor(UsuarioInversor usr) {
@@ -64,6 +72,7 @@ public class FachadaGUI {
         // iniciamos la vista de usuario de mercado
         this.vinversor = new VPrincipalInversor(usr,fa);
         vinversor.setVisible(true);
+        this.currentFrame = vinversor;
     }
 
     public void iniciarEmpresa(UsuarioEmpresa usr){
@@ -72,12 +81,14 @@ public class FachadaGUI {
         //iniciamos la vista de empresa
         this.vempresa = new VPrincipalEmpresa(usr, fa);
         vempresa.setVisible(true);
+        this.currentFrame = vempresa;
     }
 
     public void cerrarSesion(javax.swing.JFrame frame){
         frame.dispose();
         this.vi = new VInicio(this.fa);
         vi.setVisible(true);
+        this.currentFrame = vi;
     }
     
     public void ventanaParticipaciones(UsuarioEmpresa usr){
