@@ -77,6 +77,10 @@ public class FachadaAplicacion {
         this.fgui.ventanaBeneficios(usr);
     }
     
+    public void ventanaCompras(UsuarioDeMercado usr){
+        this.fgui.ventanaCompras(usr);
+    }
+    
     public void verBeneficios(){
         this.fgui.verBeneficios();
     }
