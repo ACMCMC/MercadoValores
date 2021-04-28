@@ -43,6 +43,7 @@ public class VGestionParticipacion extends javax.swing.JFrame {
         DarBajaBoton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setResizable(false);
 
         TextoParticipaciones.setText("Número de participaciones:");
 
@@ -124,8 +125,9 @@ public class VGestionParticipacion extends javax.swing.JFrame {
                 x.setVisible(true);
             }
         }
-        catch(SQLException e){
-            FachadaAplicacion.muestraExcepcion(e);
+        catch(Exception e){
+            VAviso x = new VAviso(this,true,e.getMessage());
+            x.setVisible(true);
         }   
         this.dispose();
     }//GEN-LAST:event_DarAltaBotonActionPerformed
@@ -141,8 +143,9 @@ public class VGestionParticipacion extends javax.swing.JFrame {
                 x.setVisible(true);               
             }
         }
-        catch(SQLException e){
-            FachadaAplicacion.muestraExcepcion(e);
+        catch(Exception e){
+            VAviso x = new VAviso(this,true,e.getMessage());
+            x.setVisible(true);
         }    
         this.dispose();
     }//GEN-LAST:event_DarBajaBotonActionPerformed

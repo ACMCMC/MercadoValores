@@ -215,10 +215,17 @@ public class VPrincipalAdmin extends javax.swing.JFrame {
 
     private void NuevaComisionBotonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NuevaComisionBotonActionPerformed
         //Actualizamos la comision actual
-        if(!this.ComisionActualCajaTexto.getText().isEmpty()){
-            this.usr.setComision_actual(Double.parseDouble(this.ComisionActualCajaTexto.getText()));
-            FachadaDB.getFachada().actualizarComision(this.usr);
+        
+        try{
+            if(!this.ComisionActualCajaTexto.getText().isEmpty()){
+                this.usr.setComision_actual(Double.parseDouble(this.ComisionActualCajaTexto.getText()));
+                FachadaDB.getFachada().actualizarComision(this.usr);
+            }
+        }catch(Exception e){
+            VAviso x = new VAviso(this,true,e.getMessage());
+            x.setVisible(true);
         }
+
     }//GEN-LAST:event_NuevaComisionBotonActionPerformed
 
     private void botonCerrarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonCerrarSesionActionPerformed
@@ -254,19 +261,25 @@ public class VPrincipalAdmin extends javax.swing.JFrame {
     //funcion que actualiza usuarios de la tabla que se muestra al regulador
     //esto permite autorizar facilmente el alta y baja de usuarios
     private void updateTabla(){
-        TablaUsuarios uT = (TablaUsuarios) this.tablaUsuarios.getModel();
-        Set<UsuarioDeMercado> u = FachadaDB.getFachada().getUsuariosDeMercado();
-        ArrayList<UsuarioDeMercado> uM = new ArrayList<>();
-        
-        for(UsuarioDeMercado user: u){
-            
-            //filtramos los que estén esperando confimación de alta o de baja:
-            if(user.getEstado() == EstadoUsuario.SOLICITANDO_ALTA || user.getEstado() == EstadoUsuario.SOLICITANDO_BAJA){
-                uM.add(user);
+        try{
+            TablaUsuarios uT = (TablaUsuarios) this.tablaUsuarios.getModel();
+            Set<UsuarioDeMercado> u = FachadaDB.getFachada().getUsuariosDeMercado();
+            ArrayList<UsuarioDeMercado> uM = new ArrayList<>();
+
+            for(UsuarioDeMercado user: u){
+
+                //filtramos los que estén esperando confimación de alta o de baja:
+                if(user.getEstado() == EstadoUsuario.SOLICITANDO_ALTA || user.getEstado() == EstadoUsuario.SOLICITANDO_BAJA){
+                    uM.add(user);
+                }
             }
+
+            uT.setFilas(uM);            
+        }catch(Exception e){
+            VAviso x = new VAviso(this,true,e.getMessage());
+            x.setVisible(true);
         }
-        
-        uT.setFilas(uM);
+
     }
     
     private void displayComision(){
