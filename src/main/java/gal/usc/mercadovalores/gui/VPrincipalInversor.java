@@ -256,7 +256,6 @@ public class VPrincipalInversor extends javax.swing.JFrame {
             //actualizamos el usuario local
             String idActual = this.usr.getId();
             this.usr.setId((String) this.TablaDatos.getValueAt(0, 1));
-            //this.usr.setSaldo((double) this.TablaDatos.getValueAt(1, 1));
             this.usr.setDireccion((String) this.TablaDatos.getValueAt(2, 1));
             this.usr.setTelefono((String) this.TablaDatos.getValueAt(3, 1));
             this.usr.setDni((String) this.TablaDatos.getValueAt(4, 1));
