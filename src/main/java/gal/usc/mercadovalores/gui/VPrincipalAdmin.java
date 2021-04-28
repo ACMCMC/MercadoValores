@@ -51,6 +51,7 @@ public class VPrincipalAdmin extends javax.swing.JFrame {
         tablaUsuarios = new javax.swing.JTable();
         botonAutorizar = new javax.swing.JButton();
         botonCerrarSesion = new javax.swing.JButton();
+        botonDenegar = new javax.swing.JButton();
         Menu = new javax.swing.JMenuBar();
         UsuarioMenu = new javax.swing.JMenu();
         SaldosMenuItem = new javax.swing.JMenuItem();
@@ -101,6 +102,13 @@ public class VPrincipalAdmin extends javax.swing.JFrame {
             }
         });
 
+        botonDenegar.setText("Denegar");
+        botonDenegar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonDenegarActionPerformed(evt);
+            }
+        });
+
         UsuarioMenu.setText("Usuarios");
 
         SaldosMenuItem.setText("Modifcar saldos");
@@ -137,6 +145,8 @@ public class VPrincipalAdmin extends javax.swing.JFrame {
                                 .addGap(0, 0, Short.MAX_VALUE))
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(botonDenegar)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(botonAutorizar))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(botonCerrarSesion)
@@ -158,7 +168,9 @@ public class VPrincipalAdmin extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(botonAutorizar)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(botonAutorizar)
+                    .addComponent(botonDenegar))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 13, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(SalirBoton)
@@ -175,17 +187,24 @@ public class VPrincipalAdmin extends javax.swing.JFrame {
 
     //este boton permite autorizar las altas de usuarios nuevos
     private void botonAutorizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonAutorizarActionPerformed
-        //si autorizo ->        
-        TablaUsuarios uT = (TablaUsuarios) this.tablaUsuarios.getModel();
-        UsuarioDeMercado user = uT.obtenerUsuario(this.tablaUsuarios.getSelectedRow());
-        
-        if(user.getEstado() == EstadoUsuario.SOLICITANDO_ALTA){
-            FachadaDB.getFachada().autorizarRegistro(user);
-        }else if(user.getEstado() == EstadoUsuario.SOLICITANDO_BAJA){
-            FachadaDB.getFachada().autorizarBaja(user);
+        //si autorizo ->  
+        try{
+            TablaUsuarios uT = (TablaUsuarios) this.tablaUsuarios.getModel();
+            UsuarioDeMercado user = uT.obtenerUsuario(this.tablaUsuarios.getSelectedRow());
+
+            if(user.getEstado() == EstadoUsuario.SOLICITANDO_ALTA){
+                FachadaDB.getFachada().autorizarBaja(user);
+            }else if(user.getEstado() == EstadoUsuario.SOLICITANDO_BAJA){
+                FachadaDB.getFachada().autorizarBaja(user);
+            }
+            
+            this.updateTabla();
+
+        }catch(Exception e){
+            VAviso x = new VAviso(this,true,e.getMessage());
+            x.setVisible(true);
         }
         
-        this.updateTabla();
         
     }//GEN-LAST:event_botonAutorizarActionPerformed
 
@@ -210,6 +229,26 @@ public class VPrincipalAdmin extends javax.swing.JFrame {
     private void BajaPagosBotonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BajaPagosBotonActionPerformed
         this.fa.verBeneficios();
     }//GEN-LAST:event_BajaPagosBotonActionPerformed
+
+    private void botonDenegarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonDenegarActionPerformed
+        //si no autorizo ->  
+        try{
+            TablaUsuarios uT = (TablaUsuarios) this.tablaUsuarios.getModel();
+            UsuarioDeMercado user = uT.obtenerUsuario(this.tablaUsuarios.getSelectedRow());
+
+            if(user.getEstado() == EstadoUsuario.SOLICITANDO_ALTA){
+                FachadaDB.getFachada().autorizarRegistro(user);
+            }else if(user.getEstado() == EstadoUsuario.SOLICITANDO_BAJA){
+                FachadaDB.getFachada().autorizarRegistro(user);
+            }
+            
+            this.updateTabla();
+
+        }catch(Exception e){
+            VAviso x = new VAviso(this,true,e.getMessage());
+            x.setVisible(true);
+        }
+    }//GEN-LAST:event_botonDenegarActionPerformed
 
     
     //funcion que actualiza usuarios de la tabla que se muestra al regulador
@@ -251,6 +290,7 @@ public class VPrincipalAdmin extends javax.swing.JFrame {
     private javax.swing.JMenu UsuarioMenu;
     private javax.swing.JButton botonAutorizar;
     private javax.swing.JButton botonCerrarSesion;
+    private javax.swing.JButton botonDenegar;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tablaUsuarios;
     // End of variables declaration//GEN-END:variables
