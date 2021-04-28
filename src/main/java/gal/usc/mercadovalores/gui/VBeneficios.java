@@ -225,6 +225,7 @@ public class VBeneficios extends javax.swing.JFrame {
             Double precio = Double.parseDouble(this.campoParticipaciones.getText());
             FachadaDB.getFachada().anunciarBeneficios(this.usr,precio,new Timestamp(System.currentTimeMillis()));
             this.setCampos();
+            this.updateTabla();
         }catch(Exception e){
             VAviso x = new VAviso(this,true,e.getMessage());
             x.setVisible(true);
