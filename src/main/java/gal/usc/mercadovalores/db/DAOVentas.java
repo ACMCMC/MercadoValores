@@ -245,32 +245,37 @@ public class DAOVentas extends DAO<Participacion> {
                                     Double precioaux=resultSet.getDouble("precio");
                                     
                                     
-                                    if(numCompradas+aux>numero){//Numero compardas+Numero Ofrecidas>Numero que quiere
+                                    
                                         //Guardamos los ids para hacer luego update
                                         ids.add(idUsuarioaux);
-                                        participacionesVendidas.add(aux);
-                                        numCompradas+=aux;
+                                        
+                                       
+                                        
                                         if(aux>ret){//Si es mayor el numero de participaciones a la venta de la tupla se hace update
 
                                             preparedStatement2 = getConexion()
                                             .prepareStatement("update anuncio_venta " +
-                                                              "set num_participaciones=? "+ 
+                                                              "set num_participaciones=num_participaciones-? "+ 
                                                               "where id1=? and id2=? and fecha=?");
-                                            preparedStatement2.setInt(1, aux-ret);
+                                            preparedStatement2.setInt(1, ret);
                                             preparedStatement2.setString(2, idUsuarioaux);
                                             preparedStatement2.setString(3, idEmpresaaux);
                                             preparedStatement2.setTimestamp(4, fecha);
 
                                             //Cantdad a restar al usuario que compra
                                             saldoARestar+=aux*precioaux;
-                                            ret=0;//Se compraron todas las que se querían
+                                            //Se compraron todas las que se querían
 
                                             //Comision
-                                            Comision+=precioaux*aux*resultSet.getDouble("comision_en_fecha");
+                                            participacionesVendidas.add(ret);
+                                            Comision+=precioaux*ret*resultSet.getDouble("comision_en_fecha");
 
                                             //Cantidad a sumar a cada usuario que vende(venta total - comisión)
-                                             sumaSaldos.add(aux*precioaux-precioaux*aux*resultSet.getDouble("comision_en_fecha"));
+                                             sumaSaldos.add(ret*precioaux-precioaux*ret*resultSet.getDouble("comision_en_fecha"));
+                                             numCompradas+=ret;
+                                             ret=0;
                                             preparedStatement2.executeUpdate();
+                                            
                                         }else{//En todos los demas casos se borra la tupla
                                              preparedStatement2 = getConexion()
                                             .prepareStatement("delete from anuncio_venta " + 
@@ -280,6 +285,7 @@ public class DAOVentas extends DAO<Participacion> {
                                             preparedStatement2.setTimestamp(3, fecha);
 
                                             //Cantdad a restar al usuario que compra
+                                            participacionesVendidas.add(aux);
                                             saldoARestar+=aux*precioaux;
                                             ret-=aux;//Se compraron un numero hasta que llegue a 0
                                             numCompradas+=aux;
@@ -290,26 +296,7 @@ public class DAOVentas extends DAO<Participacion> {
                                             sumaSaldos.add(aux*precioaux-precioaux*aux*resultSet.getDouble("comision_en_fecha"));
                                             preparedStatement2.executeUpdate();
                                         }
-                                    }else{
-                                        preparedStatement2 = getConexion()
-                                            .prepareStatement("delete from anuncio_venta " + 
-                                                              "where id1=? and id2=? and fecha=? ");
-                                            preparedStatement2.setString(1, idUsuarioaux);
-                                            preparedStatement2.setString(2, idEmpresaaux);
-                                            preparedStatement2.setTimestamp(3, fecha);
-
-                                            //Cantdad a restar al usuario que compra
-                                            saldoARestar+=aux*precioaux;
-                                            ret-=aux;//Se compraron un numero hasta que llegue a 0
-                                            numCompradas+=aux;
-                                            //Comision
-                                            Comision+=precioaux*aux*resultSet.getDouble("comision_en_fecha");
-
-                                            //Cantidad a sumar a cada usuario que vende(venta total - comisión)
-                                            sumaSaldos.add(aux*precioaux-precioaux*aux*resultSet.getDouble("comision_en_fecha"));
-                                            preparedStatement2.executeUpdate();
                                     
-                                    }
 				} catch (EnumConstantNotPresentException e) {
 					FachadaAplicacion.muestraExcepcion(e);
 				}
