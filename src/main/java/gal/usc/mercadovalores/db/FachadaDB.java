@@ -229,7 +229,7 @@ public class FachadaDB {
     }
     
     public Set<UsuarioEmpresa> getEmpresasConAnuncios(){
-        return daoVentas.empresasConAnuncios();
+        return daoVentas.getEmpresasConAnuncios();
     }
     
     public void bajaAnuncioVenta(AnuncioVenta av) throws SQLException{

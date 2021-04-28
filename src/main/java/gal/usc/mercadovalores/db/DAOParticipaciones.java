@@ -450,5 +450,4 @@ public class DAOParticipaciones extends DAO<Participacion> {
             }
         }
     }
-    
-}ent.setString(3, u.getId());
+}
