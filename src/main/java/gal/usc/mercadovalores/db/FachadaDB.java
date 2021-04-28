@@ -276,4 +276,14 @@ public class FachadaDB {
     public Set<Compra> getAllCompras() {
         return daoVentas.getAllCompras();
     }
+
+    /**
+     * Puede devolver NULL, si no se han producido compras a la empresa
+     * @param empresa
+     * @param numCompras
+     * @return
+     */
+    public Double getPrecioMedioComprasEmpresa(UsuarioEmpresa empresa, int numCompras) {
+        return daoVentas.getPrecioMedioComprasEmpresa(empresa, numCompras);
+    }
 }
