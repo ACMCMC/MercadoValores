@@ -17,6 +17,7 @@ import java.util.Set;
 
 import gal.usc.mercadovalores.aplicacion.AnuncioVenta;
 import gal.usc.mercadovalores.aplicacion.Beneficios;
+import gal.usc.mercadovalores.aplicacion.Compra;
 import gal.usc.mercadovalores.aplicacion.FachadaAplicacion;
 import gal.usc.mercadovalores.aplicacion.Participacion;
 import gal.usc.mercadovalores.aplicacion.Usuario;
@@ -205,11 +206,6 @@ public class FachadaDB {
     public void actualizarComision(UsuarioRegulador u) {
         daoUsuarioRegulador.update(u);
     }
-    
-    public void confirmarVenta(String id1,String id2,Timestamp fecha) throws SQLException{
-        daoVentas.confirmarVenta(id1, id2, fecha);
-        
-    }
 
     public void removeParticipacion(UsuarioEmpresa usr, int p) throws SQLException{
         //daoUsuarioEmpresa.removeParticipacion(usr, p);
@@ -227,6 +223,15 @@ public class FachadaDB {
         return daoVentas.getAnuncioUsuario(usr);
     }
     
+    //NOn ten usos
+    public Set<AnuncioVenta> getAnunciosTodos(){
+        return daoVentas.getAll();
+    }
+    
+    public Set<UsuarioEmpresa> getEmpresasConAnuncios(){
+        return daoVentas.empresasConAnuncios();
+    }
+    
     public void bajaAnuncioVenta(AnuncioVenta av) throws SQLException{
         daoVentas.retirarVenta(av.getVendedor().getId(), av.getEmpresa().getId(), av.getFecha());
     }
@@ -236,11 +241,11 @@ public class FachadaDB {
     }
     
     public Set<Beneficios> getAllBeneficios(){
-        return daoParticipaciones.getAllBeneficios();
+       return daoParticipaciones.getAllBeneficios();
     }
     
     public Set<Beneficios> getBeneficiosEmpresa(UsuarioEmpresa usr){
-        return daoParticipaciones.getBeneficiosEmpresa(usr);
+       return daoParticipaciones.getBeneficiosEmpresa(usr);
     }
     
     public void bajaBeneficios(Beneficios b){
@@ -257,5 +262,23 @@ public class FachadaDB {
     
     public String getPassEncriptada(String pass){
         return daoUsuario.getContrasenaEncriptada(pass);
+    }
+
+    public Compra comprar(UsuarioDeMercado Usuario, UsuarioEmpresa empresa,Integer numero,double precio_max_por_participacion) {
+        return daoVentas.comprar(Usuario, empresa, numero, precio_max_por_participacion);
+    }
+
+    public Set<Compra> getAllCompras() {
+        return daoVentas.getAllCompras();
+    }
+
+    /**
+     * Puede devolver NULL, si no se han producido compras a la empresa
+     * @param empresa
+     * @param numCompras
+     * @return
+     */
+    public Double getPrecioMedioComprasEmpresa(UsuarioEmpresa empresa, int numCompras) {
+        return daoVentas.getPrecioMedioComprasEmpresa(empresa, numCompras);
     }
 }

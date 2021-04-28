@@ -42,7 +42,7 @@ public class VGestionParticipacion extends javax.swing.JFrame {
         NumeroParticipacionesSpinner = new javax.swing.JSpinner();
         DarBajaBoton = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         TextoParticipaciones.setText("Número de participaciones:");
 

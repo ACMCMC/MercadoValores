@@ -61,13 +61,15 @@ public class VPrincipalEmpresa extends javax.swing.JFrame {
         BajaVentaMenuItem = new javax.swing.JMenuItem();
         BeneficiosMenu = new javax.swing.JMenu();
         AltaPagoMenuItem = new javax.swing.JMenuItem();
+        BajaPagoMenuItem = new javax.swing.JMenuItem();
+        PagarMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Ventana  Empresa");
         setResizable(false);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowActivated(java.awt.event.WindowEvent evt) {
-                //formWindowActivated(evt);
+                updater(evt);
             }
         });
 
@@ -164,6 +166,11 @@ public class VPrincipalEmpresa extends javax.swing.JFrame {
         ParticipacionesMenu.add(VenderMenuItem);
 
         ComprarMenuItem.setText("Comprar");
+        ComprarMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ComprarMenuItemActionPerformed(evt);
+            }
+        });
         ParticipacionesMenu.add(ComprarMenuItem);
 
         BajaVentaMenuItem.setText("Dar de baja anuncio");
@@ -180,11 +187,6 @@ public class VPrincipalEmpresa extends javax.swing.JFrame {
 
         AltaPagoMenuItem.setText("Altas y pagos");
         AltaPagoMenuItem.setToolTipText("");
-        AltaPagoMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                AltaPagoMenuItemActionPerformed(evt);
-            }
-        });
         BeneficiosMenu.add(AltaPagoMenuItem);
 
         Menu.add(BeneficiosMenu);
@@ -320,6 +322,20 @@ public class VPrincipalEmpresa extends javax.swing.JFrame {
 
     }//GEN-LAST:event_BajaVentaMenuItemActionPerformed
 
+    private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
+        // TODO add your handling code here:
+        ActualizarTablaDatos();
+    }//GEN-LAST:event_formWindowActivated
+
+    private void ComprarMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ComprarMenuItemActionPerformed
+        // TODO add your handling code here:
+        this.fa.ventanaCompras(this.usr);
+    }//GEN-LAST:event_ComprarMenuItemActionPerformed
+
+    private void updater(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_updater
+        this.ActualizarTablaDatos();
+    }//GEN-LAST:event_updater
+
     private void ActualizarTablaDatos(){
         int n_part = 0, n_crea = 0;
 
@@ -347,6 +363,7 @@ public class VPrincipalEmpresa extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem AltaPagoMenuItem;
     private javax.swing.JMenuItem BajaMenuItem;
+    private javax.swing.JMenuItem BajaPagoMenuItem;
     private javax.swing.JMenuItem BajaVentaMenuItem;
     private javax.swing.JMenu BeneficiosMenu;
     private javax.swing.JButton BotonCerrarSesion;
@@ -355,6 +372,7 @@ public class VPrincipalEmpresa extends javax.swing.JFrame {
     private javax.swing.JMenuItem GestionParticipacionMenuItem;
     private javax.swing.JMenuBar Menu;
     private javax.swing.JMenuItem ModificarMenuItem;
+    private javax.swing.JMenuItem PagarMenuItem;
     private javax.swing.JMenu ParticipacionesMenu;
     private javax.swing.JButton SalirBoton;
     private javax.swing.JTable TablaDatos;

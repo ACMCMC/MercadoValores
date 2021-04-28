@@ -49,9 +49,10 @@ public class VVenta extends javax.swing.JFrame {
         precioComision = new javax.swing.JLabel();
         botonSalir = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         tablaEmpresas.setModel(new TablaEmpresasUsuario());
+        tablaEmpresas.setToolTipText("");
         jScrollPane1.setViewportView(tablaEmpresas);
 
         jLabel1.setText("Venta de participaciones:");
@@ -201,7 +202,7 @@ public class VVenta extends javax.swing.JFrame {
         //muestra la comision del regulador
         Double comision = FachadaDB.getFachada().getUsuarioRegulador().getComision_actual();
         String comisionText = comision.toString();
-        this.precioComision.setText(comisionText);
+        this.precioComision.setText(comisionText + "€");
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
