@@ -73,8 +73,10 @@ public class DAOParticipaciones extends DAO<Participacion> {
                 preparedStatement.setInt(1, x);
                 preparedStatement.setString(2, u.getId());
                 preparedStatement.setString(3, u.getId());
+                preparedStatement.executeUpdate();
+                c.commit();
             }
-
+            
         } catch (SQLException e) {
             throw e;
         } finally {
