@@ -314,7 +314,7 @@ public class VVenta extends javax.swing.JFrame {
                     
                 }
                 else{
-                    this.textoLargoPrecio.setText("Precio medio no disponible");
+                    this.textoLargoPrecio.setText("Historial de precios no disponible");
                     this.textoNombreEmpresa.setVisible(false);
                     this.precioMedio.setVisible(false);
                     this.textoX.setVisible(false);
