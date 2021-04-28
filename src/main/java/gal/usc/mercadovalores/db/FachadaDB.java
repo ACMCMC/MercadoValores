@@ -17,6 +17,7 @@ import java.util.Set;
 
 import gal.usc.mercadovalores.aplicacion.AnuncioVenta;
 import gal.usc.mercadovalores.aplicacion.Beneficios;
+import gal.usc.mercadovalores.aplicacion.Compra;
 import gal.usc.mercadovalores.aplicacion.FachadaAplicacion;
 import gal.usc.mercadovalores.aplicacion.Participacion;
 import gal.usc.mercadovalores.aplicacion.Usuario;
@@ -257,5 +258,13 @@ public class FachadaDB {
     
     public String getPassEncriptada(String pass){
         return daoUsuario.getContrasenaEncriptada(pass);
+    }
+
+    public Compra comprar(UsuarioDeMercado Usuario, UsuarioEmpresa empresa,Integer numero,double precio_max_por_participacion) {
+        return daoVentas.comprar(Usuario, empresa, numero, precio_max_por_participacion);
+    }
+
+    public Set<Compra> getAllCompras() {
+        return daoVentas.getAllCompras();
     }
 }

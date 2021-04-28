@@ -15,9 +15,12 @@ import java.util.HashSet;
 import java.util.Set;
 
 import gal.usc.mercadovalores.aplicacion.AnuncioVenta;
+import gal.usc.mercadovalores.aplicacion.Compra;
 import gal.usc.mercadovalores.aplicacion.EstadoUsuario;
 import gal.usc.mercadovalores.aplicacion.FachadaAplicacion;
+import gal.usc.mercadovalores.aplicacion.ParteCompra;
 import gal.usc.mercadovalores.aplicacion.Participacion;
+import gal.usc.mercadovalores.aplicacion.Usuario;
 import gal.usc.mercadovalores.aplicacion.UsuarioDeMercado;
 import gal.usc.mercadovalores.aplicacion.UsuarioEmpresa;
 import java.util.Objects;
@@ -238,185 +241,146 @@ public class DAOVentas extends DAO<Participacion> {
          return ret;
      }
     
-     public void ventaParticipaciones(UsuarioDeMercado Usuario,UsuarioEmpresa empresa,Integer numero,Integer precio){
+     /**
+      * Se encarga de realizar una compra
+      * @param Usuario
+      * @param empresa
+      * @param numero
+      * @param precio_max_por_participacion
+      * @return
+      */
+     public Compra comprar(UsuarioDeMercado Usuario, UsuarioEmpresa empresa,Integer numero, double precio_max_por_participacion){
         Connection c = startTransaction();
-        Integer ret=numero;
-        Double saldoARestar=0.0;
+        Compra ret = null;
 	PreparedStatement preparedStatement = null;
-        PreparedStatement preparedStatement2 = null;
-        PreparedStatement preparedStatement3 = null;
-        PreparedStatement preparedStatement4 = null;
-        PreparedStatement preparedStatement5 = null;
-        PreparedStatement preparedStatement6 = null;
-	ResultSet resultSet,resultSet2;
-        //Variiables para hacer update
-        ArrayList<String> ids=new ArrayList();
-        ArrayList<Double> sumaSaldos=new ArrayList();
-        ArrayList<Integer> participacionesVendidas=new ArrayList();
-        Double Comision=0.0;
-        Integer numCompradas=0;
-        
+	ResultSet resultSet;
 		try {
-                        c.setAutoCommit(false);
-                        
-			preparedStatement = getConexion()
-					.prepareStatement("select * from anuncio_venta " +
-                                                          "where ?<=precio and id2=? " +
-                                                          "order by precio asc,fecha asc");
-                        preparedStatement.setInt(1,precio );
+			preparedStatement = c.prepareStatement("select comprar(?,?,?,?)");
+                        preparedStatement.setString(1,Usuario.getId() );
                         preparedStatement.setString(2,empresa.getId() );
+                        preparedStatement.setInt(3,numero );
+                        preparedStatement.setDouble(4,precio_max_por_participacion );
 			resultSet = preparedStatement.executeQuery();
-			while (resultSet.next() && ret!=0) {
-				try {
-                                    Integer aux=resultSet.getInt("num_participaciones");
-                                    String idUsuarioaux=resultSet.getString("id1");
-                                    String idEmpresaaux=resultSet.getString("id2");
-                                    Timestamp fecha=resultSet.getTimestamp("fecha");
-                                    Double precioaux=resultSet.getDouble("precio");
-                                    
-                                    
-                                    
-                                        //Guardamos los ids para hacer luego update
-                                        ids.add(idUsuarioaux);
-                                        
-                                       
-                                        
-                                        if(aux>ret){//Si es mayor el numero de participaciones a la venta de la tupla se hace update
-
-                                            preparedStatement2 = getConexion()
-                                            .prepareStatement("update anuncio_venta " +
-                                                              "set num_participaciones=num_participaciones-? "+ 
-                                                              "where id1=? and id2=? and fecha=?");
-                                            preparedStatement2.setInt(1, ret);
-                                            preparedStatement2.setString(2, idUsuarioaux);
-                                            preparedStatement2.setString(3, idEmpresaaux);
-                                            preparedStatement2.setTimestamp(4, fecha);
-
-                                            //Cantdad a restar al usuario que compra
-                                            saldoARestar+=aux*precioaux;
-                                            //Se compraron todas las que se querían
-
-                                            //Comision
-                                            participacionesVendidas.add(ret);
-                                            Comision+=precioaux*ret*resultSet.getDouble("comision_en_fecha");
-
-                                            //Cantidad a sumar a cada usuario que vende(venta total - comisión)
-                                             sumaSaldos.add(ret*precioaux-precioaux*ret*resultSet.getDouble("comision_en_fecha"));
-                                             numCompradas+=ret;
-                                             ret=0;
-                                            preparedStatement2.executeUpdate();
-                                            
-                                        }else{//En todos los demas casos se borra la tupla
-                                             preparedStatement2 = getConexion()
-                                            .prepareStatement("delete from anuncio_venta " + 
-                                                              "where id1=? and id2=? and fecha=? ");
-                                            preparedStatement2.setString(1, idUsuarioaux);
-                                            preparedStatement2.setString(2, idEmpresaaux);
-                                            preparedStatement2.setTimestamp(3, fecha);
-
-                                            //Cantdad a restar al usuario que compra
-                                            participacionesVendidas.add(aux);
-                                            saldoARestar+=aux*precioaux;
-                                            ret-=aux;//Se compraron un numero hasta que llegue a 0
-                                            numCompradas+=aux;
-                                            //Comision
-                                            Comision+=precioaux*aux*resultSet.getDouble("comision_en_fecha");
-
-                                            //Cantidad a sumar a cada usuario que vende(venta total - comisión)
-                                            sumaSaldos.add(aux*precioaux-precioaux*aux*resultSet.getDouble("comision_en_fecha"));
-                                            preparedStatement2.executeUpdate();
-                                        }
-                                    
+			if (resultSet.next()) {
+                                try {
+                                        Integer idCompra = resultSet.getInt(1);
+                                        ret = getCompra(idCompra);
 				} catch (EnumConstantNotPresentException e) {
-					FachadaAplicacion.muestraExcepcion(e);
+                                        FachadaAplicacion.muestraExcepcion(e);
 				}
 			}
-                        //FALTA ACTUALIZAR LOS SALDOS DE LOS USUARIOS Y PAGAR LAS COMISIONES
-                        
-                        //Attualizacion regulador
-                        preparedStatement3 = getConexion()
-					.prepareStatement("update usuario_regulador " +
-                                                          "set saldo=?");
-                        preparedStatement3.setDouble(1, Comision);
-                        preparedStatement3.executeUpdate();
-                        
-                         //ACTUALIZAMOS EL SALDO DEL USUARIO QUE COMPRA
-                         preparedStatement4 = getConexion()
-					.prepareStatement("update usuario_mercado " +
-                                                          "set saldo=saldo-? where id=?");
-                         preparedStatement4.setDouble(1, saldoARestar);
-                         preparedStatement4.setString(2, Usuario.getId());
-                         preparedStatement4.executeUpdate();
-                         
-                         //Actualizamos el saldo de los usuarios que venden
-                        for(int i=0;i<ids.size();i++){
-                            preparedStatement5 = getConexion()
-					.prepareStatement("update usuario_mercado " +
-                                                          "set saldo=saldo+? where id=? ");
-                         preparedStatement5.setDouble(1, sumaSaldos.get(i));
-                         preparedStatement5.setString(2, ids.get(i));
-                         preparedStatement5.executeUpdate();
-                                preparedStatement5.close();
-                        }
-                        
-                        //Actualizar la tabla de tener_participaciones para los que venden
-                        for(int i=0;i<ids.size();i++){
-                                preparedStatement5 = getConexion()
-					.prepareStatement("update tener_participaciones " +
-                                                          "set num_participaciones=num_participaciones-? where id1=? and id2=?");
-                            preparedStatement5.setInt(1,participacionesVendidas.get(i) );
-                            preparedStatement5.setString(2, ids.get(i));
-                            preparedStatement5.setString(3, empresa.getId());
-                         preparedStatement5.executeUpdate();
-                                preparedStatement5.close();
-                        }
-                        
-                        
-                                
-                        //Actualizar tabla tener_participaciones para el comprador
-                        preparedStatement6 = getConexion()
-					.prepareStatement("select count(*) as numero from tener_participaciones where id1=? and id2=? ");
-                            preparedStatement6.setString(1, Usuario.getId());
-                            preparedStatement6.setString(2, empresa.getId());
-                         resultSet2=preparedStatement6.executeQuery();
-                         
-                         Integer existe=0;
-                         while(resultSet2.next()){
-                             existe=resultSet2.getInt("numero");
-                         }
-                         if(existe==0){
-                             preparedStatement6 = getConexion()
-					.prepareStatement("insert into tener_participaciones values(?,?,?)");
-                            preparedStatement6.setString(1, Usuario.getId());
-                            preparedStatement6.setString(2, empresa.getId());
-                            preparedStatement6.setInt(3, numCompradas);
-                         preparedStatement6.executeUpdate();
-                         }else{
-                             preparedStatement6 = getConexion()
-					.prepareStatement("update tener_participaciones set num_participaciones=num_participaciones+? where id1=? and id2=?");
-                            preparedStatement6.setInt(1, numCompradas);
-                            preparedStatement6.setString(2, Usuario.getId());
-                            preparedStatement6.setString(3, empresa.getId());
-                            preparedStatement6.executeUpdate();
-                         
-                         }
-                        
                         c.commit();
 		} catch (SQLException e) {
 			FachadaAplicacion.muestraExcepcion(e);
 		} finally {
 			try {
 				preparedStatement.close();
-                                //preparedStatement2.close();
-                                preparedStatement3.close();
-                                preparedStatement4.close();
-                                preparedStatement6.close();
 			} catch (SQLException e) {
 				FachadaAplicacion.muestraExcepcion(e);
 			}
 		}
+         return ret;
      }
-     
+
+     public Set<Compra> getAllCompras() {
+             Connection c = startTransaction();
+             Set<Compra> ret = new HashSet<>();
+             PreparedStatement preparedStatement = null;
+             ResultSet resultSet;
+                     try {
+                             preparedStatement = c.prepareStatement("select id_compra, empresa, comprador, fecha FROM compra");
+                             resultSet = preparedStatement.executeQuery();
+                             while (resultSet.next()) {
+                                     try {
+                                             UsuarioEmpresa empresa = (UsuarioEmpresa) FachadaDB.getFachada().getUsuarioById(resultSet.getString("empresa"));
+                                             UsuarioDeMercado comprador = (UsuarioDeMercado) FachadaDB.getFachada().getUsuarioById(resultSet.getString("comprador"));
+                                             Timestamp fecha = resultSet.getTimestamp("fecha");
+                                             int idCompra = resultSet.getInt("id_compra");
+                                             Set<ParteCompra> partes = getPartesCompra(idCompra);
+                                             ret.add(new Compra(partes, idCompra, fecha, empresa, comprador));
+                                     } catch (EnumConstantNotPresentException e) {
+                                             FachadaAplicacion.muestraExcepcion(e);
+                                     }
+                             }
+                             c.commit();
+                     } catch (SQLException e) {
+                             FachadaAplicacion.muestraExcepcion(e);
+                     } finally {
+                             try {
+                                     preparedStatement.close();
+                             } catch (SQLException e) {
+                                     FachadaAplicacion.muestraExcepcion(e);
+                             }
+                     }
+              return ret;
+     }
+
+     public Compra getCompra(int idCompra) {
+        Connection c = startTransaction();
+        Compra ret = null;
+	PreparedStatement preparedStatement = null;
+	ResultSet resultSet;
+		try {
+			preparedStatement = c.prepareStatement("select empresa, comprador, fecha FROM compra WHERE id_compra=?");
+                        preparedStatement.setInt(1, idCompra );
+			resultSet = preparedStatement.executeQuery();
+			if (resultSet.next()) {
+                                try {
+                                        UsuarioEmpresa empresa = (UsuarioEmpresa) FachadaDB.getFachada().getUsuarioById(resultSet.getString("empresa"));
+                                        UsuarioDeMercado comprador = (UsuarioDeMercado) FachadaDB.getFachada().getUsuarioById(resultSet.getString("comprador"));
+                                        Timestamp fecha = resultSet.getTimestamp("fecha");
+                                        Set<ParteCompra> partes = getPartesCompra(idCompra);
+                                        ret = new Compra(partes, idCompra, fecha, empresa, comprador);
+				} catch (EnumConstantNotPresentException e) {
+                                        FachadaAplicacion.muestraExcepcion(e);
+				}
+			}
+                        c.commit();
+		} catch (SQLException e) {
+			FachadaAplicacion.muestraExcepcion(e);
+		} finally {
+			try {
+				preparedStatement.close();
+			} catch (SQLException e) {
+				FachadaAplicacion.muestraExcepcion(e);
+			}
+		}
+         return ret;
+     }
+
+     public Set<ParteCompra> getPartesCompra(int idCompra) {
+        Connection c = startTransaction();
+        Set<ParteCompra> ret = new HashSet<>();
+	PreparedStatement preparedStatement = null;
+	ResultSet resultSet;
+		try {
+			preparedStatement = c.prepareStatement("select id_parte, vendedor, precio, cantidad FROM parte_compra WHERE id_compra=?");
+                        preparedStatement.setInt(1, idCompra );
+			resultSet = preparedStatement.executeQuery();
+			while (resultSet.next()) {
+                                try {
+                                        int id_parte = resultSet.getInt("id_parte");
+                                        UsuarioDeMercado vendedor = (UsuarioDeMercado) FachadaDB.getFachada().getUsuarioById(resultSet.getString("vendedor"));
+                                        double precio = resultSet.getInt("precio");
+                                        int cantidad = resultSet.getInt("cantidad");
+                                        ParteCompra parte = new ParteCompra(id_parte, precio, cantidad, vendedor);
+                                        ret.add(parte);
+				} catch (EnumConstantNotPresentException e) {
+                                        FachadaAplicacion.muestraExcepcion(e);
+				}
+			}
+                        c.commit();
+		} catch (SQLException e) {
+			FachadaAplicacion.muestraExcepcion(e);
+		} finally {
+			try {
+				preparedStatement.close();
+			} catch (SQLException e) {
+				FachadaAplicacion.muestraExcepcion(e);
+			}
+		}
+         return ret;
+     }
      
      public Set<UsuarioEmpresa> empresasConAnuncios(){
          Connection c = startTransaction();
@@ -426,14 +390,12 @@ public class DAOVentas extends DAO<Participacion> {
 	ResultSet resultSet,resultSet2;
         UsuarioEmpresa usuario=null;
 		try {
-			preparedStatement = getConexion()
-					.prepareStatement("select distinct id2 from anuncio_venta");
+			preparedStatement = c.prepareStatement("select distinct id2 from anuncio_venta");
 			resultSet = preparedStatement.executeQuery();
 			while (resultSet.next()) {
 				try {
                                     String id=resultSet.getString("id2");
-                                    preparedStatement2 = getConexion()
-					.prepareStatement("select * from usuario_empresa inner join usuario_mercado using(id) where id=? ");
+                                    preparedStatement2 = c.prepareStatement("select * from usuario_empresa inner join usuario_mercado using(id) where id=? ");
                                 preparedStatement2.setString(1,id);
                                     
 			resultSet2 = preparedStatement2.executeQuery();
@@ -457,6 +419,7 @@ public class DAOVentas extends DAO<Participacion> {
 				} catch (EnumConstantNotPresentException e) {
 					FachadaAplicacion.muestraExcepcion(e);
 				}
+                                c.commit();
 			}
 		} catch (SQLException e) {
 			FachadaAplicacion.muestraExcepcion(e);
