@@ -55,7 +55,7 @@ public class VBeneficios extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         botonPagarAhora = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
-        campoFecha = new javax.swing.JTextField();
+        jTextField1 = new javax.swing.JTextField();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tablaBeneficios = new javax.swing.JTable();
@@ -79,7 +79,7 @@ public class VBeneficios extends javax.swing.JFrame {
             .addGap(0, 100, Short.MAX_VALUE)
         );
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jLabel1.setText("Número de participaciones: ");
 
@@ -147,7 +147,7 @@ public class VBeneficios extends javax.swing.JFrame {
                                     .addComponent(textoSaldo)
                                     .addComponent(nParticipaciones))
                                 .addGap(48, 48, 48))
-                            .addComponent(campoFecha)
+                            .addComponent(jTextField1)
                             .addComponent(campoParticipaciones))))
                 .addGap(33, 33, 33))
         );
@@ -169,7 +169,7 @@ public class VBeneficios extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
-                    .addComponent(campoFecha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 43, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(botonAnunciar)
@@ -246,7 +246,7 @@ public class VBeneficios extends javax.swing.JFrame {
         //anunciamos beneficios
         try{
             Double precio = Double.parseDouble(this.campoParticipaciones.getText());
-            String fecha = this.campoFecha.getText() + " 00:00:00.000";
+            String fecha = this.jTextField1.getText() + " 00:00:00.000";
             Timestamp t = null;
             t = Timestamp.valueOf(fecha);
             FachadaDB.getFachada().anunciarBeneficios(this.usr,precio,t);
@@ -338,7 +338,6 @@ public class VBeneficios extends javax.swing.JFrame {
     private javax.swing.JButton botonAnunciar;
     private javax.swing.JButton botonPagar;
     private javax.swing.JButton botonPagarAhora;
-    private javax.swing.JTextField campoFecha;
     private javax.swing.JTextField campoParticipaciones;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton3;
@@ -354,6 +353,7 @@ public class VBeneficios extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JTextField jTextField1;
     private javax.swing.JLabel nParticipaciones;
     private javax.swing.JTable tablaBeneficios;
     private javax.swing.JLabel textoSaldo;
