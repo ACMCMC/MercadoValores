@@ -260,7 +260,7 @@ public class DAOVentas extends DAO<Participacion> {
                                             .prepareStatement("update anuncio_venta " +
                                                               "set num_participaciones=? "+ 
                                                               "where id1=? and id2=? and fecha=?");
-                                            preparedStatement2.setInt(1, aux-numero);
+                                            preparedStatement2.setInt(1, aux-ret);
                                             preparedStatement2.setString(2, idUsuarioaux);
                                             preparedStatement2.setString(3, idEmpresaaux);
                                             preparedStatement2.setTimestamp(4, fecha);
