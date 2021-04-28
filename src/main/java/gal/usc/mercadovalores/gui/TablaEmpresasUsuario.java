@@ -7,6 +7,7 @@ package gal.usc.mercadovalores.gui;
 
 import java.util.ArrayList;
 import gal.usc.mercadovalores.aplicacion.Participacion;
+import gal.usc.mercadovalores.aplicacion.UsuarioEmpresa;
 
 import javax.swing.table.AbstractTableModel;
 
@@ -71,6 +72,10 @@ public class TablaEmpresasUsuario extends AbstractTableModel{
 
         }
         return resultado;
+    }
+    
+    public UsuarioEmpresa getEmpresaAt(int row){
+        return  this.participaciones.get(row).getEmpresa();
     }
 
     public void setFilas(java.util.ArrayList<Participacion> participaciones){
