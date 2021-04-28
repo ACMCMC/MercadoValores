@@ -224,12 +224,12 @@ public class FachadaDB {
     }
     
     public Set<UsuarioEmpresa> getEmpresasConAnuncios(){
-        return daoVentas.getEmpresasConAnuncios();
+        return daoVentas.empresasConAnuncios();
     }
     
     //Vende
-    public void ventaParticipaciones(UsuarioDeMercado vendedor,UsuarioEmpresa empresa, Integer numero, Integer precio){
-        daoVentas.ventaParticipaciones(vendedor, empresa, numero, precio);
+    public void compraParticipaciones(UsuarioDeMercado vendedor,UsuarioEmpresa empresa, Integer numero, Integer precio){
+        daoVentas.compraParticipaciones(vendedor, empresa, numero, precio);
     }
     
     public void bajaAnuncioVenta(AnuncioVenta av) throws SQLException{
