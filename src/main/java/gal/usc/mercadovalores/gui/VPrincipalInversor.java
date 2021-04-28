@@ -275,13 +275,13 @@ public class VPrincipalInversor extends javax.swing.JFrame {
                 
                 
                 FachadaDB.getFachada().actualizarUser(this.usr);
-            }else if(res != null ){
+            }else if(res != null){
                 VAviso x = new VAviso(this,true,"Nombre de usuario ya en uso, por favor elige otro.");
                 x.setVisible(true);
                 this.usr.setId(idActual);
             }else{
                 try{
-                    FachadaDB.getFachada().add(this.usr);
+                    FachadaDB.getFachada().actualizarUserEID(this.usr, idActual);
                 }catch(Exception e){
                     VAviso x = new VAviso(this,true,e.getMessage());
                     x.setVisible(true);

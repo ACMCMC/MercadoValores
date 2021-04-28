@@ -141,6 +141,32 @@ public final class DAOUsuarioEmpresa extends DAO<UsuarioEmpresa> {
 		}
 	}
 
+	public void updateId(UsuarioEmpresa user, String oldId) {
+		Connection c = startTransaction();
+		PreparedStatement preparedStatement = null;
+
+		try {
+			c.setAutoCommit(false);
+			preparedStatement = c
+					.prepareStatement("update usuario_mercado set id=? where id=?");
+			preparedStatement.setString(1, user.getId());
+			preparedStatement.setString(2, oldId);
+			preparedStatement.executeUpdate();
+			preparedStatement.close();
+			c.commit();
+
+			update(user);
+		} catch (SQLException e) {
+			FachadaAplicacion.muestraExcepcion(e);
+		} finally {
+			try {
+				preparedStatement.close();
+			} catch (SQLException e) {
+				FachadaAplicacion.muestraExcepcion(e);
+			}
+		}
+	}
+
 	public void add(UsuarioEmpresa u) throws SQLException {
 		Connection c = startTransaction();
 		PreparedStatement preparedStatement = null;
