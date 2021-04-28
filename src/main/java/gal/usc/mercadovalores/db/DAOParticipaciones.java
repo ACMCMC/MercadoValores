@@ -46,13 +46,6 @@ public class DAOParticipaciones extends DAO<Participacion> {
                 preparedStatement.executeUpdate();
             }
 
-            preparedStatement.close();
-            preparedStatement = c.prepareStatement("update usuario_empresa set importe_bloqueado=? where id=?");
-            //preparedStatement.setDouble(1,
-            //FachadaDB.getFachada().getParticipacionesEmpresa(u) * this.getImportePorParticipacion(u));
-            preparedStatement.setString(2, u.getId());
-            preparedStatement.executeUpdate();
-
             c.commit();
 
         } catch (SQLException e) {
@@ -81,13 +74,6 @@ public class DAOParticipaciones extends DAO<Participacion> {
                 preparedStatement.setString(2, u.getId());
                 preparedStatement.setString(3, u.getId());
             }
-            preparedStatement.executeUpdate();
-            preparedStatement.close();
-            preparedStatement = c.prepareStatement("update usuario_empresa set importe_bloqueado=? where id=?");
-            //preparedStatement.setDouble(1, this.numeroParticipacionesTotales(u) * this.getImportePorParticipacion(u));
-            preparedStatement.setString(2, u.getId());
-            preparedStatement.executeUpdate();
-            c.commit();
 
         } catch (SQLException e) {
             throw e;
@@ -292,10 +278,8 @@ public class DAOParticipaciones extends DAO<Participacion> {
 
     public void altaBeneficios(UsuarioEmpresa u, double porcentaje, Timestamp fecha) {
         Connection c = startTransaction();
-        Set<Participacion> setFinal = new HashSet<>();
 
         PreparedStatement preparedStatement = null;
-        ResultSet resultSet;
 
         try {
             preparedStatement = c.prepareStatement("insert into beneficios values(?,?,?)");
