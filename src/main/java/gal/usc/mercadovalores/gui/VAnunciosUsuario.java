@@ -45,7 +45,7 @@ public class VAnunciosUsuario extends javax.swing.JFrame {
         labelUsuario = new javax.swing.JLabel();
         botonSalir = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         tablaAnuncios.setModel(new TablaAnunciosUsuario());
         jScrollPane1.setViewportView(tablaAnuncios);

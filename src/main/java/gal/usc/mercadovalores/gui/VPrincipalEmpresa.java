@@ -69,7 +69,7 @@ public class VPrincipalEmpresa extends javax.swing.JFrame {
         setResizable(false);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowActivated(java.awt.event.WindowEvent evt) {
-                //formWindowActivated(evt);
+                updater(evt);
             }
         });
 
@@ -331,6 +331,10 @@ public class VPrincipalEmpresa extends javax.swing.JFrame {
         // TODO add your handling code here:
         this.fa.ventanaCompras(this.usr);
     }//GEN-LAST:event_ComprarMenuItemActionPerformed
+
+    private void updater(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_updater
+        this.ActualizarTablaDatos();
+    }//GEN-LAST:event_updater
 
     private void ActualizarTablaDatos(){
         int n_part = 0, n_crea = 0;
