@@ -307,6 +307,7 @@ public class DAOVentas extends DAO<Participacion> {
                         preparedStatement.setInt(3, numero);
                         preparedStatement.setDouble(4, precio_max_por_participacion);
                         resultSet = preparedStatement.executeQuery();
+                        c.commit();
                         if (resultSet.next()) {
                                 try {
                                         Integer idCompra = resultSet.getInt(1);
@@ -315,7 +316,6 @@ public class DAOVentas extends DAO<Participacion> {
                                         FachadaAplicacion.muestraExcepcion(e);
                                 }
                         }
-                        c.commit();
                 } catch (SQLException e) {
                         FachadaAplicacion.muestraExcepcion(e);
                 } finally {
@@ -337,6 +337,7 @@ public class DAOVentas extends DAO<Participacion> {
                         preparedStatement = c
                                         .prepareStatement("select id_compra, empresa, comprador, fecha FROM compra");
                         resultSet = preparedStatement.executeQuery();
+                        c.commit();
                         while (resultSet.next()) {
                                 try {
                                         UsuarioEmpresa empresa = (UsuarioEmpresa) FachadaDB.getFachada()
@@ -351,7 +352,6 @@ public class DAOVentas extends DAO<Participacion> {
                                         FachadaAplicacion.muestraExcepcion(e);
                                 }
                         }
-                        c.commit();
                 } catch (SQLException e) {
                         FachadaAplicacion.muestraExcepcion(e);
                 } finally {
@@ -374,6 +374,7 @@ public class DAOVentas extends DAO<Participacion> {
                                         "select empresa, comprador, fecha FROM compra WHERE id_compra=?");
                         preparedStatement.setInt(1, idCompra);
                         resultSet = preparedStatement.executeQuery();
+                        c.commit();
                         if (resultSet.next()) {
                                 try {
                                         UsuarioEmpresa empresa = (UsuarioEmpresa) FachadaDB.getFachada()
@@ -387,7 +388,6 @@ public class DAOVentas extends DAO<Participacion> {
                                         FachadaAplicacion.muestraExcepcion(e);
                                 }
                         }
-                        c.commit();
                 } catch (SQLException e) {
                         FachadaAplicacion.muestraExcepcion(e);
                 } finally {
