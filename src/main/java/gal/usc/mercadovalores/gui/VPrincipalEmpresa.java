@@ -248,7 +248,13 @@ public class VPrincipalEmpresa extends javax.swing.JFrame {
     }//GEN-LAST:event_BotonCerrarSesionActionPerformed
 
     private void BajaMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BajaMenuItemActionPerformed
-        FachadaDB.getFachada().solicitarBaja(this.usr);
+        
+        try{
+            FachadaDB.getFachada().solicitarBaja(this.usr);
+        }catch(Exception e){
+            VAviso x = new VAviso(this,true,e.getMessage());
+            x.setVisible(true);
+        }
     }//GEN-LAST:event_BajaMenuItemActionPerformed
 
     private void botonActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonActualizarActionPerformed
@@ -318,11 +324,14 @@ public class VPrincipalEmpresa extends javax.swing.JFrame {
 
     }//GEN-LAST:event_BajaVentaMenuItemActionPerformed
 
+    
+    //esta no se usa
+    /*
     private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
         // TODO add your handling code here:
         ActualizarTablaDatos();
     }//GEN-LAST:event_formWindowActivated
-
+    */
     private void ComprarMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ComprarMenuItemActionPerformed
         // TODO add your handling code here:
         this.fa.ventanaCompras(this.usr);

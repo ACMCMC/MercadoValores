@@ -77,6 +77,7 @@ public class VRegistro extends javax.swing.JDialog {
         labelAtras2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setResizable(false);
 
         jLabel8.setText("Registro Inversor");
 

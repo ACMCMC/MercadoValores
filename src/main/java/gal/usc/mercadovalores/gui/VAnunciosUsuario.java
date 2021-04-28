@@ -46,6 +46,7 @@ public class VAnunciosUsuario extends javax.swing.JFrame {
         botonSalir = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setResizable(false);
 
         tablaAnuncios.setModel(new TablaAnunciosUsuario());
         jScrollPane1.setViewportView(tablaAnuncios);
@@ -127,11 +128,12 @@ public class VAnunciosUsuario extends javax.swing.JFrame {
             TablaAnunciosUsuario tA = (TablaAnunciosUsuario) this.tablaAnuncios.getModel();
             AnuncioVenta aV = tA.obtenerParticipacion(this.tablaAnuncios.getSelectedRow());
             FachadaDB.getFachada().bajaAnuncioVenta(aV);
+            this.updateTable();
+
         }catch(Exception e){
             VAviso x = new VAviso(this,true,e.getMessage());
             x.setVisible(true);
         }
-        this.updateTable();
     }//GEN-LAST:event_botonDarDeBajaActionPerformed
 
     private void updateTable(){
@@ -144,17 +146,27 @@ public class VAnunciosUsuario extends javax.swing.JFrame {
             this.labelUsuario.setText(tmp.getNombreComercial());
         }
         
-        TablaAnunciosUsuario tA = (TablaAnunciosUsuario) this.tablaAnuncios.getModel();
-        Set<AnuncioVenta> setAnuncios = FachadaDB.getFachada().getAnunciosUsuario(this.usr);
-        ArrayList<AnuncioVenta> arrAnuncios = new ArrayList<>();
-        for(AnuncioVenta aV : setAnuncios){
-            arrAnuncios.add(aV);
+        
+        try{
+            
+            TablaAnunciosUsuario tA = (TablaAnunciosUsuario) this.tablaAnuncios.getModel();
+            Set<AnuncioVenta> setAnuncios = FachadaDB.getFachada().getAnunciosUsuario(this.usr);
+            ArrayList<AnuncioVenta> arrAnuncios = new ArrayList<>();
+            for(AnuncioVenta aV : setAnuncios){
+                arrAnuncios.add(aV);
+            }
+
+            tA.setFilas(arrAnuncios);
+            if(tA.getRowCount()>0){
+                this.tablaAnuncios.setRowSelectionInterval(0, 0);
+            }
+            
+        }catch(Exception e){
+            VAviso x = new VAviso(this,true,e.getMessage());
+            x.setVisible(true);
         }
         
-        tA.setFilas(arrAnuncios);
-        if(tA.getRowCount()>0){
-            this.tablaAnuncios.setRowSelectionInterval(0, 0);
-        }
+
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
