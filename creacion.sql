@@ -383,11 +383,9 @@ CREATE OR REPLACE FUNCTION comprar(id_empresa usuario_empresa.id%TYPE, id_compra
 		SELECT numero into participaciones_por_comprar;
 		INSERT INTO compra(empresa, comprador, fecha) VALUES (id_empresa, id_comprador, CURRENT_TIMESTAMP) RETURNING id_compra into id_compra_creada; --Puede que luego no se consiga hacer ninguna compra
 
-		RAISE NOTICE 'Creada compra con id %', id_compra_creada;
+		WHILE exists(SELECT * FROM anuncio_venta WHERE anuncio_venta.id1 <> id_comprador and anuncio_venta.id2=id_empresa and anuncio_venta.precio <= precio_max_por_participacion) and participaciones_por_comprar > 0 loop
 
-		WHILE exists(SELECT * FROM anuncio_venta WHERE anuncio_venta.id2=id_empresa and anuncio_venta.precio <= precio_max_por_participacion) and participaciones_por_comprar > 0 loop
-
-		SELECT anuncio_venta.id1, anuncio_venta.fecha, anuncio_venta.comision_en_fecha into id_vendedor, fecha_anuncio_venta, comision FROM anuncio_venta WHERE anuncio_venta.id2=id_empresa ORDER BY anuncio_venta.precio asc, anuncio_venta.fecha asc FETCH FIRST ROW ONLY;
+		SELECT anuncio_venta.id1, anuncio_venta.fecha, anuncio_venta.comision_en_fecha into id_vendedor, fecha_anuncio_venta, comision FROM anuncio_venta WHERE anuncio_venta.id1 <> id_comprador and anuncio_venta.id2=id_empresa ORDER BY anuncio_venta.precio asc, anuncio_venta.fecha asc FETCH FIRST ROW ONLY;
 
 		SELECT LEAST(participaciones_por_comprar, (SELECT anuncio_venta.num_participaciones FROM anuncio_venta WHERE anuncio_venta.fecha=fecha_anuncio_venta and anuncio_venta.id1=id_vendedor and anuncio_venta.id2=id_empresa)) into cantidad_compra; --El numero de acciones a comprar es el minimo de dos valores: el de las participaciones que nos faltan por comprar y el de las participaciones que se pueden comprar segun este anuncio
 
@@ -406,11 +404,9 @@ CREATE OR REPLACE FUNCTION comprar(id_empresa usuario_empresa.id%TYPE, id_compra
 		END IF;
 		UPDATE tener_participaciones SET num_participaciones=num_participaciones+cantidad_compra WHERE id1=id_comprador and id2=id_empresa; --Sumamos al que compra
 
-		RAISE NOTICE 'Compradas % participaciones a %', cantidad_compra, id_vendedor;
-
 		end loop;
 
-		RETURN numero - participaciones_por_comprar;
+		RETURN id_compra_creada;
 		 
     END;
 $$ LANGUAGE plpgsql;
