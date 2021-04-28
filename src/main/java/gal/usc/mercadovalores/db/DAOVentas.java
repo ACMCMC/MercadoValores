@@ -330,7 +330,6 @@ public class DAOVentas extends DAO<Participacion> {
                          preparedStatement5.setDouble(1, sumaSaldos.get(i));
                          preparedStatement5.setString(2, ids.get(i));
                          preparedStatement5.executeUpdate();
-                                preparedStatement5.close();
                         }
                         
                         //Actualizar la tabla de tener_participaciones para los que venden
@@ -342,7 +341,7 @@ public class DAOVentas extends DAO<Participacion> {
                             preparedStatement5.setString(2, ids.get(i));
                             preparedStatement5.setString(3, empresa.getId());
                          preparedStatement5.executeUpdate();
-                                preparedStatement5.close();
+                         
                         }
                         
                         
@@ -384,6 +383,7 @@ public class DAOVentas extends DAO<Participacion> {
                                 //preparedStatement2.close();
                                 preparedStatement3.close();
                                 preparedStatement4.close();
+                                preparedStatement5.close();
                                 preparedStatement6.close();
 			} catch (SQLException e) {
 				FachadaAplicacion.muestraExcepcion(e);
