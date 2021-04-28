@@ -102,7 +102,7 @@ CREATE TABLE compra(
 );
 CREATE TABLE parte_compra(
 	id_compra serial,
-	id_parte serial, --Cada parte de compra se identifica independientemente, esto nos permite usar generacion de valores por defecto
+	id_parte serial UNIQUE, --Cada parte de compra se identifica independientemente, esto nos permite usar generacion de valores por defecto
 	vendedor varchar(30),
 	precio double precision,
 	cantidad integer,
@@ -438,6 +438,15 @@ CREATE OR REPLACE FUNCTION pagar_anuncio_beneficios(id_empresa beneficios.id%TYP
 		DELETE FROM beneficios WHERE beneficios.id=id_empresa and beneficios.fecha_pago=fecha; --Primero borramos el anuncio, por lo que el saldo se vuelve disponible inmediatamente para la funcion pagar_beneficios
 
 		PERFORM pagar_beneficios(id_empresa, importe); --Llamamos a la funcion
+
+    END;
+$$ LANGUAGE plpgsql;
+
+--Función para realizar el pago de un anuncio de beneficios
+CREATE OR REPLACE FUNCTION precio_medio_compras_empresa(id_empresa beneficios.id%TYPE, num_ultimas_compras integer) RETURNS double precision AS $$
+    BEGIN
+
+		RETURN (SELECT avg(precio_medio.precio_medio_compra) FROM (SELECT avg(precio) as precio_medio_compra FROM parte_compra WHERE id_compra in (SELECT id_compra FROM compra WHERE compra.empresa=id_empresa ORDER BY compra.fecha desc LIMIT num_ultimas_compras) GROUP BY id_compra) as precio_medio);
 
     END;
 $$ LANGUAGE plpgsql;
