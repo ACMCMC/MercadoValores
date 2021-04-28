@@ -40,6 +40,7 @@ public class FachadaDB {
     private DAOParticipaciones daoParticipaciones;
     private DAOVentas daoVentas;
     private DAOUsuario daoUsuario;
+    private DAORoles daoRoles;
 
     public static FachadaDB getFachada() {
         return fachada;
@@ -79,6 +80,7 @@ public class FachadaDB {
         daoParticipaciones = new DAOParticipaciones(conexion);
         daoVentas = new DAOVentas(conexion);
         daoUsuario = new DAOUsuario(conexion);
+        daoRoles = new DAORoles(conexion);
     }
 
     public boolean comprobarContrasena(String contrasenaTextoPlano, String contrasenaEncriptada) {
@@ -289,4 +291,21 @@ public class FachadaDB {
     public Double getPrecioMedioComprasEmpresa(UsuarioEmpresa empresa, int numCompras) {
         return daoVentas.getPrecioMedioComprasEmpresa(empresa, numCompras);
     }
+
+    public void cambiarARolRegulador() {
+        daoRoles.setRolRegulador();
+    }
+
+    public void cambiarARolInversor() {
+        daoRoles.setRolInversor();
+    }
+    
+    public void cambiarARolEmpresa() {
+        daoRoles.setRolEmpresa();
+    }
+
+    public void resetearRol() {
+        daoRoles.resetRol();
+    }
+
 }
