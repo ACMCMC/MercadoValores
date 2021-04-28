@@ -308,19 +308,26 @@ public class VPrincipalInversor extends javax.swing.JFrame {
     }//GEN-LAST:event_formWindowActivated
 
     private void ActualizarTablaDatos(){
-        int n_part = 0;
-        
-        for(Participacion part: FachadaDB.getFachada().getParticipacionesUsuarioDeMercado(usr)){
-            n_part += part.getNumero();
+        try{
+            this.usr = (UsuarioInversor)FachadaDB.getFachada().getUsuarioById(this.usr.getId());
+            int n_part = 0;
+
+            for(Participacion part: FachadaDB.getFachada().getParticipacionesUsuarioDeMercado(usr)){
+                n_part += part.getNumero();
+            }
+            this.TablaDatos.setValueAt(usr.getId(), 0, 1);
+            this.TablaDatos.setValueAt(usr.getSaldo(), 1, 1);
+            this.TablaDatos.setValueAt(usr.getDireccion(), 2, 1);
+            this.TablaDatos.setValueAt(usr.getTelefono(), 3, 1);
+            this.TablaDatos.setValueAt(usr.getDni(), 4, 1);
+            this.TablaDatos.setValueAt(usr.getNombreCompleto(), 5, 1);
+            this.TablaDatos.setValueAt(usr.getClave(), 6, 1);
+            this.TablaDatos.setValueAt(n_part, 7, 1);
+        }catch(Exception e){
+            VAviso x = new VAviso(this,true,"Los campos no pueden estar vacíos.");
+            x.setVisible(true);
         }
-        this.TablaDatos.setValueAt(usr.getId(), 0, 1);
-        this.TablaDatos.setValueAt(usr.getSaldo(), 1, 1);
-        this.TablaDatos.setValueAt(usr.getDireccion(), 2, 1);
-        this.TablaDatos.setValueAt(usr.getTelefono(), 3, 1);
-        this.TablaDatos.setValueAt(usr.getDni(), 4, 1);
-        this.TablaDatos.setValueAt(usr.getNombreCompleto(), 5, 1);
-        this.TablaDatos.setValueAt(usr.getClave(), 6, 1);
-        this.TablaDatos.setValueAt(n_part, 7, 1);
+        
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -325,27 +325,35 @@ public class VPrincipalEmpresa extends javax.swing.JFrame {
     }//GEN-LAST:event_updater
 
     private void ActualizarTablaDatos(){
-        int n_part = 0, n_crea = 0;
+        try{
+            this.usr = (UsuarioEmpresa)FachadaDB.getFachada().getUsuarioById(this.usr.getId());
 
-        for(Participacion part: FachadaDB.getFachada().getParticipacionesUsuarioDeMercado(usr)){
-            n_part += part.getNumero();
+            int n_part = 0, n_crea = 0;
+
+            for(Participacion part: FachadaDB.getFachada().getParticipacionesUsuarioDeMercado(usr)){
+                n_part += part.getNumero();
+            }
+
+            for(Participacion part: FachadaDB.getFachada().getParticipacionesEmpresa(usr)){
+                n_crea += part.getNumero();
+            }
+
+
+            this.TablaDatos.setValueAt(usr.getId(), 0, 1);
+            this.TablaDatos.setValueAt(usr.getSaldo(), 1, 1);
+            this.TablaDatos.setValueAt(usr.getDireccion(), 2, 1);
+            this.TablaDatos.setValueAt(usr.getTelefono(), 3, 1);
+            this.TablaDatos.setValueAt(usr.getCif(), 4, 1);
+            this.TablaDatos.setValueAt(usr.getNombreComercial(), 5, 1);
+            this.TablaDatos.setValueAt(usr.getImporteBloqueado(), 6, 1);
+            this.TablaDatos.setValueAt(n_part,7, 1);
+            this.TablaDatos.setValueAt(n_crea, 8, 1);
+            this.TablaDatos.setValueAt(usr.getClave(), 9, 1);
+        }catch(Exception e){
+            VAviso x = new VAviso(this,true,"Los campos deben estar completos");
+            x.setVisible(true);
         }
 
-        for(Participacion part: FachadaDB.getFachada().getParticipacionesEmpresa(usr)){
-            n_crea += part.getNumero();
-        }
-
-        
-        this.TablaDatos.setValueAt(usr.getId(), 0, 1);
-        this.TablaDatos.setValueAt(usr.getSaldo(), 1, 1);
-        this.TablaDatos.setValueAt(usr.getDireccion(), 2, 1);
-        this.TablaDatos.setValueAt(usr.getTelefono(), 3, 1);
-        this.TablaDatos.setValueAt(usr.getCif(), 4, 1);
-        this.TablaDatos.setValueAt(usr.getNombreComercial(), 5, 1);
-        this.TablaDatos.setValueAt(usr.getImporteBloqueado(), 6, 1);
-        this.TablaDatos.setValueAt(n_part,7, 1);
-        this.TablaDatos.setValueAt(n_crea, 8, 1);
-        this.TablaDatos.setValueAt(usr.getClave(), 9, 1);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
