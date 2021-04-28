@@ -1,3 +1,5 @@
+CREATE EXTENSION pgcrypto;
+
 CREATE TABLE usuario_regulador(
   id varchar(30),
   clave text,
@@ -73,15 +75,68 @@ CREATE TABLE anuncio_venta(
   id1 varchar(30),
   id2 varchar(30),
   num_participaciones integer,
-  fecha_pago timestamp,
+  fecha timestamptz,
   precio double precision,
   comision_en_fecha double precision,
-  primary key (id1,id2,fecha_pago),
+  primary key (id1,id2,fecha),
 	foreign key (id1,id2) references tener_participaciones
         	on update cascade
         	on delete cascade, --si se borra el usuario se borran sus anuncios de venta. si se borra una empresa esto no entra en juego porque antes tiene que acabar con sus participaciones en el mercado
-  CHECK (precio >= 0::double precision AND comision_en_fecha >= 0::double precision AND num_participaciones > 0::integer)
+  CHECK (precio >= 0::double precision AND comision_en_fecha >= 0::double precision AND num_participaciones >= 0::integer)
 );
+
+--Funcionalidades extra
+
+CREATE TABLE compra(
+    id_compra serial UNIQUE,
+	empresa varchar(30),
+	comprador varchar(30),
+	fecha timestamptz,
+	primary key(id_compra),
+	foreign key (comprador) references usuario_mercado(id)
+        	on update cascade
+        	on delete restrict, 
+	foreign key (empresa) references usuario_empresa(id)
+        	on update cascade
+        	on delete restrict
+);
+CREATE TABLE parte_compra(
+	id_compra serial,
+	id_parte serial, --Cada parte de compra se identifica independientemente, esto nos permite usar generacion de valores por defecto
+	vendedor varchar(30),
+	precio double precision,
+	cantidad integer,
+	primary key(id_compra,id_parte),
+	foreign key (vendedor) references usuario_mercado(id)
+        	on update cascade
+        	on delete restrict, 
+	foreign key (id_compra) references compra(id_compra)
+        		on update cascade
+        		on delete restrict,
+	CHECK (precio >= 0::double precision AND cantidad >= 0::integer)
+);
+
+/*
+CREATE ROLE Regulador;
+
+GRANT INSERT, SELECT, UPDATE (estado) ON usuario_mercado TO Regulador;
+
+CREATE ROLE MercadoUser;
+
+GRANT INSERT, SELECT (num_participaciones) ON tener_participaciones TO MercadoUser;
+
+GRANT INSERT, SELECT, UPDATE (fecha, precio, comision_en_fecha, numero_participaciones) ON anuncio_venta TO MercadoUser;
+
+CREATE ROLE InversorUser INHERIT;
+
+GRANT MercadoUser TO InversorUser;
+
+CREATE ROLE EmpresaUser INHERIT;
+
+GRANT MercadoUser TO EmpresaUser;
+
+GRANT SELECT ON beneficios TO EmpresaUser;
+*/
 
 CREATE OR REPLACE FUNCTION comprueba_participaciones() RETURNS trigger AS $comprueba_participaciones$
     DECLARE
@@ -269,6 +324,20 @@ $borrar_fila_tener_participaciones_si_es_cero$ LANGUAGE plpgsql;
 CREATE TRIGGER borrar_fila_tener_participaciones_si_es_cero AFTER UPDATE ON tener_participaciones
 FOR EACH ROW EXECUTE PROCEDURE borrar_fila_tener_participaciones_si_es_cero();
 
+--Si una fila tiene numero de participaciones 0, la borramos
+CREATE OR REPLACE FUNCTION borrar_fila_anuncio_venta_si_es_cero() RETURNS trigger AS $borrar_fila_anuncio_venta_si_es_cero$
+    BEGIN
+		
+		DELETE FROM anuncio_venta WHERE id1=new.id1 and id2=new.id2 and fecha=new.fecha and num_participaciones=0;
+
+		RETURN NEW;
+		 
+    END;
+$borrar_fila_anuncio_venta_si_es_cero$ LANGUAGE plpgsql;
+
+CREATE TRIGGER borrar_fila_anuncio_venta_si_es_cero AFTER UPDATE OR INSERT ON anuncio_venta
+FOR EACH ROW EXECUTE PROCEDURE borrar_fila_anuncio_venta_si_es_cero();
+
 --Comprueba que no se repite el ID entre usuarios_empresa, inversores y el regulador
 CREATE OR REPLACE FUNCTION comprueba_tipo_unico_usuario() RETURNS trigger AS $comprueba_tipo_unico_usuario$
     DECLARE
@@ -300,78 +369,33 @@ FOR EACH ROW EXECUTE PROCEDURE comprueba_tipo_unico_usuario();
 CREATE TRIGGER comprueba_tipo_unico_usuario BEFORE INSERT ON usuario_empresa
 FOR EACH ROW EXECUTE PROCEDURE comprueba_tipo_unico_usuario();
 
---Cada vez que se modifica la tabla tener_participaciones, se registra una compra
-CREATE OR REPLACE FUNCTION comprar(id_empresa usuario_empresa.id%TYPE, id_comprador usuario_mercado.id%TYPE, numero integer, precio_compra double precision) RETURNS void
-    DECLARE
-		diferencia_beneficios_a_pagar double precision;
-		max double precision;
-    BEGIN
-
-		SELECT  FROM anuncio_venta WHERE anuncio_venta.id2=id_empresa ORDER BY anuncio_venta.precio asc;
-
-		INSERT INTO compra(empresa, comprador, fecha) VALUES ()
-
-		SELECT (COALESCE(SUM((new.num_participaciones - COALESCE(old.num_participaciones,0)) * (beneficios.importe_por_participacion)),0)) into diferencia_beneficios_a_pagar --cogemos la fila anterior de tener_participaciones, y la nueva, y multiplicamos su diferencia por cada uno de los importes por participacion anunciados. Sumamos todo, y esa es la diferencia total que tendremos que reservar.
-		FROM beneficios
-		WHERE id=new.id2;
-		
-		SELECT saldo into max
-		FROM usuario_mercado
-		WHERE id=new.id2;
-
-		--sumamos al saldo bloqueado, y restamos al saldo disponible
-		UPDATE usuario_empresa SET importe_bloqueado=importe_bloqueado+diferencia_beneficios_a_pagar WHERE id=new.id2;
-		UPDATE usuario_mercado SET saldo=saldo-diferencia_beneficios_a_pagar WHERE id=new.id2;
-		 
-    END;
-$mantener_registro_compras$ LANGUAGE plpgsql;
-
-CREATE TRIGGER mantener_registro_compras BEFORE INSERT OR UPDATE ON tener_participaciones
-FOR EACH ROW EXECUTE PROCEDURE mantener_registro_compras();
-
---Cada vez que se modifica la tabla tener_participaciones, se registra una compra
+--Realiza inmediatamente un pago de beneficios
 CREATE OR REPLACE FUNCTION pagar_beneficios(id_empresa usuario_empresa.id%TYPE, pago_por_participacion double precision) RETURNS void AS $$
 	DECLARE
-		comision double precision;
+		--comision double precision;
     BEGIN
 
-		SELECT usuario_regulador.comision_actual into comision FROM usuario_regulador LIMIT 1;
+		--SELECT usuario_regulador.comision_actual into comision FROM usuario_regulador LIMIT 1;
 
-		UPDATE usuario_mercado SET saldo=saldo-((SELECT sum(num_participaciones * pago_por_participacion) FROM tener_participaciones WHERE tener_participaciones.id2=id_empresa) * (1.0 + comision)) WHERE usuario_mercado.id=id_empresa; --Primero le restamos a la empresa el saldo que se usaría para pagar
+		--UPDATE usuario_mercado SET saldo=saldo-((SELECT sum(num_participaciones * pago_por_participacion) FROM tener_participaciones WHERE tener_participaciones.id2=id_empresa) * (1.0 + comision)) WHERE usuario_mercado.id=id_empresa; --Primero le restamos a la empresa el saldo que se usaría para pagar (Esta versión no la usamos porque tiene en cuenta la comisión actual)
+		UPDATE usuario_mercado SET saldo=saldo-(SELECT sum(num_participaciones * pago_por_participacion) FROM tener_participaciones WHERE tener_participaciones.id2=id_empresa) WHERE usuario_mercado.id=id_empresa; --Primero le restamos a la empresa el saldo que se usaría para pagar
 
 		UPDATE usuario_mercado SET saldo=saldo+(SELECT num_participaciones * pago_por_participacion FROM tener_participaciones WHERE tener_participaciones.id2=id_empresa and tener_participaciones.id1=usuario_mercado.id) WHERE usuario_mercado.id in (SELECT id1 FROM tener_participaciones WHERE tener_participaciones.id2=id_empresa); --A cada usuario le sumamos el importe correspondiente a sus participaciones
-		 
+
     END;
 $$ LANGUAGE plpgsql;
 
---Funcionalidades extra
+--Función para realizar el pago de un anuncio de beneficios
+CREATE OR REPLACE FUNCTION pagar_anuncio_beneficios(id_empresa beneficios.id%TYPE, fecha beneficios.fecha_pago%TYPE) RETURNS void AS $$
+	DECLARE
+		importe beneficios.importe_por_participacion%TYPE;
+    BEGIN
 
-CREATE TABLE compra(
-    id_compra serial,
-	empresa varchar(30),
-	comprador varchar(30),
-	fecha timestamp,
-	primary key(id_compra),
-	foreign key (comprador) references usuario_mercado(id)
-        	on update cascade
-        	on delete restrict, 
-	foreign key (empresa) references usuario_empresa(id)
-        	on update cascade
-        	on delete restrict
-);
-CREATE TABLE parte_compra(
-	id_parte serial,
-	id_compra integer,
-	vendedor varchar(30),
-	precio double precision,
-	cantidad integer,
-	primary key(id_compra,id_parte),
-	foreign key (vendedor) references usuario_mercado(id)
-        	on update cascade
-        	on delete restrict, 
-	constraint claveforanealineal
-		foreign key (id_compra) references compra(id_compra)
-        		on update cascade
-        		on delete restrict,
-	CHECK (precio >= 0::double precision AND cantidad >= 0::integer)
-);
+		SELECT beneficios.importe_por_participacion into importe FROM beneficios WHERE beneficios.id=id_empresa and beneficios.fecha_pago=fecha;
+
+		DELETE FROM beneficios WHERE beneficios.id=id_empresa and beneficios.fecha_pago=fecha; --Primero borramos el anuncio, por lo que el saldo se vuelve disponible inmediatamente para la funcion pagar_beneficios
+
+		PERFORM pagar_beneficios(id_empresa, importe); --Llamamos a la funcion
+
+    END;
+$$ LANGUAGE plpgsql;

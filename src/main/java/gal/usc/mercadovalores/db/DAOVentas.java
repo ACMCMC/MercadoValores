@@ -380,15 +380,48 @@ public class DAOVentas extends DAO<Participacion> {
 		} catch (SQLException e) {
 			FachadaAplicacion.muestraExcepcion(e);
 		} finally {
-			try {
-				preparedStatement.close();
-                                /*//preparedStatement2.close();
-                                preparedStatement3.close();
-                                preparedStatement4.close();
-                                preparedStatement6.close();*/
-			} catch (SQLException e) {
+                    if(preparedStatement != null){
+                        try{
+                            preparedStatement.close();
+                        } catch (SQLException e) {
 				FachadaAplicacion.muestraExcepcion(e);
 			}
+                    }
+                    if(preparedStatement2 != null){
+                        try{
+                            preparedStatement2.close();
+                        } catch (SQLException e) {
+				FachadaAplicacion.muestraExcepcion(e);
+			}
+                    }
+                    if(preparedStatement3 != null){
+                        try{
+                            preparedStatement3.close();
+                        } catch (SQLException e) {
+				FachadaAplicacion.muestraExcepcion(e);
+			}
+                    }
+                    if(preparedStatement4 != null){
+                        try{
+                            preparedStatement4.close();
+                        } catch (SQLException e) {
+				FachadaAplicacion.muestraExcepcion(e);
+			}
+                    }
+		    if(preparedStatement5 != null){
+                        try{
+                            preparedStatement5.close();
+                        } catch (SQLException e) {
+				FachadaAplicacion.muestraExcepcion(e);
+			}
+                    }
+                    if(preparedStatement6 != null){
+                        try{
+                            preparedStatement6.close();
+                        } catch (SQLException e) {
+				FachadaAplicacion.muestraExcepcion(e);
+			}
+                    }
 		}
      }
      
@@ -435,14 +468,56 @@ public class DAOVentas extends DAO<Participacion> {
 		} catch (SQLException e) {
 			FachadaAplicacion.muestraExcepcion(e);
 		} finally {
-			try {
-				preparedStatement.close();
-                                preparedStatement2.close();
-			} catch (SQLException e) {
+                    if(preparedStatement != null){
+                        try{
+                            preparedStatement.close();
+                        } catch (SQLException e) {
 				FachadaAplicacion.muestraExcepcion(e);
 			}
+                    }
+                    if(preparedStatement2 != null){
+                        try{
+                            preparedStatement2.close();
+                        } catch (SQLException e) {
+				FachadaAplicacion.muestraExcepcion(e);
+			}
+                    }
 		}
          return ret;
      
      }
+     
+     public Double getPrecioMedioComprasEmpresa(UsuarioEmpresa empresa, int numCompras) {
+
+                Connection c = startTransaction();
+                Double ret = null;
+                PreparedStatement preparedStatement = null;
+                ResultSet resultSet;
+                try {
+                        preparedStatement = c.prepareStatement("select precio_medio_compras_empresa(?,?)");
+                        preparedStatement.setString(1, empresa.getId());
+                        preparedStatement.setInt(2, numCompras);
+                        resultSet = preparedStatement.executeQuery();
+                        c.commit();
+                        if (resultSet.next()) {
+                                try {
+                                        ret = resultSet.getDouble(1);
+                                        if (resultSet.wasNull()) {
+                                                ret = null;
+                                        }
+                                } catch (EnumConstantNotPresentException e) {
+                                        FachadaAplicacion.muestraExcepcion(e);
+                                }
+                        }
+                } catch (SQLException e) {
+                        FachadaAplicacion.muestraExcepcion(e);
+                } finally {
+                        try {
+                                preparedStatement.close();
+                        } catch (SQLException e) {
+                                FachadaAplicacion.muestraExcepcion(e);
+                        }
+                }
+                return ret;
+        }
 }

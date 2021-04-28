@@ -84,6 +84,10 @@ public class FachadaDB {
         return daoUsuario.comprobarContrasena(contrasenaTextoPlano, contrasenaEncriptada);
     }
 
+    public String getContrasenaEncriptada(String contrasenaTextoPlano) {
+        return daoUsuario.getContrasenaEncriptada(contrasenaTextoPlano);
+    }
+
     public Set<UsuarioEmpresa> getUsuariosEmpresa() {
         return daoUsuarioEmpresa.getAll();
     }
@@ -248,11 +252,23 @@ public class FachadaDB {
        return daoParticipaciones.getBeneficiosEmpresa(usr);
     }
     
-    
     public void bajaBeneficios(Beneficios b){
         daoParticipaciones.BajaBeneficios(b);
     }
-    public void pagarBeneficios(UsuarioEmpresa u, double pagoPorParticipacion) {
-        daoParticipaciones.pagoBeneficios(u, pagoPorParticipacion);
+
+    public void pagarBeneficiosInmediatamente(UsuarioEmpresa u, double pagoPorParticipacion) {
+        daoParticipaciones.pagarBeneficiosInmediatamente(u, pagoPorParticipacion);
+    }
+
+    public void pagarAnuncioBeneficios(UsuarioEmpresa u, Timestamp fecha) {
+        daoParticipaciones.pagarAnuncioBeneficios(u, fecha);
+    }
+    
+    public String getPassEncriptada(String pass){
+        return daoUsuario.getContrasenaEncriptada(pass);
+    }
+    
+    public Double getPrecioMedioComprasEmpresa(UsuarioEmpresa empresa, int numCompras) {
+        return daoVentas.getPrecioMedioComprasEmpresa(empresa, numCompras);
     }
 }

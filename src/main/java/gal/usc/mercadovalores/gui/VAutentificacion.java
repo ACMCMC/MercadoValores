@@ -173,17 +173,20 @@ public class VAutentificacion extends javax.swing.JDialog {
             if (res instanceof UsuarioRegulador) {
                 // lanzamos ventana de regulador
                 fa.iniciarAdmin((UsuarioRegulador) res);
-            } else if (res instanceof UsuarioDeMercado
-                    && ((UsuarioDeMercado) res).getEstado() != EstadoUsuario.SOLICITANDO_ALTA) { // El estado no puede ser SOLICITANDO_ALTA
-                if (res instanceof UsuarioEmpresa) {
+            } else if (res instanceof UsuarioDeMercado) {
+                if (((UsuarioDeMercado) res).getEstado() != EstadoUsuario.SOLICITANDO_ALTA) { // El estado no puede ser SOLICITANDO_ALTA
+                    if (res instanceof UsuarioEmpresa) {
                     // lanzamos ventana de empresa
-                    fa.iniciarEmpresa((UsuarioEmpresa) res);
-                }
+                        fa.iniciarEmpresa((UsuarioEmpresa) res);
+                    }
                 // lanzamos ventana de inversor
-                else if (res instanceof UsuarioInversor) {
-                    fa.iniciarInversor((UsuarioInversor) res);
+                    else if (res instanceof UsuarioInversor) {
+                        fa.iniciarInversor((UsuarioInversor) res);
+                    }
+                } else {
+                    FachadaAplicacion.muestraExcepcion(new Exception("Aún no se ha aprobado la solicitud de alta del usuario"));
                 }
-            }
+        }
         } else {
             this.avisoLogin.setVisible(true);
         }
