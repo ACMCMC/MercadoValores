@@ -206,11 +206,6 @@ public class FachadaDB {
     public void actualizarComision(UsuarioRegulador u) {
         daoUsuarioRegulador.update(u);
     }
-    
-    public void confirmarVenta(String id1,String id2,Timestamp fecha) throws SQLException{
-        daoVentas.confirmarVenta(id1, id2, fecha);
-        
-    }
 
     public void removeParticipacion(UsuarioEmpresa usr, int p) throws SQLException{
         //daoUsuarioEmpresa.removeParticipacion(usr, p);
@@ -228,6 +223,20 @@ public class FachadaDB {
         return daoVentas.getAnuncioUsuario(usr);
     }
     
+    //NOn ten usos
+    public Set<AnuncioVenta> getAnunciosTodos(){
+        return daoVentas.getAll();
+    }
+    
+    public Set<UsuarioEmpresa> getEmpresasConAnuncios(){
+        return daoVentas.getEmpresasConAnuncios();
+    }
+    
+    //Vende
+    public void ventaParticipaciones(UsuarioDeMercado vendedor,UsuarioEmpresa empresa, Integer numero, Integer precio){
+        daoVentas.ventaParticipaciones(vendedor, empresa, numero, precio);
+    }
+    
     public void bajaAnuncioVenta(AnuncioVenta av) throws SQLException{
         daoVentas.retirarVenta(av.getVendedor().getId(), av.getEmpresa().getId(), av.getFecha());
     }
@@ -237,11 +246,11 @@ public class FachadaDB {
     }
     
     public Set<Beneficios> getAllBeneficios(){
-        return daoParticipaciones.getAllBeneficios();
+       return daoParticipaciones.getAllBeneficios();
     }
     
     public Set<Beneficios> getBeneficiosEmpresa(UsuarioEmpresa usr){
-        return daoParticipaciones.getBeneficiosEmpresa(usr);
+       return daoParticipaciones.getBeneficiosEmpresa(usr);
     }
     
     public void bajaBeneficios(Beneficios b){

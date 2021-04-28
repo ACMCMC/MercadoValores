@@ -5,7 +5,15 @@
  */
 package gal.usc.mercadovalores.db;
 
+import gal.usc.mercadovalores.aplicacion.AnuncioVenta;
+import gal.usc.mercadovalores.aplicacion.EstadoUsuario;
+import gal.usc.mercadovalores.aplicacion.FachadaAplicacion;
 import java.sql.Connection;
+import java.util.Set;
+
+import gal.usc.mercadovalores.aplicacion.Participacion;
+import gal.usc.mercadovalores.aplicacion.UsuarioDeMercado;
+import gal.usc.mercadovalores.aplicacion.UsuarioEmpresa;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -92,9 +100,6 @@ public class DAOVentas extends DAO<Participacion> {
 			}
 		}
         
-    
-    }
-    
     public void retirarVenta(String id1,String id2,Timestamp fecha) throws SQLException{
         Connection c = startTransaction();
         PreparedStatement preparedStatement = null;
@@ -239,7 +244,7 @@ public class DAOVentas extends DAO<Participacion> {
 			}
 		}
          return ret;
-     }
+    }
     
      /**
       * Se encarga de realizar una compra
@@ -434,4 +439,59 @@ public class DAOVentas extends DAO<Participacion> {
          return ret;
      
      }
+     
+     public Set<UsuarioEmpresa> getEmpresasConAnuncios(){
+         Connection c = startTransaction();
+        Set<UsuarioEmpresa> ret=new HashSet<>();
+	PreparedStatement preparedStatement = null;
+        PreparedStatement preparedStatement2 = null;
+	ResultSet resultSet,resultSet2;
+        UsuarioEmpresa usuario=null;
+		try {
+			preparedStatement = getConexion()
+					.prepareStatement("select distinct id2 from anuncio_venta");
+			resultSet = preparedStatement.executeQuery();
+			while (resultSet.next()) {
+				try {
+                                    String id=resultSet.getString("id2");
+                                    preparedStatement2 = getConexion()
+					.prepareStatement("select * from usuario_empresa inner join usuario_mercado using(id) where id=? ");
+                                    
+                                preparedStatement2.setString(1,id );
+                                    
+			resultSet2 = preparedStatement2.executeQuery();
+                                while(resultSet2.next()){
+					String id2 = resultSet2.getString("id");
+					String clave = resultSet2.getString("clave");
+					double saldo = resultSet2.getDouble("saldo");
+					String direccion = resultSet2.getString("direccion");
+					String telefono = resultSet2.getString("telefono");
+					EstadoUsuario estado = EstadoUsuario.getByName(resultSet2.getString("estado"));
+					String cif = resultSet2.getString("cif");
+					String nombreComercial = resultSet2.getString("nombre_comercial");
+					double importeBloqueado = resultSet2.getDouble("importe_bloqueado");
+
+					usuario = new UsuarioEmpresa(id2, clave, saldo, direccion, telefono, estado, cif, nombreComercial,
+							importeBloqueado);
+					ret.add(usuario);
+                                
+                                    }
+				} catch (EnumConstantNotPresentException e) {
+					FachadaAplicacion.muestraExcepcion(e);
+				}
+			}
+		} catch (SQLException e) {
+			FachadaAplicacion.muestraExcepcion(e);
+		} finally {
+			try {
+				preparedStatement.close();
+                                preparedStatement2.close();
+			} catch (SQLException e) {
+				FachadaAplicacion.muestraExcepcion(e);
+			}
+		}
+         return ret;
+     
+     }
+     
 }

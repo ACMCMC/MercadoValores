@@ -61,10 +61,7 @@ public class TablaAnunciosUsuario extends AbstractTableModel{
         return clase;
     }
 
-    @Override
-    public boolean isCellEditable(int row, int col){
-        return false;
-    }
+    
 
     public Object getValueAt(int row, int col){
         Object resultado=null;
