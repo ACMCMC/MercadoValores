@@ -82,6 +82,7 @@ public class VBeneficios extends javax.swing.JFrame {
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setResizable(false);
 
         jLabel1.setText("Número de participaciones: ");
 
@@ -302,37 +303,46 @@ public class VBeneficios extends javax.swing.JFrame {
 
     //obtenemos numero de participaciones de la empresa
     private void setCampos(){
-        Set<Participacion> allParts = FachadaDB.getFachada().getParticipacionesEmpresa(usr);
+        try{
+            //obtener numero total de participaciones
+            Set<Participacion> allParts = FachadaDB.getFachada().getParticipacionesEmpresa(usr);
+            nParts = 0;
+            for(Participacion p: allParts){
+                nParts += p.getNumero();
+            }
+            Integer totalParticipaciones = this.nParts;
+            this.nParticipaciones.setText(totalParticipaciones.toString());
+
+            Double totalSaldo = FachadaDB.getFachada().getUsuarioById(this.usr.getId()).getSaldo();
+            this.textoSaldo.setText(totalSaldo.toString());
         
-        //obtener numero total de participaciones
-        nParts = 0;
-        for(Participacion p: allParts){
-            nParts += p.getNumero();
+        }catch(Exception e){
+            VAviso x = new VAviso(this,true,e.getMessage());
+            x.setVisible(true);
         }
-        Integer totalParticipaciones = this.nParts;
-        this.nParticipaciones.setText(totalParticipaciones.toString());
-        
-        Double totalSaldo = FachadaDB.getFachada().getUsuarioById(this.usr.getId()).getSaldo();
-        this.textoSaldo.setText(totalSaldo.toString());
-        
-        Timestamp now = new Timestamp(System.currentTimeMillis());
-      
     }
     
    private void updateTabla(){
-       TablaBeneficios tB = (TablaBeneficios)this.tablaBeneficios.getModel();
-       
-       Set<Beneficios> allBens = FachadaDB.getFachada().getBeneficiosEmpresa(this.usr);
-       ArrayList<Beneficios> benFinales = new ArrayList<>();
-       for(Beneficios b: allBens){
-           benFinales.add(b);
-       }
-       
-       tB.setFilas(benFinales);
-       
-        if(tB.getRowCount()>0){
-            this.tablaBeneficios.setRowSelectionInterval(0, 0);
+        try{
+           
+            TablaBeneficios tB = (TablaBeneficios)this.tablaBeneficios.getModel();
+
+            Set<Beneficios> allBens = FachadaDB.getFachada().getBeneficiosEmpresa(this.usr);
+            ArrayList<Beneficios> benFinales = new ArrayList<>();
+            for(Beneficios b: allBens){
+                benFinales.add(b);
+            }
+
+            tB.setFilas(benFinales);
+
+            if(tB.getRowCount()>0){
+                this.tablaBeneficios.setRowSelectionInterval(0, 0);
+            }   
+        }catch(Exception e){
+            VAviso x = new VAviso(this,true,e.getMessage());
+            x.setVisible(true);
         }
+
    }
    
 

@@ -54,6 +54,7 @@ public class VVenta extends javax.swing.JFrame {
         botonVender = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setResizable(false);
 
         tablaEmpresas.setModel(new TablaEmpresasUsuario());
         tablaEmpresas.setToolTipText("");
@@ -223,46 +224,61 @@ public class VVenta extends javax.swing.JFrame {
     }//GEN-LAST:event_BotonPrecioMedioActionPerformed
 
     private void updateTabla(){
-        TablaEmpresasUsuario tE = (TablaEmpresasUsuario) this.tablaEmpresas.getModel();
-        Set<Participacion> p = this.usr.getParticipaciones();
-        ArrayList<Participacion> pT = new ArrayList<>();
-        
-        
-        for(Participacion pa : p){
-            //modificamos el numero de participaciones para enseñar las disponibles
-            int partEnVenta = FachadaDB.getFachada().getParticipacionesDeEmpresaALaVentaPorUsuario(this.usr,pa.getEmpresa());
-            pa.setNumero(pa.getNumero()-partEnVenta);
-            pT.add(pa);
+        try{
+            TablaEmpresasUsuario tE = (TablaEmpresasUsuario) this.tablaEmpresas.getModel();
+            Set<Participacion> p = this.usr.getParticipaciones();
+            ArrayList<Participacion> pT = new ArrayList<>();
+
+
+            for(Participacion pa : p){
+                //modificamos el numero de participaciones para enseñar las disponibles
+                int partEnVenta = FachadaDB.getFachada().getParticipacionesDeEmpresaALaVentaPorUsuario(this.usr,pa.getEmpresa());
+                pa.setNumero(pa.getNumero()-partEnVenta);
+                pT.add(pa);
+            }
+
+            tE.setFilas(pT);
+
+            if(tE.getRowCount()>0){
+                this.tablaEmpresas.setRowSelectionInterval(0, 0);
+            }            
+        }catch(Exception e){
+            VAviso x = new VAviso(this,true,e.getMessage());
+            x.setVisible(true);
         }
-        
-        tE.setFilas(pT);
-        
-        if(tE.getRowCount()>0){
-            this.tablaEmpresas.setRowSelectionInterval(0, 0);
-        }
+
     }
     
     private void textoComision(){
-        
-        //muestra la comision del regulador
-        Double comision = FachadaDB.getFachada().getUsuarioRegulador().getComision_actual();
-        String comisionText = comision.toString();
-        this.precioComision.setText(comisionText);
+        try{
+            //muestra la comision del regulador
+            Double comision = FachadaDB.getFachada().getUsuarioRegulador().getComision_actual();
+            String comisionText = comision.toString();
+            this.precioComision.setText(comisionText);            
+        }catch(Exception e){
+            VAviso x = new VAviso(this,true,e.getMessage());
+            x.setVisible(true);
+        }
+
     }
     
     private void textoPrecioMedio(){
-        TablaEmpresasUsuario tE = (TablaEmpresasUsuario) this.tablaEmpresas.getModel();
-        if(tablaEmpresas.getSelectedRow()>0){
-            Double precio = FachadaDB.getFachada().getPrecioMedioComprasEmpresa((UsuarioEmpresa)tE.getEmpresaAt(tablaEmpresas.getSelectedRow()), (int) this.numeroVentasMedioSpinner.getValue());
-            if(precio!=null){
-                String precioText = precio.toString();
-                this.precioMedio.setText(precioText + "€");
-            }
-            else{
-                this.precioMedio.setText("No disponible");
-            }
+        try{
+            TablaEmpresasUsuario tE = (TablaEmpresasUsuario) this.tablaEmpresas.getModel();
+            if(tablaEmpresas.getSelectedRow()>0){
+                Double precio = FachadaDB.getFachada().getPrecioMedioComprasEmpresa((UsuarioEmpresa)tE.getEmpresaAt(tablaEmpresas.getSelectedRow()), (int) this.numeroVentasMedioSpinner.getValue());
+                if(precio!=null){
+                    String precioText = precio.toString();
+                    this.precioMedio.setText(precioText + "€");
+                }
+                else{
+                    this.precioMedio.setText("No disponible");
+                }
+            }            
+        }catch(Exception e){
+            VAviso x = new VAviso(this,true,e.getMessage());
+            x.setVisible(true);
         }
-        
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
