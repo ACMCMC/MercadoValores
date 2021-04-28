@@ -61,7 +61,7 @@ public class FachadaDB {
 
             usuario.setProperty("user", configuracion.getProperty("usuario"));
             usuario.setProperty("password", configuracion.getProperty("clave"));
-            //usuario.setProperty("ssl", "false");
+            usuario.setProperty("ssl", "true");
             String url = "jdbc:" + gestor + "://" + configuracion.getProperty("servidor") + ":"
                     + configuracion.getProperty("puerto") + "/" + configuracion.getProperty("baseDatos");
             this.conexion = java.sql.DriverManager.getConnection(url, usuario);
