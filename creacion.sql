@@ -1,3 +1,5 @@
+CREATE EXTENSION pgcrypto;
+
 CREATE TABLE usuario_regulador(
   id varchar(30),
   clave text,
@@ -80,7 +82,7 @@ CREATE TABLE anuncio_venta(
 	foreign key (id1,id2) references tener_participaciones
         	on update cascade
         	on delete cascade, --si se borra el usuario se borran sus anuncios de venta. si se borra una empresa esto no entra en juego porque antes tiene que acabar con sus participaciones en el mercado
-  CHECK (precio >= 0::double precision AND comision_en_fecha >= 0::double precision AND num_participaciones > 0::integer)
+  CHECK (precio >= 0::double precision AND comision_en_fecha >= 0::double precision AND num_participaciones >= 0::integer)
 );
 
 --Funcionalidades extra
@@ -99,8 +101,8 @@ CREATE TABLE compra(
         	on delete restrict
 );
 CREATE TABLE parte_compra(
-	id_parte serial,
-	id_compra serial UNIQUE, --Cada parte de compra se identifica independientemente, esto nos permite usar generacion de valores por defecto
+	id_compra serial,
+	id_parte serial, --Cada parte de compra se identifica independientemente, esto nos permite usar generacion de valores por defecto
 	vendedor varchar(30),
 	precio double precision,
 	cantidad integer,
@@ -333,7 +335,7 @@ CREATE OR REPLACE FUNCTION borrar_fila_anuncio_venta_si_es_cero() RETURNS trigge
     END;
 $borrar_fila_anuncio_venta_si_es_cero$ LANGUAGE plpgsql;
 
-CREATE TRIGGER borrar_fila_anuncio_venta_si_es_cero AFTER UPDATE ON anuncio_venta
+CREATE TRIGGER borrar_fila_anuncio_venta_si_es_cero AFTER UPDATE OR INSERT ON anuncio_venta
 FOR EACH ROW EXECUTE PROCEDURE borrar_fila_anuncio_venta_si_es_cero();
 
 --Comprueba que no se repite el ID entre usuarios_empresa, inversores y el regulador
@@ -395,12 +397,11 @@ CREATE OR REPLACE FUNCTION comprar(id_empresa usuario_empresa.id%TYPE, id_compra
 
 		INSERT INTO parte_compra(id_compra, vendedor, precio, cantidad) VALUES (id_compra_creada, id_vendedor, (SELECT precio FROM anuncio_venta WHERE anuncio_venta.fecha=fecha_anuncio_venta and anuncio_venta.id1=id_vendedor and anuncio_venta.id2=id_empresa), cantidad_compra);
 
-		UPDATE anuncio_venta SET num_participaciones=num_participaciones-cantidad_compra WHERE anuncio_venta.fecha=fecha_anuncio_venta and anuncio_venta.id1=id_vendedor and anuncio_venta.id2=id_empresa; --Le restamos al anuncio de venta las participaciones que hemos vendido. Si pasa a haber 0, se borra automaticamente la fila
-
-		UPDATE usuario_mercado SET saldo=saldo-cantidad_compra*(SELECT anuncio_venta.precio FROM anuncio_venta WHERE anuncio_venta.fecha=fecha_anuncio_venta and anuncio_venta.id1=id_vendedor and anuncio_venta.id2=id_empresa) WHERE id=id_comprador; --Le quitamos el saldo correspondiente al comprador
+		UPDATE usuario_mercado SET saldo=saldo - cantidad_compra * (SELECT anuncio_venta.precio FROM anuncio_venta WHERE anuncio_venta.fecha=fecha_anuncio_venta and anuncio_venta.id1=id_vendedor and anuncio_venta.id2=id_empresa) WHERE id=id_comprador; --Le quitamos el saldo correspondiente al comprador
 		UPDATE usuario_mercado SET saldo=saldo+cantidad_compra*(1.0-comision)*(SELECT anuncio_venta.precio FROM anuncio_venta WHERE anuncio_venta.fecha=fecha_anuncio_venta and anuncio_venta.id1=id_vendedor and anuncio_venta.id2=id_empresa) WHERE id=id_vendedor; --Le sumamos la parte correspondiente a lo que no son comisiones de la venta al vendedor
 		UPDATE usuario_regulador SET saldo=saldo+cantidad_compra*(comision)*(SELECT anuncio_venta.precio FROM anuncio_venta WHERE anuncio_venta.fecha=fecha_anuncio_venta and anuncio_venta.id1=id_vendedor and anuncio_venta.id2=id_empresa); --Le sumamos la parte correspondiente a las comisiones al regulador
 
+		UPDATE anuncio_venta SET num_participaciones=num_participaciones-cantidad_compra WHERE anuncio_venta.fecha=fecha_anuncio_venta and anuncio_venta.id1=id_vendedor and anuncio_venta.id2=id_empresa; --Le restamos al anuncio de venta las participaciones que hemos vendido. Si pasa a haber 0, se borra automaticamente la fila
 		UPDATE tener_participaciones SET num_participaciones=num_participaciones-cantidad_compra WHERE id1=id_vendedor and id2=id_empresa; --Restamos al que vende en la tabla tener_participaciones
 		IF not exists(SELECT * FROM tener_participaciones WHERE id1=id_comprador and id2=id_empresa) THEN
 		INSERT INTO tener_participaciones(id1, id2, num_participaciones) VALUES (id_comprador, id_empresa, 0);
