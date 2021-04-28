@@ -302,8 +302,8 @@ public class DAOVentas extends DAO<Participacion> {
                 ResultSet resultSet;
                 try {
                         preparedStatement = c.prepareStatement("select comprar(?,?,?,?)");
-                        preparedStatement.setString(1, Usuario.getId());
-                        preparedStatement.setString(2, empresa.getId());
+                        preparedStatement.setString(1, empresa.getId());
+                        preparedStatement.setString(2, Usuario.getId());
                         preparedStatement.setInt(3, numero);
                         preparedStatement.setDouble(4, precio_max_por_participacion);
                         resultSet = preparedStatement.executeQuery();
