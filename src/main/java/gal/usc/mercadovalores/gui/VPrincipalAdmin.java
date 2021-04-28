@@ -193,7 +193,7 @@ public class VPrincipalAdmin extends javax.swing.JFrame {
             UsuarioDeMercado user = uT.obtenerUsuario(this.tablaUsuarios.getSelectedRow());
 
             if(user.getEstado() == EstadoUsuario.SOLICITANDO_ALTA){
-                FachadaDB.getFachada().autorizarBaja(user);
+                FachadaDB.getFachada().autorizarRegistro(user);
             }else if(user.getEstado() == EstadoUsuario.SOLICITANDO_BAJA){
                 FachadaDB.getFachada().autorizarBaja(user);
             }
@@ -237,7 +237,7 @@ public class VPrincipalAdmin extends javax.swing.JFrame {
             UsuarioDeMercado user = uT.obtenerUsuario(this.tablaUsuarios.getSelectedRow());
 
             if(user.getEstado() == EstadoUsuario.SOLICITANDO_ALTA){
-                FachadaDB.getFachada().autorizarRegistro(user);
+                FachadaDB.getFachada().autorizarBaja(user);
             }else if(user.getEstado() == EstadoUsuario.SOLICITANDO_BAJA){
                 FachadaDB.getFachada().autorizarRegistro(user);
             }
