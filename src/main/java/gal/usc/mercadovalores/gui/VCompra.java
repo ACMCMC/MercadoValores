@@ -37,13 +37,13 @@ public class VCompra extends javax.swing.JFrame {
         updateTable();
         textoPrecioMedio();
         
-        this.tablaAnuncios.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+        /*this.tablaAnuncios.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
                 VCompra.this.numeroVentasMedioSpinner.setValue( ((int) VCompra.this.numeroVentasMedioSpinner.getValue()) > 0 ? (int) VCompra.this.numeroVentasMedioSpinner.getValue() : 1);
                 textoPrecioMedio();
             }
-        });
+        });*/
     }
 
     /**
@@ -231,7 +231,7 @@ public class VCompra extends javax.swing.JFrame {
             }
         }catch(Exception e){
             VAviso x = new VAviso(this,true,e.getMessage());
-            x.setVisible(true);
+            //x.setVisible(true);
         }
 
     }//GEN-LAST:event_ComprarBotonActionPerformed
@@ -240,6 +240,7 @@ public class VCompra extends javax.swing.JFrame {
         // TODO add your handling code here:
         TablaEmpresasConAnuncios te=(TablaEmpresasConAnuncios) tablaAnuncios.getModel();
         emp = te.getEmpresaAt(tablaAnuncios.getSelectedRow(),1);
+        VCompra.this.numeroVentasMedioSpinner.setValue( ((int) VCompra.this.numeroVentasMedioSpinner.getValue()) > 0 ? (int) VCompra.this.numeroVentasMedioSpinner.getValue() : 1);
         textoPrecioMedio();
     }//GEN-LAST:event_tablaAnunciosMousePressed
 
@@ -273,13 +274,22 @@ public class VCompra extends javax.swing.JFrame {
                 arrEmpresas.add(aV);
             }
         
-            tA.setFilas(arrEmpresas);
-            if(tA.getRowCount()>0){
+            if (!arrEmpresas.isEmpty()) {
+                try {
+                    tA.setFilas(arrEmpresas);
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    
+                }
+                
+                if(tA.getRowCount()>0){
                 this.tablaAnuncios.setRowSelectionInterval(0, 0);
             }
+            }
+            
+  
         }catch(Exception e){
             VAviso x = new VAviso(this,true,e.getMessage());
-            x.setVisible(true);
+            //x.setVisible(true);
         }
     }
     

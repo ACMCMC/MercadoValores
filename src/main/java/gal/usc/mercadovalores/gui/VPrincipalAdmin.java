@@ -31,6 +31,7 @@ public class VPrincipalAdmin extends javax.swing.JFrame {
         initComponents();
         this.updateTabla();
         this.displayComision();
+        this.displaySaldo();
     }
 
     /**
@@ -52,6 +53,7 @@ public class VPrincipalAdmin extends javax.swing.JFrame {
         botonAutorizar = new javax.swing.JButton();
         botonCerrarSesion = new javax.swing.JButton();
         botonDenegar = new javax.swing.JButton();
+        saldoLabel = new javax.swing.JLabel();
         Menu = new javax.swing.JMenuBar();
         UsuarioMenu = new javax.swing.JMenu();
         SaldosMenuItem = new javax.swing.JMenuItem();
@@ -109,6 +111,8 @@ public class VPrincipalAdmin extends javax.swing.JFrame {
             }
         });
 
+        saldoLabel.setText("Saldo:");
+
         UsuarioMenu.setText("Usuarios");
 
         SaldosMenuItem.setText("Modifcar saldos");
@@ -131,11 +135,14 @@ public class VPrincipalAdmin extends javax.swing.JFrame {
                 .addGap(33, 33, 33)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(NuevaComisionBoton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(ComisionActualTexto, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(saldoLabel)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(ComisionActualTexto, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(ComisionActualCajaTexto, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(NuevaComisionBoton)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -160,10 +167,11 @@ public class VPrincipalAdmin extends javax.swing.JFrame {
                 .addGap(24, 24, 24)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(ComisionActualTexto)
-                    .addComponent(ComisionActualCajaTexto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(NuevaComisionBoton)
-                .addGap(27, 27, 27)
+                    .addComponent(ComisionActualCajaTexto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(NuevaComisionBoton))
+                .addGap(18, 18, 18)
+                .addComponent(saldoLabel)
+                .addGap(23, 23, 23)
                 .addComponent(BajaPagosBoton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -171,7 +179,7 @@ public class VPrincipalAdmin extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(botonAutorizar)
                     .addComponent(botonDenegar))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 13, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 15, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(SalirBoton)
                     .addComponent(botonCerrarSesion))
@@ -288,6 +296,12 @@ public class VPrincipalAdmin extends javax.swing.JFrame {
         this.ComisionActualCajaTexto.setText(comStr);
     }
     
+    private void displaySaldo(){
+        Double saldo = this.usr.getSaldo();
+        String comStr = saldo.toString();
+        this.saldoLabel.setText("Saldo: " + comStr + " €");
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -305,6 +319,7 @@ public class VPrincipalAdmin extends javax.swing.JFrame {
     private javax.swing.JButton botonCerrarSesion;
     private javax.swing.JButton botonDenegar;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel saldoLabel;
     private javax.swing.JTable tablaUsuarios;
     // End of variables declaration//GEN-END:variables
 }
