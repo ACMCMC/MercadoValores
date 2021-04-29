@@ -3,6 +3,7 @@ CREATE EXTENSION IF NOT EXISTS pgcrypto; --Para encriptar las contrasenas
 --Los saldos los ponemos como números en punto flotante
 --Los números de participaciones son enteros, las participaciones son indivisibles
 
+--T-01
 CREATE TABLE usuario_regulador(
   id varchar(30), --Parece un limite razonable
   clave text, --La guardaremos encriptada (funcionalidad optativa)
@@ -14,6 +15,7 @@ CREATE TABLE usuario_regulador(
 
 CREATE TYPE enum_estado AS ENUM ('SOLICITANDO_ALTA', 'SOLICITANDO_BAJA', 'DADO_DE_ALTA'); --Los estados en los que puede estar un usuario
 
+--T-02
 CREATE TABLE usuario_mercado(
     id varchar(30),
     clave text,
@@ -25,6 +27,7 @@ CREATE TABLE usuario_mercado(
     CHECK (saldo >= 0::double precision)
 );
 
+--T-03
 CREATE TABLE usuario_inversor(
   id varchar(30),
   dni char(9), --Porque sabemos la longitud concreta
@@ -36,6 +39,7 @@ CREATE TABLE usuario_inversor(
   CHECK (dni SIMILAR TO '\d{8}[A-Z]') --Comprobamos que realmente sea un DNI
 );
 
+--T-04
 CREATE TABLE usuario_empresa(
   id varchar(30),
   cif char(9), --Igual que para el DNI
@@ -49,6 +53,7 @@ CREATE TABLE usuario_empresa(
   CHECK (cif SIMILAR TO '[A-Z]\d{8}')
 );
 
+--T-05
 CREATE TABLE beneficios(
   id varchar(30),
   fecha_pago timestamp,
@@ -61,6 +66,7 @@ CREATE TABLE beneficios(
   CHECK (importe_por_participacion >= 0::double precision AND num_participaciones >= 0::integer)
 );
 
+--T-06
 CREATE TABLE tener_participaciones(
   id1 varchar(30),
   id2 varchar(30),
@@ -75,6 +81,7 @@ CREATE TABLE tener_participaciones(
   CHECK (num_participaciones >= 0::integer)
 );
 
+--T-07
 CREATE TABLE anuncio_venta(
   id1 varchar(30),
   id2 varchar(30),
@@ -91,6 +98,7 @@ CREATE TABLE anuncio_venta(
 
 --Funcionalidades extra
 
+--T-08
 CREATE TABLE compra(
     id_compra serial UNIQUE, --Usamos un serial y asi podemos anadir nuevas compras con ids autoincrementales
 	empresa varchar(30),
@@ -104,6 +112,8 @@ CREATE TABLE compra(
         	on update cascade --Idem
         	on delete cascade
 );
+
+--T-09
 CREATE TABLE parte_compra(
 	id_compra serial,
 	id_parte serial UNIQUE, --Cada parte de compra se identifica independientemente, esto nos permite usar generacion de valores por defecto
