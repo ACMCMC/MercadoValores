@@ -468,11 +468,13 @@ CREATE OR REPLACE FUNCTION pagar_beneficios(id_empresa usuario_empresa.id%TYPE, 
 
 		IF num_participaciones_por_participacion > 0 THEN
 
-		IF COALESCE((SELECT num_participaciones FROM tener_participaciones WHERE tener_participaciones.id1=id_empresa and tener_participaciones.id2=id_empresa),0) < (SELECT sum(t2.num_participaciones * num_participaciones_por_participacion) FROM tener_participaciones as t2 WHERE t2.id1 <> id_empresa and t2.id2=id_empresa) THEN
-			RAISE EXCEPTION 'No se dispone de suficientes participaciones para hacer el pago';
-		END IF;
+		--Esto está comentado, porque hemos decidido finalmente que las participaciones se crean, no se le quitan a la empresa. Hemos decidido mantenerlo para que sea sencillo recuperar el comportamiento anterior.
 
-		--UPDATE tener_participaciones SET num_participaciones=num_participaciones-(SELECT sum(t2.num_participaciones * num_participaciones_por_participacion) FROM tener_participaciones as t2 WHERE t2.id1 <> id_empresa and t2.id2=id_empresa) WHERE tener_participaciones.id1=id_empresa and tener_participaciones.id2=id_empresa; --Primero le restamos a la empresa las participaciones que va a otorgar, no pagamos participaciones a la propia empresa. Esto está comentado, porque las participaciones se crean, no se le quitan a la empresa
+		--IF COALESCE((SELECT num_participaciones FROM tener_participaciones WHERE tener_participaciones.id1=id_empresa and tener_participaciones.id2=id_empresa),0) < (SELECT sum(t2.num_participaciones * num_participaciones_por_participacion) FROM tener_participaciones as t2 WHERE t2.id1 <> id_empresa and t2.id2=id_empresa) THEN
+		--	RAISE EXCEPTION 'No se dispone de suficientes participaciones para hacer el pago';
+		--END IF;
+
+		--UPDATE tener_participaciones SET num_participaciones=num_participaciones-(SELECT sum(t2.num_participaciones * num_participaciones_por_participacion) FROM tener_participaciones as t2 WHERE t2.id1 <> id_empresa and t2.id2=id_empresa) WHERE tener_participaciones.id1=id_empresa and tener_participaciones.id2=id_empresa; --Primero le restamos a la empresa las participaciones que va a otorgar, no pagamos participaciones a la propia empresa.
 
 		UPDATE tener_participaciones SET num_participaciones=num_participaciones+(num_participaciones * num_participaciones_por_participacion) WHERE tener_participaciones.id1 <> id_empresa and tener_participaciones.id2=id_empresa; --A cada usuario le sumamos las participaciones adecuadas
 
