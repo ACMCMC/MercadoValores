@@ -6,9 +6,9 @@ CREATE EXTENSION IF NOT EXISTS pgcrypto; --Para encriptar las contrasenas
 --T-01
 CREATE TABLE usuario_regulador(
   id varchar(30), --Parece un limite razonable
-  clave text, --La guardaremos encriptada (funcionalidad optativa)
-  saldo double precision,
-  comision_actual double precision,
+  clave text NOT NULL, --La guardaremos encriptada (funcionalidad optativa)
+  saldo double precision NOT NULL DEFAULT 0.0,
+  comision_actual double precision NOT NULL,
   primary key (id),
   CHECK (saldo >= 0::double precision AND comision_actual >= 0::double precision AND comision_actual <= 1::double precision)
 );
@@ -18,11 +18,11 @@ CREATE TYPE enum_estado AS ENUM ('SOLICITANDO_ALTA', 'SOLICITANDO_BAJA', 'DADO_D
 --T-02
 CREATE TABLE usuario_mercado(
     id varchar(30),
-    clave text,
-    saldo double precision,
+    clave text NOT NULL,
+    saldo double precision DEFAULT 0.0,
     direccion text,
     telefono text, --text porque no sabemos el formato concreto, los telefonos internacionalmente se escriben de formas muy distintas
-    estado enum_estado,
+    estado enum_estado NOT NULL,
     primary key (id),
     CHECK (saldo >= 0::double precision)
 );
@@ -30,8 +30,8 @@ CREATE TABLE usuario_mercado(
 --T-03
 CREATE TABLE usuario_inversor(
   id varchar(30),
-  dni char(9), --Porque sabemos la longitud concreta
-  nombre_completo text,
+  dni char(9) NOT NULL, --Porque sabemos la longitud concreta
+  nombre_completo text NOT NULL,
   primary key (id),
     foreign key (id) references usuario_mercado
    		 on update cascade --Si actualizamos el ID del usuario, esta tabla se deberia actualizar tambien
@@ -42,8 +42,8 @@ CREATE TABLE usuario_inversor(
 --T-04
 CREATE TABLE usuario_empresa(
   id varchar(30),
-  cif char(9), --Igual que para el DNI
-  nombre_comercial text,
+  cif char(9) NOT NULL, --Igual que para el DNI
+  nombre_comercial text NOT NULL,
   importe_bloqueado double precision DEFAULT 0.0,
   primary key (id),
     foreign key (id) references usuario_mercado
@@ -85,10 +85,10 @@ CREATE TABLE tener_participaciones(
 CREATE TABLE anuncio_venta(
   id1 varchar(30),
   id2 varchar(30),
-  num_participaciones integer,
+  num_participaciones integer NOT NULL,
   fecha timestamptz,
-  precio double precision,
-  comision_en_fecha double precision,
+  precio double precision NOT NULL,
+  comision_en_fecha double precision NOT NULL,
   primary key (id1,id2,fecha),
 	foreign key (id1,id2) references tener_participaciones
         	on update cascade
@@ -101,8 +101,8 @@ CREATE TABLE anuncio_venta(
 --T-08
 CREATE TABLE compra(
     id_compra serial UNIQUE, --Usamos un serial y asi podemos anadir nuevas compras con ids autoincrementales
-	empresa varchar(30),
-	comprador varchar(30),
+	empresa varchar(30) NOT NULL,
+	comprador varchar(30) NOT NULL,
 	fecha timestamptz,
 	primary key(id_compra),
 	foreign key (comprador) references usuario_mercado(id)
@@ -117,9 +117,9 @@ CREATE TABLE compra(
 CREATE TABLE parte_compra(
 	id_compra serial,
 	id_parte serial UNIQUE, --Cada parte de compra se identifica independientemente, esto nos permite usar generacion de valores por defecto
-	vendedor varchar(30),
-	precio double precision,
-	cantidad integer,
+	vendedor varchar(30) NOT NULL,
+	precio double precision NOT NULL,
+	cantidad integer NOT NULL,
 	primary key(id_compra,id_parte),
 	foreign key (vendedor) references usuario_mercado(id)
         	on update cascade
