@@ -276,7 +276,7 @@ public class VBeneficios extends javax.swing.JFrame {
             if(nParts < 0){
                 throw new Exception("El numero de participaciones debe ser mayor o igual a 0");
             }
-            FachadaDB.getFachada().anunciarBeneficios(this.usr,precio,t);
+            FachadaDB.getFachada().anunciarBeneficios(this.usr,precio,t,nParts);
             this.setCampos();
             this.updateTabla();
         }catch(Exception e){
@@ -303,6 +303,7 @@ public class VBeneficios extends javax.swing.JFrame {
             
             FachadaDB.getFachada().pagarAnuncioBeneficios(b.getEmpresa(),b.getFecha());
             this.updateTabla();
+            this.setCampos();
         }catch(Exception e){
             VAviso x = new VAviso(this,true,e.getMessage());
             x.setVisible(true);

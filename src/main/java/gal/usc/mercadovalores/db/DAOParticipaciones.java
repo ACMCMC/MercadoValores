@@ -278,16 +278,17 @@ public class DAOParticipaciones extends DAO<Participacion> {
         return setFinal;
     }
 
-    public void altaBeneficios(UsuarioEmpresa u, double porcentaje, Timestamp fecha) {
+    public void altaBeneficios(UsuarioEmpresa u, double porcentaje, Timestamp fecha, int nParts) {
         Connection c = startTransaction();
 
         PreparedStatement preparedStatement = null;
 
         try {
-            preparedStatement = c.prepareStatement("insert into beneficios values(?,?,?)");
+            preparedStatement = c.prepareStatement("insert into beneficios values(?,?,?,?)");
             preparedStatement.setString(1, u.getId());
             preparedStatement.setTimestamp(2, fecha);
             preparedStatement.setDouble(3, porcentaje);
+            preparedStatement.setDouble(4, nParts);
             preparedStatement.executeUpdate();
             c.commit();
         } catch (SQLException e) {

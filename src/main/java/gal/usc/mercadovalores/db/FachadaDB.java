@@ -246,8 +246,8 @@ public class FachadaDB {
         daoVentas.retirarVenta(av.getVendedor().getId(), av.getEmpresa().getId(), av.getFecha());
     }
     
-    public void anunciarBeneficios(UsuarioEmpresa usr, double precio, Timestamp date)throws SQLException{
-        daoParticipaciones.altaBeneficios(usr, precio, date);
+    public void anunciarBeneficios(UsuarioEmpresa usr, double precio, Timestamp date, int nParts)throws SQLException{
+        daoParticipaciones.altaBeneficios(usr, precio, date,nParts);
     }
     
     public Set<Beneficios> getAllBeneficios(){
