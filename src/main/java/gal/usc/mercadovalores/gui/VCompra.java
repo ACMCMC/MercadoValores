@@ -15,6 +15,8 @@ import java.util.*;
 import gal.usc.mercadovalores.aplicacion.Compra;
 import gal.usc.mercadovalores.aplicacion.ParteCompra;
 import gal.usc.mercadovalores.aplicacion.FachadaAplicacion;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 /**
  *
@@ -34,6 +36,14 @@ public class VCompra extends javax.swing.JFrame {
         textoSaldo();
         updateTable();
         textoPrecioMedio();
+        
+        this.tablaAnuncios.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                VCompra.this.numeroVentasMedioSpinner.setValue( ((int) VCompra.this.numeroVentasMedioSpinner.getValue()) > 0 ? (int) VCompra.this.numeroVentasMedioSpinner.getValue() : 1);
+                textoPrecioMedio();
+            }
+        });
     }
 
     /**
@@ -92,6 +102,7 @@ public class VCompra extends javax.swing.JFrame {
         numParticipacionesSpinner.setModel(new javax.swing.SpinnerNumberModel(0, 0, null, 1));
 
         tablaAnuncios.setModel(new TablaEmpresasConAnuncios());
+        tablaAnuncios.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         tablaAnuncios.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 tablaAnunciosMousePressed(evt);
@@ -183,10 +194,11 @@ public class VCompra extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(textoX)
-                            .addComponent(actualizarBoton)
-                            .addComponent(numeroVentasMedioSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(numeroVentasMedioSpinner, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(textoX)
+                                .addComponent(actualizarBoton)))
                         .addGap(9, 9, 9))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(precioMedio, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
