@@ -12,20 +12,25 @@ import gal.usc.mercadovalores.aplicacion.UsuarioEmpresa;
 import gal.usc.mercadovalores.aplicacion.UsuarioInversor;
 import gal.usc.mercadovalores.db.FachadaDB;
 import java.util.*;
+import gal.usc.mercadovalores.aplicacion.Compra;
+import gal.usc.mercadovalores.aplicacion.ParteCompra;
+import gal.usc.mercadovalores.aplicacion.FachadaAplicacion;
 
 /**
  *
  * @author icaro
  */
 public class VCompra extends javax.swing.JFrame {
+    private FachadaAplicacion fa;
     private UsuarioDeMercado usr;
     private UsuarioEmpresa emp;
     /**
      * Creates new form VCompra
      */
-    public VCompra(UsuarioDeMercado usr) {
+    public VCompra(UsuarioDeMercado usr,FachadaAplicacion fa) {
         initComponents();
         this.usr = usr;
+        this.fa = fa;
         textoSaldo();
         updateTable();
         textoPrecioMedio();
@@ -202,12 +207,16 @@ public class VCompra extends javax.swing.JFrame {
 
     private void ComprarBotonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ComprarBotonActionPerformed
         // TODO add your handling code here:
+        Compra c = null;
         try{
             if(emp!=null){
-                FachadaDB.getFachada().comprar(usr, emp, (Integer)numParticipacionesSpinner.getValue(),Integer.valueOf(precioTexto.getText()));
+                c = FachadaDB.getFachada().comprar(usr, emp, (Integer)numParticipacionesSpinner.getValue(),Integer.valueOf(precioTexto.getText()));
             }
             updateTable();
-            textoSaldo(); 
+            textoSaldo();
+            if(c != null){
+                this.fa.mostrarCompra(this,c);
+            }
         }catch(Exception e){
             VAviso x = new VAviso(this,true,e.getMessage());
             x.setVisible(true);

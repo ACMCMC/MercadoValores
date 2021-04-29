@@ -246,8 +246,8 @@ public class FachadaDB {
         daoVentas.retirarVenta(av.getVendedor().getId(), av.getEmpresa().getId(), av.getFecha());
     }
     
-    public void anunciarBeneficios(UsuarioEmpresa usr, double precio, Timestamp date)throws SQLException{
-        daoParticipaciones.altaBeneficios(usr, precio, date);
+    public void anunciarBeneficios(UsuarioEmpresa usr, double precio, Timestamp date, int nParts)throws SQLException{
+        daoParticipaciones.altaBeneficios(usr, precio, date,nParts);
     }
     
     public Set<Beneficios> getAllBeneficios(){
@@ -262,8 +262,8 @@ public class FachadaDB {
         daoParticipaciones.BajaBeneficios(b);
     }
 
-    public void pagarBeneficiosInmediatamente(UsuarioEmpresa u, double pagoPorParticipacion) {
-        daoParticipaciones.pagarBeneficiosInmediatamente(u, pagoPorParticipacion);
+    public void pagarBeneficiosInmediatamente(UsuarioEmpresa u, double pagoPorParticipacion, int cantidad) {
+        daoParticipaciones.pagarBeneficiosInmediatamente(u, pagoPorParticipacion, cantidad);
     }
 
     public void pagarAnuncioBeneficios(UsuarioEmpresa u, Timestamp fecha) {
@@ -281,7 +281,7 @@ public class FachadaDB {
     public Set<Compra> getAllCompras() {
         return daoVentas.getAllCompras();
     }
-
+    
     /**
      * Puede devolver NULL, si no se han producido compras a la empresa
      * @param empresa

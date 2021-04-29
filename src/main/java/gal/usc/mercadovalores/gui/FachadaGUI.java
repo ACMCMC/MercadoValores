@@ -11,6 +11,9 @@ import gal.usc.mercadovalores.aplicacion.UsuarioDeMercado;
 import gal.usc.mercadovalores.aplicacion.UsuarioEmpresa;
 import gal.usc.mercadovalores.aplicacion.UsuarioInversor;
 import gal.usc.mercadovalores.aplicacion.UsuarioRegulador;
+import gal.usc.mercadovalores.aplicacion.Compra;
+
+import gal.usc.mercadovalores.db.FachadaDB;
 
 
 /**
@@ -86,6 +89,7 @@ public class FachadaGUI {
 
     public void cerrarSesion(javax.swing.JFrame frame){
         frame.dispose();
+        FachadaDB.getFachada().resetearRol();
         this.vi = new VInicio(this.fa);
         vi.setVisible(true);
         this.currentFrame = vi;
@@ -117,13 +121,18 @@ public class FachadaGUI {
     }
     
     public void ventanaCompras(UsuarioDeMercado usr){
-        VCompra vC = new VCompra(usr);
+        VCompra vC = new VCompra(usr,this.fa);
         vC.setVisible(true);
     }
     
     public void verBeneficios(){
         VBeneficiosAdmin vBA = new VBeneficiosAdmin();
         vBA.setVisible(true);
+    }
+    
+    public void mostrarCompra(javax.swing.JFrame frame, Compra c){
+        AvisoCompra aC = new AvisoCompra(frame, true, c);
+        aC.setVisible(true);
     }
     
 }

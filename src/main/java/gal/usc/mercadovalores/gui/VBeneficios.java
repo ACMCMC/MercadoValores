@@ -58,6 +58,8 @@ public class VBeneficios extends javax.swing.JFrame {
         botonPagarAhora = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
+        jLabel8 = new javax.swing.JLabel();
+        campoNParticipaciones = new javax.swing.JTextField();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tablaBeneficios = new javax.swing.JTable();
@@ -124,6 +126,10 @@ public class VBeneficios extends javax.swing.JFrame {
 
         jLabel6.setText("Fecha de pago(yyyy-mm-dd):");
 
+        jLabel8.setText("Cantidad de participaciones:");
+
+        campoNParticipaciones.setText("0");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -139,19 +145,29 @@ public class VBeneficios extends javax.swing.JFrame {
                         .addComponent(botonAnunciar))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel6)
                             .addComponent(jLabel1)
-                            .addComponent(jLabel5)
-                            .addComponent(jLabel2))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel8))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(textoSaldo)
-                                    .addComponent(nParticipaciones))
-                                .addGap(48, 48, 48))
-                            .addComponent(jTextField1)
-                            .addComponent(campoParticipaciones))))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(nParticipaciones)
+                                        .addGap(48, 48, 48))
+                                    .addComponent(campoParticipaciones)))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(44, 44, 44)
+                                .addComponent(campoNParticipaciones))))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel6)
+                            .addComponent(jLabel5))
+                        .addGap(44, 44, 44)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(textoSaldo))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addGap(33, 33, 33))
         );
         jPanel1Layout.setVerticalGroup(
@@ -167,13 +183,17 @@ public class VBeneficios extends javax.swing.JFrame {
                     .addComponent(campoParticipaciones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel8)
+                    .addComponent(campoNParticipaciones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
                     .addComponent(textoSaldo))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
                     .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 43, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 92, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(botonAnunciar)
                     .addComponent(jButton1)
@@ -225,7 +245,7 @@ public class VBeneficios extends javax.swing.JFrame {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(botonPagar)
                     .addComponent(jButton3))
-                .addContainerGap(24, Short.MAX_VALUE))
+                .addContainerGap(115, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Pagar Beneficios", jPanel3);
@@ -252,7 +272,11 @@ public class VBeneficios extends javax.swing.JFrame {
             String fecha = this.jTextField1.getText() + " 00:00:00.000";
             Timestamp t = null;
             t = Timestamp.valueOf(fecha);
-            FachadaDB.getFachada().anunciarBeneficios(this.usr,precio,t);
+            Integer nParts = Integer.parseInt(this.campoNParticipaciones.getText());
+            if(nParts < 0){
+                throw new Exception("El numero de participaciones debe ser mayor o igual a 0");
+            }
+            FachadaDB.getFachada().anunciarBeneficios(this.usr,precio,t,nParts);
             this.setCampos();
             this.updateTabla();
         }catch(Exception e){
@@ -276,8 +300,10 @@ public class VBeneficios extends javax.swing.JFrame {
             TablaBeneficios tB = (TablaBeneficios)this.tablaBeneficios.getModel();
             Beneficios b = tB.obtenerBeneficios(this.tablaBeneficios.getSelectedRow());
             //pagar beneficios
+            
             FachadaDB.getFachada().pagarAnuncioBeneficios(b.getEmpresa(),b.getFecha());
             this.updateTabla();
+            this.setCampos();
         }catch(Exception e){
             VAviso x = new VAviso(this,true,e.getMessage());
             x.setVisible(true);
@@ -293,7 +319,13 @@ public class VBeneficios extends javax.swing.JFrame {
     private void botonPagarAhoraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonPagarAhoraActionPerformed
         try{
             Double precio = Double.parseDouble(this.campoParticipaciones.getText());
-            FachadaDB.getFachada().pagarBeneficiosInmediatamente(this.usr, precio);
+            Integer nParts = Integer.parseInt(this.campoNParticipaciones.getText());
+
+            if(nParts < 0){
+                throw new Exception("El numero de participaciones debe ser mayor o igual a 0");
+            }
+            
+            FachadaDB.getFachada().pagarBeneficiosInmediatamente(this.usr, precio,nParts);
             this.setCampos();
         }catch(Exception e){
             VAviso x = new VAviso(this,true,e.getMessage());
@@ -352,6 +384,7 @@ public class VBeneficios extends javax.swing.JFrame {
     private javax.swing.JButton botonAnunciar;
     private javax.swing.JButton botonPagar;
     private javax.swing.JButton botonPagarAhora;
+    private javax.swing.JTextField campoNParticipaciones;
     private javax.swing.JTextField campoParticipaciones;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton3;
@@ -362,6 +395,7 @@ public class VBeneficios extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
