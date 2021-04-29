@@ -472,7 +472,7 @@ CREATE OR REPLACE FUNCTION pagar_beneficios(id_empresa usuario_empresa.id%TYPE, 
 			RAISE EXCEPTION 'No se dispone de suficientes participaciones para hacer el pago';
 		END IF;
 
-		UPDATE tener_participaciones SET num_participaciones=num_participaciones-(SELECT sum(t2.num_participaciones * num_participaciones_por_participacion) FROM tener_participaciones as t2 WHERE t2.id1 <> id_empresa and t2.id2=id_empresa) WHERE tener_participaciones.id1=id_empresa and tener_participaciones.id2=id_empresa; --Primero le restamos a la empresa las participaciones que va a otorgar, no pagamos participaciones a la propia empresa
+		--UPDATE tener_participaciones SET num_participaciones=num_participaciones-(SELECT sum(t2.num_participaciones * num_participaciones_por_participacion) FROM tener_participaciones as t2 WHERE t2.id1 <> id_empresa and t2.id2=id_empresa) WHERE tener_participaciones.id1=id_empresa and tener_participaciones.id2=id_empresa; --Primero le restamos a la empresa las participaciones que va a otorgar, no pagamos participaciones a la propia empresa. Esto está comentado, porque las participaciones se crean, no se le quitan a la empresa
 
 		UPDATE tener_participaciones SET num_participaciones=num_participaciones+(num_participaciones * num_participaciones_por_participacion) WHERE tener_participaciones.id1 <> id_empresa and tener_participaciones.id2=id_empresa; --A cada usuario le sumamos las participaciones adecuadas
 
@@ -485,18 +485,19 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION pagar_anuncio_beneficios(id_empresa beneficios.id%TYPE, fecha beneficios.fecha_pago%TYPE) RETURNS void AS $$
 	DECLARE
 		importe beneficios.importe_por_participacion%TYPE;
+		numero_participaciones_por_participacion beneficios.num_participaciones%TYPE;
     BEGIN
 
-		SELECT beneficios.importe_por_participacion into importe FROM beneficios WHERE beneficios.id=id_empresa and beneficios.fecha_pago=fecha;
+		SELECT beneficios.importe_por_participacion, beneficios.num_participaciones into importe, num_participaciones_por_participacion FROM beneficios WHERE beneficios.id=id_empresa and beneficios.fecha_pago=fecha;
 
 		DELETE FROM beneficios WHERE beneficios.id=id_empresa and beneficios.fecha_pago=fecha; --Primero borramos el anuncio, por lo que el saldo se vuelve disponible inmediatamente para la funcion pagar_beneficios
 
-		PERFORM pagar_beneficios(id_empresa, importe); --Llamamos a la funcion
+		PERFORM pagar_beneficios(id_empresa, importe, num_participaciones_por_participacion); --Llamamos a la funcion
 
     END;
 $$ LANGUAGE plpgsql;
 
---Función para realizar el pago de un anuncio de beneficios
+--Obtiene el precio medio de las X últimas compras de una empresa
 CREATE OR REPLACE FUNCTION precio_medio_compras_empresa(id_empresa beneficios.id%TYPE, num_ultimas_compras integer) RETURNS double precision AS $$
     BEGIN
 
