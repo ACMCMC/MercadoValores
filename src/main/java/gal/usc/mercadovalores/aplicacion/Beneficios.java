@@ -10,15 +10,22 @@ public class Beneficios{
     private UsuarioEmpresa empresa;
     private Timestamp fecha;
     private double importeParticipacion;
+    private int cantidadParticipaciones;
 
-    public Beneficios(UsuarioEmpresa empresa, Timestamp fecha, double importeParticipacion) {
+    public Beneficios(UsuarioEmpresa empresa, Timestamp fecha, double importeParticipacion, int cantidad) {
         this.empresa = empresa;
         this.fecha = fecha;
         this.importeParticipacion = importeParticipacion;
+        this.cantidadParticipaciones = cantidad;
     }
 
-    
-    
+    public int getCantidadParticipaciones() {
+        return cantidadParticipaciones;
+    }
+
+    public void setCantidadParticipaciones(int cantidadParticipaciones) {
+        this.cantidadParticipaciones = cantidadParticipaciones;
+    }
     /**
      * @return the empresa
      */

@@ -50,7 +50,7 @@ CREATE TABLE beneficios(
   id varchar(30),
   fecha_pago timestamp,
   importe_por_participacion double precision,
-  num_participaciones double precision,
+  num_participaciones integer,
   primary key (id,fecha_pago),
 	foreign key (id) references usuario_empresa
         	on update cascade
@@ -490,11 +490,11 @@ CREATE OR REPLACE FUNCTION pagar_anuncio_beneficios(id_empresa beneficios.id%TYP
 		numero_participaciones_por_participacion beneficios.num_participaciones%TYPE;
     BEGIN
 
-		SELECT beneficios.importe_por_participacion, beneficios.num_participaciones into importe, num_participaciones_por_participacion FROM beneficios WHERE beneficios.id=id_empresa and beneficios.fecha_pago=fecha;
+		SELECT beneficios.importe_por_participacion, beneficios.num_participaciones into importe, numero_participaciones_por_participacion FROM beneficios WHERE beneficios.id=id_empresa and beneficios.fecha_pago=fecha;
 
 		DELETE FROM beneficios WHERE beneficios.id=id_empresa and beneficios.fecha_pago=fecha; --Primero borramos el anuncio, por lo que el saldo se vuelve disponible inmediatamente para la funcion pagar_beneficios
 
-		PERFORM pagar_beneficios(id_empresa, importe, num_participaciones_por_participacion); --Llamamos a la funcion
+		PERFORM pagar_beneficios(id_empresa, importe, numero_participaciones_por_participacion); --Llamamos a la funcion
 
     END;
 $$ LANGUAGE plpgsql;

@@ -6,8 +6,7 @@
 package gal.usc.mercadovalores.gui;
 
 import java.util.ArrayList;
-import gal.usc.mercadovalores.aplicacion.Beneficios;
-
+import gal.usc.mercadovalores.aplicacion.ParteCompra;
 import javax.swing.table.AbstractTableModel;
 
 /*
@@ -20,19 +19,19 @@ import javax.swing.table.AbstractTableModel;
  *
  * @author user
  */
-public class TablaBeneficios extends AbstractTableModel{
-    private ArrayList<Beneficios> beneficios;
+public class TablaCompra extends AbstractTableModel{
+    private ArrayList<ParteCompra> partes;
     
-    public TablaBeneficios(){
-        this.beneficios = new ArrayList<Beneficios>();
+    public TablaCompra(){
+        this.partes = new ArrayList<ParteCompra>();
     }
     
     public int getColumnCount (){
-        return 4;
+        return 3;
     }
 
     public int getRowCount(){
-        return beneficios.size();
+        return partes.size();
     }
 
     @Override
@@ -40,11 +39,9 @@ public class TablaBeneficios extends AbstractTableModel{
         String nombre="";
 
         switch (col){
-            case 0: nombre = "Empresa"; break;
-            case 1: nombre = "Fecha"; break;
-            case 2: nombre = "Importe"; break;
-            case 3: nombre = "Participaciones"; break;
-
+            case 0: nombre = "Cantidad"; break;
+            case 1: nombre = "Precio"; break;
+            case 2: nombre = "Vendedor"; break;
         }
         return nombre;
     }
@@ -54,11 +51,9 @@ public class TablaBeneficios extends AbstractTableModel{
         Class clase=null;
 
         switch (col){
-            case 0: clase= java.lang.String.class; break;
-            case 1: clase=java.sql.Timestamp.class; break;
+            case 0: clase= java.lang.Integer.class; break;
+            case 1: clase=java.lang.Double.class; break;
             case 2: clase=java.lang.String.class; break;
-            case 3: clase=java.lang.Integer.class; break;
-
 
         }
         return clase;
@@ -73,20 +68,19 @@ public class TablaBeneficios extends AbstractTableModel{
         Object resultado=null;
 
         switch (col){
-            case 0: resultado= beneficios.get(row).getEmpresa().getNombreComercial(); break;
-            case 1: resultado= beneficios.get(row).getFecha(); break;
-            case 2: resultado= beneficios.get(row).getImporteParticipacion(); break;
-            case 3: resultado= beneficios.get(row).getCantidadParticipaciones(); break;
+            case 0: resultado= partes.get(row).getCantidad(); break;
+            case 1: resultado= partes.get(row).getPrecio(); break;
+            case 2: resultado= partes.get(row).getVendedor().getId(); break;
         }
         return resultado;
     }
 
-    public void setFilas(java.util.ArrayList<Beneficios> beneficios){
-        this.beneficios = beneficios;
+    public void setFilas(java.util.ArrayList<ParteCompra> partes){
+        this.partes = partes;
         fireTableDataChanged();
     }
 
-    public Beneficios obtenerBeneficios(int i){
-        return this.beneficios.get(i);
+    public ParteCompra obtenerBeneficios(int i){
+        return this.partes.get(i);
     }
 }
