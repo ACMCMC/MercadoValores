@@ -289,6 +289,11 @@ public class VPrincipalEmpresa extends javax.swing.JFrame {
                 this.usr.setId(idActual);
             }else{
                 try{
+                    
+                    if(!passActual.equals(this.usr.getClave())){
+                        this.usr.setClave(FachadaDB.getFachada().getPassEncriptada(this.usr.getClave()));
+                    }
+                    
                     FachadaDB.getFachada().actualizarUserEID(this.usr, idActual);
                 }catch(Exception e){
                     VAviso x = new VAviso(this,true,e.getMessage());
