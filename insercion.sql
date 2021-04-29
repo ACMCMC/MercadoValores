@@ -19,10 +19,11 @@ Values ('Tim','39759783E','Timothy Drake Wayne'),
 ('Clark','12774663S','Clark Kent El'),
 ('Bruce','24327634B','Bruce Wayne');
 
-Insert into beneficios (id,fecha_pago,importe_por_participacion)
-Values ('Opti','2021/12/31 17:00:00.00', 4.00),
-('WW','2022/04/26 14:00:00.00',100),
-('SI','2021/5/9 00:00:00.00',50);
+Insert into beneficios (id,fecha_pago,importe_por_participacion,num_participaciones)
+Values ('Opti','2021/12/31 17:00:00.00', 4.00, 0),
+('WW','2022/04/26 14:00:00.00',100, 0),
+('WW','2022/04/26 15:00:00.00',0, 5),
+('SI','2021/5/9 00:00:00.00',50, 3);
 
 Insert into tener_participaciones (id1,id2,num_participaciones)
 Values ('Bruce','Opti', 6),
