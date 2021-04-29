@@ -3,7 +3,7 @@ CREATE EXTENSION IF NOT EXISTS pgcrypto; --Para encriptar las contrasenas
 --Los saldos los ponemos como números en punto flotante
 --Los números de participaciones son enteros, las participaciones son indivisibles
 
---T-02
+--T-01
 CREATE TABLE usuario_regulador(
   id varchar(30), --Parece un limite razonable
   clave text, --La guardaremos encriptada (funcionalidad optativa)
