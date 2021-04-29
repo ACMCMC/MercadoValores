@@ -318,7 +318,8 @@ public class DAOParticipaciones extends DAO<Participacion> {
                     String id1 = resultSet.getString("id");
                     Timestamp t = resultSet.getTimestamp("fecha_pago");
                     Double precio = resultSet.getDouble("importe_por_participacion");
-                    b = new Beneficios((UsuarioEmpresa)f.getUsuarioById(id1),t,precio);
+                    Integer cantidad = resultSet.getInt("num_participaciones");
+                    b = new Beneficios((UsuarioEmpresa)f.getUsuarioById(id1),t,precio,cantidad);
                     setFinal.add(b);
                 } catch (EnumConstantNotPresentException e) {
                     FachadaAplicacion.muestraExcepcion(e);
@@ -355,7 +356,8 @@ public class DAOParticipaciones extends DAO<Participacion> {
                     String id1 = resultSet.getString("id");
                     Timestamp t = resultSet.getTimestamp("fecha_pago");
                     Double precio = resultSet.getDouble("importe_por_participacion");
-                    b = new Beneficios((UsuarioEmpresa)f.getUsuarioById(id1),t,precio);
+                    Integer cantidad = resultSet.getInt("num_participaciones");
+                    b = new Beneficios((UsuarioEmpresa)f.getUsuarioById(id1),t,precio,cantidad);
                     setFinal.add(b);
                 } catch (EnumConstantNotPresentException e) {
                     FachadaAplicacion.muestraExcepcion(e);
@@ -396,15 +398,16 @@ public class DAOParticipaciones extends DAO<Participacion> {
         }
     }
 
-    public void pagarBeneficiosInmediatamente(UsuarioEmpresa u, double pagoPorParticipacion) {
+    public void pagarBeneficiosInmediatamente(UsuarioEmpresa u, double pagoPorParticipacion, int cantidad) {
         Connection c = startTransaction();
         PreparedStatement preparedStatement = null;
 
         try {
 
-            preparedStatement = c.prepareStatement("select pagar_beneficios(?, ?);");
+            preparedStatement = c.prepareStatement("select pagar_beneficios(?, ?, ?);");
             preparedStatement.setString(1, u.getId());
             preparedStatement.setDouble(2, pagoPorParticipacion);
+            preparedStatement.setInt(3, cantidad);
             preparedStatement.executeQuery();
             c.commit();
         } catch (SQLException e) {

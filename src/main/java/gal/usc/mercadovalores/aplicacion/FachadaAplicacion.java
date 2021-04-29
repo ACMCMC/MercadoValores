@@ -87,4 +87,8 @@ public class FachadaAplicacion {
     public void verBeneficios(){
         this.fgui.verBeneficios();
     }
+    
+    public void mostrarCompra(javax.swing.JFrame frame, Compra c){
+        this.fgui.mostrarCompra(frame,c);
+    }
 }
