@@ -33,6 +33,7 @@ public class VCompra extends javax.swing.JFrame {
         this.fa = fa;
         textoSaldo();
         updateTable();
+        textoPrecioMedio();
     }
 
     /**
@@ -56,6 +57,12 @@ public class VCompra extends javax.swing.JFrame {
         tablaAnuncios = new javax.swing.JTable();
         jLabel5 = new javax.swing.JLabel();
         precioTexto = new javax.swing.JTextField();
+        textoLargoPrecio = new javax.swing.JLabel();
+        textoX = new javax.swing.JLabel();
+        numeroVentasMedioSpinner = new javax.swing.JSpinner();
+        actualizarBoton = new javax.swing.JButton();
+        precioMedio = new javax.swing.JLabel();
+        textoNombreEmpresa = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -94,6 +101,17 @@ public class VCompra extends javax.swing.JFrame {
 
         jLabel5.setText("Precio máximo a pagar:");
 
+        textoX.setText("X =");
+
+        numeroVentasMedioSpinner.setModel(new javax.swing.SpinnerNumberModel(10, 0, null, 1));
+
+        actualizarBoton.setText("Actualizar");
+        actualizarBoton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                actualizarBotonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -101,12 +119,22 @@ public class VCompra extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(24, 24, 24)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(textoNombreEmpresa, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(textoLargoPrecio, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(SalirBoton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(ComprarBoton))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(textoX)
+                                .addGap(18, 18, 18)
+                                .addComponent(numeroVentasMedioSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(actualizarBoton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(precioMedio, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel2)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -124,7 +152,7 @@ public class VCompra extends javax.swing.JFrame {
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(numParticipacionesSpinner, javax.swing.GroupLayout.DEFAULT_SIZE, 114, Short.MAX_VALUE)
                                     .addComponent(precioTexto))))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 49, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -144,11 +172,25 @@ public class VCompra extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
                     .addComponent(numParticipacionesSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
                     .addComponent(precioTexto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
+                .addComponent(textoLargoPrecio, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(textoNombreEmpresa, javax.swing.GroupLayout.DEFAULT_SIZE, 18, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(textoX)
+                            .addComponent(actualizarBoton)
+                            .addComponent(numeroVentasMedioSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(9, 9, 9))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(precioMedio, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(ComprarBoton)
                     .addComponent(SalirBoton))
@@ -186,7 +228,13 @@ public class VCompra extends javax.swing.JFrame {
         // TODO add your handling code here:
         TablaEmpresasConAnuncios te=(TablaEmpresasConAnuncios) tablaAnuncios.getModel();
         emp = te.getEmpresaAt(tablaAnuncios.getSelectedRow(),1);
+        textoPrecioMedio();
     }//GEN-LAST:event_tablaAnunciosMousePressed
+
+    private void actualizarBotonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_actualizarBotonActionPerformed
+        // TODO add your handling code here:
+        textoPrecioMedio();
+    }//GEN-LAST:event_actualizarBotonActionPerformed
 
     private void textoSaldo(){
         
@@ -223,11 +271,45 @@ public class VCompra extends javax.swing.JFrame {
         }
     }
     
+    private void textoPrecioMedio(){
+        try{
+            TablaEmpresasConAnuncios tA = (TablaEmpresasConAnuncios) this.tablaAnuncios.getModel();
+            emp = (UsuarioEmpresa)tA.getEmpresaAt(tablaAnuncios.getSelectedRow(), 1);
+            if(emp != null){
+                Double precio = FachadaDB.getFachada().getPrecioMedioComprasEmpresa(emp, (int) this.numeroVentasMedioSpinner.getValue());
+                if(precio!=null){
+                    String precioText = precio.toString();
+                    this.textoX.setVisible(true);
+                    this.numeroVentasMedioSpinner.setVisible(true);
+                    this.textoLargoPrecio.setVisible(true);
+                    this.textoNombreEmpresa.setVisible(true);
+                    this.precioMedio.setVisible(true);
+                    this.actualizarBoton.setVisible(true);
+                    this.textoLargoPrecio.setText("Precio medio de las últimas  X  ventas da empresa:");
+                    this.textoNombreEmpresa.setText(emp.getNombreComercial());
+                    this.precioMedio.setText(precioText + "€");
+                    
+                }
+                else{
+                    this.textoLargoPrecio.setText("Historial de precios no disponible");
+                    this.textoNombreEmpresa.setVisible(false);
+                    this.precioMedio.setVisible(false);
+                    this.textoX.setVisible(false);
+                    this.numeroVentasMedioSpinner.setVisible(false);
+                    this.actualizarBoton.setVisible(false);
+                }
+            }            
+        }catch(Exception e){
+            VAviso x = new VAviso(this,true,e.getMessage());
+            x.setVisible(true);
+        }
+    }
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton ComprarBoton;
     private javax.swing.JButton SalirBoton;
+    private javax.swing.JButton actualizarBoton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -235,8 +317,13 @@ public class VCompra extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSpinner numParticipacionesSpinner;
+    private javax.swing.JSpinner numeroVentasMedioSpinner;
+    private javax.swing.JLabel precioMedio;
     private javax.swing.JTextField precioTexto;
     private javax.swing.JLabel saldoActual;
     private javax.swing.JTable tablaAnuncios;
+    private javax.swing.JLabel textoLargoPrecio;
+    private javax.swing.JLabel textoNombreEmpresa;
+    private javax.swing.JLabel textoX;
     // End of variables declaration//GEN-END:variables
 }

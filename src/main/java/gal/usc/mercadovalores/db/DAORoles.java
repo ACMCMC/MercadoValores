@@ -19,9 +19,8 @@ public class DAORoles extends DAO {
         try {
             c.setAutoCommit(false);
             preparedStatement = c
-                    .prepareStatement("set role ?");
-            preparedStatement.setString(1, rol);
-            preparedStatement.executeUpdate();
+                    .prepareStatement("SET ROLE " + rol); // No es vulnerable a inyección SQL porque el string no viene del usuario, además no se puede usar sustitución de parámetros en este caso
+            preparedStatement.execute();
             preparedStatement.close();
             c.commit();
         } catch (SQLException e) {
@@ -36,15 +35,15 @@ public class DAORoles extends DAO {
     }
     
     public void setRolRegulador() {
-        setRol("ReguladorUser");
+        setRol("regulador_user");
     }
     
     public void setRolEmpresa() {
-        setRol("EmpresaUser");
+        setRol("empresa_user");
     }
     
     public void setRolInversor() {
-        setRol("InversorUser");
+        setRol("inversor_user");
     }
     
     public void resetRol() {
@@ -55,7 +54,7 @@ public class DAORoles extends DAO {
             c.setAutoCommit(false);
             preparedStatement = c
                     .prepareStatement("reset role");
-            preparedStatement.executeUpdate();
+            preparedStatement.execute();
             preparedStatement.close();
             c.commit();
         } catch (SQLException e) {
