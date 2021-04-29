@@ -50,7 +50,7 @@ CREATE TABLE beneficios(
   id varchar(30),
   fecha_pago timestamp,
   importe_por_participacion double precision,
-  num_participaciones double precision,
+  num_participaciones integer,
   primary key (id,fecha_pago),
 	foreign key (id) references usuario_empresa
         	on update cascade
