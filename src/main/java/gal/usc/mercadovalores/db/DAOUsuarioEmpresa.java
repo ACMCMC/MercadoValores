@@ -110,7 +110,6 @@ public final class DAOUsuarioEmpresa extends DAO<UsuarioEmpresa> {
 		PreparedStatement preparedStatement = null;
 
 		try {
-			c.setAutoCommit(false);
 			preparedStatement = c.prepareStatement(
 					"update usuario_empresa set cif=?, nombre_comercial=?, importe_bloqueado=? where id=?");
 			preparedStatement.setString(1, u.getCif());
@@ -146,7 +145,6 @@ public final class DAOUsuarioEmpresa extends DAO<UsuarioEmpresa> {
 		PreparedStatement preparedStatement = null;
 
 		try {
-			c.setAutoCommit(false);
 			preparedStatement = c
 					.prepareStatement("update usuario_mercado set id=? where id=?");
 			preparedStatement.setString(1, user.getId());
@@ -172,7 +170,6 @@ public final class DAOUsuarioEmpresa extends DAO<UsuarioEmpresa> {
 		PreparedStatement preparedStatement = null;
 
 		try {
-			c.setAutoCommit(false);
 			preparedStatement = c.prepareStatement(
 					"insert into usuario_mercado(clave, saldo, direccion, telefono, estado, id) values (crypt(?,gen_salt('bf')),?,?,?,CAST (? AS enum_estado),?)");
 			preparedStatement.setString(1, u.getClave());
@@ -207,7 +204,6 @@ public final class DAOUsuarioEmpresa extends DAO<UsuarioEmpresa> {
 		Connection c = startTransaction();
 		PreparedStatement preparedStatement = null;
 		try {
-			c.setAutoCommit(false);
 			preparedStatement = c.prepareStatement("delete from usuario_empresa where id=?");
 			preparedStatement.setString(1, user.getId());
 			preparedStatement.executeUpdate();
@@ -232,7 +228,6 @@ public final class DAOUsuarioEmpresa extends DAO<UsuarioEmpresa> {
 		PreparedStatement preparedStatement = null;
 		Connection c = startTransaction();
 		try {
-			c.setAutoCommit(false);
 			preparedStatement = c
 					.prepareStatement("update usuario_mercado set estado=CAST(? AS enum_estado) where id=?");
 			preparedStatement.setString(1, EstadoUsuario.DADO_DE_ALTA.toString());
@@ -254,7 +249,6 @@ public final class DAOUsuarioEmpresa extends DAO<UsuarioEmpresa> {
 		PreparedStatement preparedStatement = null;
 		Connection c = startTransaction();
 		try {
-			c.setAutoCommit(false);
 			preparedStatement = c
 					.prepareStatement("update usuario_mercado set estado=CAST(? AS enum_estado) where id=?");
 			preparedStatement.setString(1, "SOLICITANDO_BAJA");

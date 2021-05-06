@@ -25,7 +25,6 @@ public final class DAOUsuarioInversor extends DAO<UsuarioInversor> {
 		ResultSet resultSet;
 
 		try {
-			c.setAutoCommit(false);
 			preparedStatement = c
 					.prepareStatement("select * from usuario_inversor inner join usuario_mercado using(id) where id=?");
 			preparedStatement.setString(1, idToGet);
@@ -99,7 +98,6 @@ public final class DAOUsuarioInversor extends DAO<UsuarioInversor> {
 		PreparedStatement preparedStatement = null;
 
 		try {
-			c.setAutoCommit(false);
 			preparedStatement = c
 					.prepareStatement("update usuario_inversor set dni=?, nombre_completo=? where id=?");
 			preparedStatement.setString(1, user.getDni());
@@ -134,7 +132,6 @@ public final class DAOUsuarioInversor extends DAO<UsuarioInversor> {
 		PreparedStatement preparedStatement = null;
 
 		try {
-			c.setAutoCommit(false);
 			preparedStatement = c
 					.prepareStatement("update usuario_mercado set id=? where id=?");
 			preparedStatement.setString(1, user.getId());
@@ -201,7 +198,6 @@ public final class DAOUsuarioInversor extends DAO<UsuarioInversor> {
 		Connection c = startTransaction();
 		PreparedStatement preparedStatement = null;
 		try {
-			c.setAutoCommit(false);
 			preparedStatement = c.prepareStatement("delete from usuario_inversor where id=?");
 			preparedStatement.setString(1, user.getId());
 			preparedStatement.executeUpdate();
@@ -226,7 +222,6 @@ public final class DAOUsuarioInversor extends DAO<UsuarioInversor> {
 		PreparedStatement preparedStatement = null;
 		Connection c = startTransaction();
 		try {
-			c.setAutoCommit(false);
 			preparedStatement = c
 					.prepareStatement("update usuario_mercado set estado=CAST(? AS enum_estado) where id=?");
 			preparedStatement.setString(1, "DADO_DE_ALTA");
@@ -248,7 +243,6 @@ public final class DAOUsuarioInversor extends DAO<UsuarioInversor> {
 		PreparedStatement preparedStatement = null;
 		Connection c = startTransaction();
 		try {
-			c.setAutoCommit(false);
 			preparedStatement = c
 					.prepareStatement("update usuario_mercado set estado=CAST(? AS enum_estado) where id=?");
 			preparedStatement.setString(1, "SOLICITANDO_BAJA");

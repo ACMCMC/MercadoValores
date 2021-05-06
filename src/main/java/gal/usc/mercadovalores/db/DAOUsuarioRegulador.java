@@ -44,7 +44,6 @@ public final class DAOUsuarioRegulador extends DAO<UsuarioRegulador> {
 		Connection c = startTransaction();
 		PreparedStatement preparedStatement = null;
 		try {
-			c.setAutoCommit(false);
 			preparedStatement = c.prepareStatement(
 					"update usuario_regulador set clave=?, saldo=?, comision_actual=? where id=?");
 			preparedStatement.setString(1, user.getClave());

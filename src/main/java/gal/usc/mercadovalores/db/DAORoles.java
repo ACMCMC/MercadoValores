@@ -17,7 +17,6 @@ public class DAORoles extends DAO {
         PreparedStatement preparedStatement = null;
     
         try {
-            c.setAutoCommit(false);
             preparedStatement = c
                     .prepareStatement("SET ROLE " + rol); // No es vulnerable a inyección SQL porque el string no viene del usuario, además no se puede usar sustitución de parámetros en este caso
             preparedStatement.execute();
@@ -51,7 +50,6 @@ public class DAORoles extends DAO {
         PreparedStatement preparedStatement = null;
     
         try {
-            c.setAutoCommit(false);
             preparedStatement = c
                     .prepareStatement("reset role");
             preparedStatement.execute();

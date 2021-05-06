@@ -65,7 +65,6 @@ public class DAOParticipaciones extends DAO<Participacion> {
         Participacion participaciones;
 
         try {
-            c.setAutoCommit(false);
             participaciones = tenerParticipaciones(u, u);
             if (participaciones != null) {
                 preparedStatement = c.prepareStatement(
@@ -103,7 +102,6 @@ public class DAOParticipaciones extends DAO<Participacion> {
         ResultSet resultSet;
         Participacion result = null;
         try {
-            c.setAutoCommit(false);
             preparedStatement = c
                     .prepareStatement("select num_participaciones from tener_participaciones where id1=? and id2=?");
             preparedStatement.setString(1, u1.getId());
@@ -179,7 +177,6 @@ public class DAOParticipaciones extends DAO<Participacion> {
         PreparedStatement preparedStatement = null;
         ResultSet resultSet;
         try {
-            c.setAutoCommit(false);
             preparedStatement = c.prepareStatement("select importe_por_participacion from beneficios where id=?");
             preparedStatement.setString(1, u.getId());
             resultSet = preparedStatement.executeQuery();

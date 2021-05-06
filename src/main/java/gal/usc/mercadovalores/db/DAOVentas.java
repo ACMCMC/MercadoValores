@@ -48,7 +48,6 @@ public class DAOVentas extends DAO<Participacion> {
                 PreparedStatement preparedStatement = null;
                 Timestamp timestamp = new Timestamp(System.currentTimeMillis());
                 try {
-                        c.setAutoCommit(false);
                         preparedStatement = c.prepareStatement(
                                         "Insert into anuncio_venta (id1,id2,num_participaciones,fecha,precio,comision_en_fecha)"
                                                         + "Values (?,?,?,?,?,?)");
@@ -78,7 +77,6 @@ public class DAOVentas extends DAO<Participacion> {
                 Connection c = startTransaction();
                 PreparedStatement preparedStatement = null;
                 try {
-                        c.setAutoCommit(false);
                         preparedStatement = c.prepareStatement(
                                         "delete from anuncio_venta " + "where id1=? and id2=? and fecha=?");
                         preparedStatement.setString(1, id1);
@@ -103,7 +101,6 @@ public class DAOVentas extends DAO<Participacion> {
                 Connection c = startTransaction();
                 PreparedStatement preparedStatement = null;
                 try {
-                        c.setAutoCommit(false);
                         preparedStatement = c.prepareStatement(
                                         "delete from anuncio_venta " + "where id1=? and id2=? and fecha=?");
                         preparedStatement.setString(1, id1);
